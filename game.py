@@ -73,7 +73,7 @@ class Game(ShowBase):
         Obj3D.worldRenderer = self.render
 
         # Load collision handlers
-        self.setupCollisionDetections()
+        self.collisionSetup()
 
         # Load lights and the fancy background
         self.loadBackground()
@@ -255,18 +255,18 @@ class Game(ShowBase):
        
     # https://hub.packtpub.com/collision-detection-and-physics-panda3d-game-development/
     # Collision Events
-    def setupCollisionDetections(self):
+    def collisionSetup(self, showCollisions=False):
         base.cTrav = CollisionTraverser()
-        base.cTrav.showCollisions(render)
+        if showCollisions:
+            base.cTrav.showCollisions(render)
 
         self.notifier = CollisionHandlerEvent()
-
         self.notifier.addInPattern("%fn-in-%in")
 
         self.accept("car-in-crate", self.onCollision)
 
     def onCollision(self, entry):
-        print("Collide!")
+        print("Collide", entry)
 
 game = Game()
 base.run()
