@@ -44,10 +44,7 @@ class Racecar(Obj3D):
         self.passenger.scaleAll(2.5)
         self.passenger.move(dx=self.offsetX, dy=self.offsetY, dz=self.offsetZ)
 
-        print(self.offset)
-        print(self.dimX, self.dimY, self.dimZ)
-
-        self.initBasicCollisionBox("hittest", showBox=True)
+        self.initBasicCollisionBox("car", showBox=True)
 
 class Passenger(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
@@ -60,9 +57,9 @@ class Crate(Obj3D):
         self.gameObj = gameObj
 
         self.scaleAll(0.01)
-        self.move(dz=self.dimZ/2)
+        self.move(dy=40, dz=self.dimZ/2)
 
-        self.initBasicCollisionBox("hittest", showBox=True)
+        self.initBasicCollisionBox("crate", showBox=True)
 
 class Game(ShowBase):
     def __init__(self):
@@ -73,6 +70,9 @@ class Game(ShowBase):
         self.isGameOver = False
 
         Obj3D.worldRenderer = self.render
+
+        # Load collision handlers
+        self.setupCollisionDetections()
 
         # Load lights and the fancy background
         self.loadBackground()
@@ -93,9 +93,6 @@ class Game(ShowBase):
         # Check for key presses 
         # And do corresponding action
         self.taskMgr.add(self.keyPressHandler, "keyPressHandler")
-
-        # Load collision handlers
-        self.setupCollisionDetections()
 
     def setCameraToPlayer(self, task):
         car = self.car
@@ -258,9 +255,17 @@ class Game(ShowBase):
     # https://hub.packtpub.com/collision-detection-and-physics-panda3d-game-development/
     # Collision Events
     def setupCollisionDetections(self):
-        self.colTrav = CollisionTraverser()
-        self.colTrav.showCollisions(self.render)
-        self.colNotifier = CollisionHandlerEvent()
-        
+        base.cTrav = CollisionTraverser()
+        base.cTrav.showCollisions(render)
+
+        self.notifier = CollisionHandlerEvent()
+
+        self.notifier.addInPattern("%fn-in-%in")
+
+        self.accept("car-in-crate", self.onCollision)
+
+    def onCollision(self, entry):
+        print("Collide!")
+
 game = Game()
 base.run()

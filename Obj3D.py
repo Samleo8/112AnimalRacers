@@ -78,7 +78,7 @@ class Obj3D():
         }
 
     def initBasicCollisionBox(self, name="hittest", showBox=False):
-        colNode = self.addCollisionNode("hittest")
+        colNode = self.addCollisionNode(name)
 
         # TODO: Find other kinds of collision objects
         # Collision box surrounding the object
