@@ -91,6 +91,8 @@ class Obj3D():
         if showBox: 
             colNode.show()
 
+        return colNode
+
     # Set texture
     def initTexture(self, textureName):
         texture = loader.loadTexture(f"models/tex/{textureName}.png")

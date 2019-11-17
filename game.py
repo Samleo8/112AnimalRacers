@@ -45,6 +45,8 @@ class Racecar(Obj3D):
         self.passenger.move(dx=self.offsetX, dy=self.offsetY, dz=self.offsetZ)
 
         self.initBasicCollisionBox("car", showBox=True)
+        
+        base.cTrav.addCollider(self.getCollisionNode("car"), self.gameObj.notifier)
 
 class Passenger(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
@@ -60,7 +62,6 @@ class Crate(Obj3D):
         self.move(dy=40, dz=self.dimZ/2)
 
         self.initBasicCollisionBox("crate", showBox=True)
-
 class Game(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)

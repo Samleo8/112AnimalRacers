@@ -24,7 +24,7 @@ class Application(ShowBase):
         self.accept("frowney-in-floor", self.onCollision)
 
     def addSmiley(self):
-        self.frowney = loader.loadModel("models/3penguin")
+        self.frowney = loader.loadModel("models/penguin")
         self.frowney.reparentTo(render)
 
         self.frowney.setPos(0, 0, 10)
