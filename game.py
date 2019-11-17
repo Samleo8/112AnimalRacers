@@ -59,7 +59,7 @@ class Crate(Obj3D):
         self.gameObj = gameObj
 
         self.scaleAll(0.01)
-        self.move(dy=40, dz=self.dimZ/2)
+        self.move(dz=self.dimZ/2)
 
         self.initBasicCollisionBox("crate", showBox=True)
 class Game(ShowBase):
@@ -173,7 +173,10 @@ class Game(ShowBase):
         self.car = Racecar(self, "groundroamer", self.render)
 
         self.crate = Crate(self, "crate", self.render)
+        self.crate2 = Crate(self, "crate", self.render)
 
+        self.crate.move(dy=40)
+        self.crate2.move(dx=40)        
 
     # Key Events
     def createKeyControls(self):
