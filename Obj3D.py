@@ -80,7 +80,7 @@ class Obj3D():
 
     # Collision Handling
     # Initialise a an object surrounding the whole player
-    def initSurroundingCollisionObj(self, name=None, shape="box", show=False, args=None):
+    def initSurroundingCollisionObj(self, name=None, shape="box", show=True, args=None):
         name = name if name != None else self.modelName
         colNode = self.addCollisionNode(name)
 
@@ -113,20 +113,24 @@ class Obj3D():
             ex, ey, ez = self.relativeOffset
 
             # Defaults: y-axis
-            rad = max(self.dimX, self.dimZ)/2
-            sy += self.dimY/2 - rad
-            ey -= self.dimY/2 - rad
+            radMax = max(self.dimX, self.dimZ)/2
+            radMin = min(self.dimX, self.dimZ)/2
 
-            if type(args, dict) and args.get("axis")!=None:
+            sy += self.dimY/2 - radMin
+            ey -= self.dimY/2 - radMin
+
+            if isinstance(args, dict) and args.get("axis")!=None:
                 axis = args.get("axis")
                 if axis == "x":
-                    rad = max(self.dimY, self.dimZ)/2
-                    sx += self.dimX/2 - rad
-                    ex -= self.dimX/2 - rad
+                    radMax = max(self.dimY, self.dimZ)/2
+                    radMin = min(self.dimY, self.dimZ)/2
+                    sx += self.dimX/2 - radMin
+                    ex -= self.dimX/2 - radMin
                 elif axis == "z":
-                    rad = max(self.dimX, self.dimY)/2
-                    sz += self.dimZ/2 - rad
-                    ez -= self.dimZ/2 - rad
+                    radMax = max(self.dimX, self.dimY)/2
+                    radMin = min(self.dimX, self.dimY)/2
+                    sz += self.dimZ/2 - radMin
+                    ez -= self.dimZ/2 - radMin
                 else:
                     pass #default to y-axis
             else:
@@ -136,7 +140,7 @@ class Obj3D():
             return CollisionCapsule(
                 sx, sy, sz, # start point
                 ex, ey, ez, # end point
-                rad
+                radMax
             )
 
 
