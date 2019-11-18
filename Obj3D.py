@@ -30,6 +30,7 @@ class Obj3D():
     def __init__(self, model, renderParent=None, pos=None, hpr=None):
         # Set model
         # Also check if we can load this model type
+        self.modelName = model
         modelTypes = ["gltf", "glb", "egg"] # in order of priority
         modelFile = f"models/{model}"
 
@@ -77,21 +78,67 @@ class Obj3D():
 
         }
 
-    def initBasicCollisionBox(self, name="hittest", showBox=False):
+    # Collision Handling
+    # Initialise a an object surrounding the whole player
+    def initSurroundingCollisionObj(self, name=None, shape="box", show=False, args=None):
+        name = name if name != None else self.modelName
         colNode = self.addCollisionNode(name)
 
         # TODO: Find other kinds of collision objects
         # Collision box surrounding the object
-        box = CollisionBox(
-            self.relativeOffset,  # calculated true center
-            self.relDimX/2, self.relDimY/2, self.relDimZ/2  # dx, dy, dz
-        )
+        obj = genCollisionSolid(shape, args)
 
         colNode.node().addSolid(box)
-        if showBox: 
+
+        if show: 
             colNode.show()
 
         return colNode
+
+    # Create a collision solid dynamically based on 
+    # offset center, dimensions and specified arguments
+    def genCollisionSolid(self, shape="box", args=None):
+        if shape in [ "box" ]:
+            return CollisionBox(
+                self.relativeOffset,  # calculated true center
+                self.relDimX/2, self.relDimY/2, self.relDimZ/2  # dx, dy, dz
+            )
+        elif shape in [ "sphere" ]:
+            return CollisionSphere(
+                self.relOffsetX, self.relOffsetY, self.relOffsetZ, # calculated true center
+                max(self.relativeDim)/2 #radius will be max of component of relative dimension
+            )
+        elif shape in [ "cylinder", "capsule" ]:
+            sx, sy, sz = self.relativeOffset
+            ex, ey, ez = self.relativeOffset
+
+            # Defaults: y-axis
+            rad = max(self.dimX, self.dimZ)/2
+            sy += self.dimY/2 - rad
+            ey -= self.dimY/2 - rad
+
+            if type(args, dict) and args.get("axis")!=None:
+                axis = args.get("axis")
+                if axis == "x":
+                    rad = max(self.dimY, self.dimZ)/2
+                    sx += self.dimX/2 - rad
+                    ex -= self.dimX/2 - rad
+                elif axis == "z":
+                    rad = max(self.dimX, self.dimY)/2
+                    sz += self.dimZ/2 - rad
+                    ez -= self.dimZ/2 - rad
+                else:
+                    pass #default to y-axis
+            else:
+                # default to y-axis
+                pass
+
+            return CollisionCapsule(
+                sx, sy, sz, # start point
+                ex, ey, ez, # end point
+                rad
+            )
+
 
     # Set texture
     def initTexture(self, textureName):
