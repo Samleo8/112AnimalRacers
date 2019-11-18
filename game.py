@@ -45,8 +45,17 @@ class Racecar(Obj3D):
         self.passenger.move(dx=self.offsetX, dy=self.offsetY, dz=self.offsetZ)
 
         self.initBasicCollisionBox("car", showBox=True)
+
+        colNode = self.getCollisionNode("car")
         
-        base.cTrav.addCollider(self.getCollisionNode("car"), self.gameObj.notifier)
+        pusher = CollisionHandlerPusher()
+
+        pusher.addCollider(
+            colNode, 
+            self.gameObj.crate.getCollisionNode("crate")
+        )
+
+        base.cTrav.addCollider(colNode, pusher)
 
 class Passenger(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
@@ -170,13 +179,14 @@ class Game(ShowBase):
         self.sky = Obj3D("FarmSky")
 
     def loadModels(self):
-        self.car = Racecar(self, "groundroamer", self.render)
-
         self.crate = Crate(self, "crate", self.render)
         self.crate2 = Crate(self, "crate", self.render)
 
         self.crate.move(dy=40)
         self.crate2.move(dx=40)        
+
+        self.car = Racecar(self, "groundroamer", self.render)
+
 
     # Key Events
     def createKeyControls(self):
@@ -260,13 +270,16 @@ class Game(ShowBase):
     # Collision Events
     def collisionSetup(self, showCollisions=False):
         base.cTrav = CollisionTraverser()
+
         if showCollisions:
             base.cTrav.showCollisions(render)
 
+        '''
         self.notifier = CollisionHandlerEvent()
         self.notifier.addInPattern("%fn-in-%in")
 
         self.accept("car-in-crate", self.onCollision)
+        '''
 
     def onCollision(self, entry):
         print("Collide", entry)
