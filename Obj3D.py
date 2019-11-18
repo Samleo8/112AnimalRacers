@@ -143,6 +143,7 @@ class Obj3D():
                 radMax
             )
 
+        return None
 
     # Set texture
     def initTexture(self, textureName):
