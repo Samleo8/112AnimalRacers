@@ -44,7 +44,7 @@ class Racecar(Obj3D):
         self.passenger.scaleAll(2.5)
         self.passenger.move(dx=self.offsetX, dy=self.offsetY, dz=self.offsetZ)
 
-        self.initBasicCollisionBox("car", showBox=True)
+        self.initSurroundingCollisionObj("car", "capsule")
 
         colNode = self.getCollisionNode("car")
         
@@ -52,7 +52,7 @@ class Racecar(Obj3D):
 
         pusher.addCollider(
             colNode, 
-            self.gameObj.crate.getCollisionNode("crate")
+            self.gameObj.crate.model
         )
 
         base.cTrav.addCollider(colNode, pusher)
@@ -70,7 +70,7 @@ class Crate(Obj3D):
         self.scaleAll(0.01)
         self.move(dz=self.dimZ/2)
 
-        self.initBasicCollisionBox("crate", showBox=True)
+        self.initSurroundingCollisionObj("crate")
 class Game(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
@@ -271,7 +271,7 @@ class Game(ShowBase):
     def collisionSetup(self, showCollisions=False):
         base.cTrav = CollisionTraverser()
 
-        if showCollisions:
+        if True or showCollisions:
             base.cTrav.showCollisions(render)
 
         '''
