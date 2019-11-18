@@ -86,9 +86,9 @@ class Obj3D():
 
         # TODO: Find other kinds of collision objects
         # Collision box surrounding the object
-        obj = genCollisionSolid(shape, args)
+        obj = self.genCollisionSolid(shape, args)
 
-        colNode.node().addSolid(box)
+        colNode.node().addSolid(obj)
 
         if show: 
             colNode.show()
