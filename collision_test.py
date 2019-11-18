@@ -11,6 +11,9 @@ class Application(ShowBase):
         self.setupCD()
         self.addSmiley()
         self.addFloor()
+
+        pusher = 
+
         taskMgr.add(self.updateSmiley, "UpdateSmiley")
 
     def setupCD(self):

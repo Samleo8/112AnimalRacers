@@ -50,10 +50,11 @@ class Racecar(Obj3D):
         
         pusher = CollisionHandlerPusher()
 
-        pusher.addCollider(
+        '''pusher.addCollider(
             colNode, 
             self.gameObj.crate.model
-        )
+        )'''
+        pusher.addCollider(colNode, base.camera, base.drive.node())
 
         base.cTrav.addCollider(colNode, pusher)
 
