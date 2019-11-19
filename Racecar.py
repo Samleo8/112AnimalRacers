@@ -11,7 +11,10 @@ class Racecar(Obj3D):
         self.maxSpeed = 1
         self.maxRotationSpeed = 5
 
+        self.defaultAcceleration = 0
+
         self.setSpeed(self.defaultSpeed, self.defaultRotationSpeed)
+        self.setAcceleration(self.defaultAcceleration, 0)
 
         # NOTE: When you scale, whatever coordinates used also scales
         self.scaleAll(1)
@@ -85,7 +88,20 @@ class Racecar(Obj3D):
         self.setSpeed(self.speed + dv, self.rotationSpeed + self.rotationAcceleration)
 
     def updateMovement(self):
+        # First update the car's speed based on its acceleration
         self.incSpeed(dv=self.acceleration, dw=self.rotationAcceleration)
+
+        # Get car's current forward facing direction based on its yaw angle
+        # Then calculate dx and dy
+        dirAngle, _, _ = self.getHpr()
+        dirAngle *= -(math.pi/180)  # to rad
+
+        # Note that sin and cos are switched because car is facing y by default
+        dy = self.speed * math.cos(dirAngle)
+        dx = self.speed * math.sin(dirAngle)
+
+        self.move(dx=dx, dy=dy)
+
 
 class Passenger(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):

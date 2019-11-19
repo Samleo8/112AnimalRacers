@@ -61,9 +61,10 @@ class Game(ShowBase):
 
         # Check for key presses 
         # And do corresponding action
-        self.taskMgr.add(self.keyPressHandler, "keyPressHandler")
+        self.taskMgr.add(self.keyPressHandler, "KeyPressHandler")
 
         # Start a game timer
+        self.taskMgr.add(self.gameTimer, "GameTimer")
 
     def setCameraToPlayer(self, task):
         player = self.player
@@ -90,6 +91,15 @@ class Game(ShowBase):
 
         self.camera.setPos(x + xOffset, y + yOffset, z + camHeight)
         self.camera.setHpr(radToDeg(thetha), phi, 0)
+
+        return Task.cont
+
+    # Game Timer
+    def gameTimer(self, task):
+        if self.paused or self.isGameOver:
+            return Task.cont
+
+        self.player.updateMovement()
 
         return Task.cont
 
@@ -168,7 +178,7 @@ class Game(ShowBase):
             "backward": [ "arrow_down" ],
             "turnLeft": [ "arrow_left" ],
             "turnRight": [ "arrow_right" ],
-            "camConfigRotate": ["space"]
+            "camConfigRotate": ["space"],
         }
 
         for fn in functionToKeys:
@@ -184,7 +194,16 @@ class Game(ShowBase):
                 # Key Up
                 self.accept(key+"-up", self.setKeyDown, [fn, -1])
 
-        self.accept("m-up", self.oobeCull)
+        # Only need the key-release events
+        # (fn, key list)
+        keyReleaseMap = [
+            (self.oobeCull, ["m"]),
+            (self.togglePause, ["p", "esc"])
+        ]
+
+        for fn, keys in keyReleaseMap:
+            for key in keys:
+                self.accept(key+"-up", fn)
 
     def setKeyDown(self, key, value):
         # In order to account for multiple keys
@@ -205,23 +224,16 @@ class Game(ShowBase):
         #       we cannot use elif
 
         if self.paused or self.isGameOver:
-            return
+            return Task.cont
 
-        # Get car's current forward facing direction based on its yaw angle
-        # Then calculate dx and dy
         player = self.player
-        dirAngle, _, _  = player.getHpr()
-        dirAngle *= -(math.pi/180) # to rad
-
-        # Note that max and cos are switched because car is facing y by default
-        dy = player.speed * math.cos(dirAngle)
-        dx = player.speed * math.sin(dirAngle)
-        
         if self.isKeyDown["forward"] > 0:
-            player.move(dx=dx, dy=dy)
+            player.setSpeed(player.defaultSpeed)
+            #player.move(dx=dx, dy=dy)
         
         if self.isKeyDown["backward"] > 0:
-            player.move(dx=-dx, dy=-dy)
+            player.setSpeed(-player.defaultSpeed)
+            #player.move(dx=-dx, dy=-dy)
         
         if self.isKeyDown["turnLeft"] > 0:
             dh = player.rotationSpeed
@@ -236,7 +248,7 @@ class Game(ShowBase):
             self.camConfig = "rotate"
 
         return Task.cont
-       
+
     # https://hub.packtpub.com/collision-detection-and-physics-panda3d-game-development/
     # Collision Events
     def collisionSetup(self, showCollisions=False):
@@ -244,6 +256,9 @@ class Game(ShowBase):
 
         if showCollisions:
             base.cTrav.showCollisions(render)
+
+    def togglePause(self):
+        self.paused ^= True
 
 game = Game()
 game.run()
