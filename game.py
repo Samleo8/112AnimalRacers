@@ -64,14 +64,14 @@ class Game(ShowBase):
         self.taskMgr.add(self.keyPressHandler, "keyPressHandler")
 
     def setCameraToPlayer(self, task):
-        car = self.car
-        x, y, z = car.getPos()
-        h, p, r = car.getHpr()
+        player = self.player
+        x, y, z = player.getPos()
+        h, p, r = player.getHpr()
 
         # Math to make camera always facing player
         # And at a constant distance camDistance away
         # Note that cam distance is in the
-        camDistance = car.dimY * 1.5
+        camDistance = player.dimY * 1.5
 
         # Allow for variable camera configuration
         if self.camConfig == "rotate":
@@ -84,7 +84,7 @@ class Game(ShowBase):
 
         # Camera has a slight tilt
         phi = -45 # in degress
-        camHeight = car.dimZ + 20
+        camHeight = player.dimZ + 20
 
         self.camera.setPos(x + xOffset, y + yOffset, z + camHeight)
         self.camera.setHpr(radToDeg(thetha), phi, 0)
@@ -155,8 +155,7 @@ class Game(ShowBase):
         self.crate.move(dy=40)
         self.crate2.move(dx=40)        
 
-        self.car = Racecar(self, "groundroamer", self.render)
-
+        self.player = Racecar(self, "groundroamer", self.render)
 
     # Key Events
     def createKeyControls(self):
@@ -208,27 +207,27 @@ class Game(ShowBase):
 
         # Get car's current forward facing direction based on its yaw angle
         # Then calculate dx and dy
-        car = self.car
-        dirAngle, _, _  = car.getHpr()
+        player = self.player
+        dirAngle, _, _  = player.getHpr()
         dirAngle *= -(math.pi/180) # to rad
 
         # Note that max and cos are switched because car is facing y by default
-        dy = car.speed * math.cos(dirAngle)
-        dx = car.speed * math.sin(dirAngle)
+        dy = player.speed * math.cos(dirAngle)
+        dx = player.speed * math.sin(dirAngle)
         
         if self.isKeyDown["forward"] > 0:
-            car.move(dx=dx, dy=dy)
+            player.move(dx=dx, dy=dy)
         
         if self.isKeyDown["backward"] > 0:
-            car.move(dx=-dx, dy=-dy)
+            player.move(dx=-dx, dy=-dy)
         
         if self.isKeyDown["turnLeft"] > 0:
-            dh = car.rotationSpeed
-            car.rotate(dh=dh)
+            dh = player.rotationSpeed
+            player.rotate(dh=dh)
 
         if self.isKeyDown["turnRight"] > 0:
-            dh = car.rotationSpeed * -1
-            car.rotate(dh=dh)
+            dh = player.rotationSpeed * -1
+            player.rotate(dh=dh)
 
         self.camConfig = self.camConfigDefault
         if self.isKeyDown["camConfigRotate"] > 0:
