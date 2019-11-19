@@ -63,6 +63,8 @@ class Game(ShowBase):
         # And do corresponding action
         self.taskMgr.add(self.keyPressHandler, "keyPressHandler")
 
+        # Start a game timer
+
     def setCameraToPlayer(self, task):
         player = self.player
         x, y, z = player.getPos()
@@ -182,7 +184,7 @@ class Game(ShowBase):
                 # Key Up
                 self.accept(key+"-up", self.setKeyDown, [fn, -1])
 
-        self.accept("m-up", self.oobe)
+        self.accept("m-up", self.oobeCull)
 
     def setKeyDown(self, key, value):
         # In order to account for multiple keys

@@ -23,6 +23,12 @@ def degToRad(deg):
 def radToDeg(rad):
     return rad * (180.0 / math.pi)
 
+def add2Tuples(tuple1, tuple2):
+    tup = tuple()
+    for i in range(len(tuple1)):
+        tup += tuple1[i] + tuple2[i]
+    return tup
+
 class Obj3D():
     # Set worldRenderer in app loadModels
     worldRenderer = None
@@ -64,6 +70,10 @@ class Obj3D():
 
         self.setPos(x, y, z)
         self.setHpr(h, p, r)
+
+        # Init speeds and accelerations
+        self.setSpeed(0, 0, 0)
+        self.setAcceleration(0, 0, 0)
 
         # Set dimensions
         # Note that when the object is scaled, the coordinate systems are scaled as well.
@@ -125,7 +135,7 @@ class Obj3D():
                 # calculated true center
                 self.relOffsetX, self.relOffsetY, self.relOffsetZ, 
                 # radius will be max of component of relative dimension
-                max(self.relDimX + padX, self.relDimX + padY, self.relDimZ + padZ)/2
+                max(add2Tuples(self.relativeOffset, padding))/2
             )
         elif shape in [ "cylinder", "capsule" ]:
             # Get calcutated true center first
@@ -194,6 +204,30 @@ class Obj3D():
 
     def getHpr(self):
         return self.hpr
+
+    '''
+    # Set/get/change velocities and accelerations
+    def setSpeed(self, vx, vy, vz):
+        self.speed = vx, vy, vz
+        self.vx, self.vy, self.vz = self.speed
+
+    def setAcceleration(self, ax, ay, az):
+        self.acceleration = ax, ay, az
+        self.ax, self.ay, self.az = self.acceleration
+
+    def getSpeed(self):
+        return self.speed
+
+    def getAcceleration(self):
+        return self.acceleration
+
+    def incSpeed(self, vx=0, vy=0, vz=0):
+        vx, vy, vz = add2Tuples(self.getSpeed(), (vx, vy, vz))
+        self.setSpeed(vx, vy, vz)
+
+    def updateMovement(self):
+        self.incSpeed(self.ax, self.ay, self.az)
+    '''
 
     # Set scale
     # Note that dimesions will change when scale changes

@@ -7,8 +7,11 @@ class Racecar(Obj3D):
 
         # Speed, positioning and sizing
         self.defaultSpeed = 0.5
-        self.speed = self.defaultSpeed
-        self.rotationSpeed = 2
+        self.defaultRotationSpeed = 2
+        self.maxSpeed = 1
+        self.maxRotationSpeed = 5
+
+        self.setSpeed(self.defaultSpeed, self.defaultRotationSpeed)
 
         # NOTE: When you scale, whatever coordinates used also scales
         self.scaleAll(1)
@@ -47,11 +50,42 @@ class Racecar(Obj3D):
         self.gameObj.accept("car-out-crate", self.exitCrate)
 
     def collideCrate(self, entry):
-        self.speed = self.defaultSpeed/3
+        self.setSpeed(self.defaultSpeed/3)
         
     def exitCrate(self, entry):
-        self.speed = self.defaultSpeed
+        self.setSpeed(self.defaultSpeed)
         
+    # Speeds and Acceleration handling
+    # Note that speed/accel is singluar direction (where the car is facing)
+    # There is also angular velocity
+
+    # Set/get/change velocities and accelerations
+    def setSpeed(self, spd=0, rotSpd=0):
+        self.speed = min(spd, self.maxSpeed) 
+        self.rotationSpeed = min(rotSpd, self.maxRotationSpeed)
+
+    def setAcceleration(self, acc=0, rotAcc=0):
+        self.acceleration = acc
+        self.rotationAcceleration = rotAcc
+
+    def getSpeed(self):
+        return self.speed
+
+    def getAcceleration(self):
+        return self.acceleration
+
+    def getRotationSpeed(self):
+        return self.rotationSpeed
+
+    def getRotationAcceleration(self):
+        return self.rotationAcceleration
+
+    def incSpeed(self, dv=0, dw=0):
+        self.setSpeed(self.speed + dv, self.rotationSpeed + self.rotationAcceleration)
+
+    def updateMovement(self):
+        self.incSpeed(dv=self.acceleration, dw=self.rotationAcceleration)
+
 class Passenger(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
         super().__init__(model, renderParent, pos, hpr)
