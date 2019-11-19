@@ -167,11 +167,9 @@ class Game(ShowBase):
         self.sky = Obj3D("FarmSky")
 
     def loadModels(self):
-        self.crate = Crate(self, "crate", self.render)
-        self.crate2 = Crate(self, "crate", self.render)
-
-        self.crate.move(dy=40)
-        self.crate2.move(dx=40)        
+        for i in range(10):
+            crate = Crate(self, "crate", self.render)
+            crate.move(dx=i*crate.dimX, dy=20)
 
         self.player = Racecar(self, "groundroamer", self.render)
 
