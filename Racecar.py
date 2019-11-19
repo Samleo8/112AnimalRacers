@@ -9,6 +9,8 @@ class Racecar(Obj3D):
         self.defaultSpeed = 0.5
         self.defaultRotationSpeed = 2
         self.maxSpeed = 1
+        self.maxSpeedBackwards = -0.8
+
         self.maxRotationSpeed = 5
 
         # Will be multiplied by current speed to provide the stopping force
@@ -67,7 +69,7 @@ class Racecar(Obj3D):
 
     # Set/get/change velocities and accelerations
     def setSpeed(self, spd=0, rotSpd=0):
-        self.speed = min(spd, self.maxSpeed) 
+        self.speed = min(max(spd, self.maxSpeedBackwards), self.maxSpeed) 
         self.rotationSpeed = min(rotSpd, self.maxRotationSpeed)
 
     def setAcceleration(self, acc=0, rotAcc=0):
@@ -98,10 +100,11 @@ class Racecar(Obj3D):
         self.incSpeed(dv=self.acceleration, dw=self.rotationAcceleration)
 
         # Direction changed
-        print(prevSpeed, self.speed)
         if not sameSign(prevSpeed, self.speed):
             self.setSpeed(0, self.rotationSpeed)
             self.setAcceleration(0, self.rotationAcceleration)
+        
+        if self.speed: print(prevSpeed, self.speed)
 
         # Get car's current forward facing direction based on its yaw angle
         # Then calculate dx and dy
