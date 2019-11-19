@@ -228,13 +228,11 @@ class Game(ShowBase):
 
         player = self.player
         if self.isKeyDown["forward"] > 0:
-            player.setSpeed(player.defaultSpeed)
-            #player.move(dx=dx, dy=dy)
-        
+            player.acceleration += player.incAcceleration
+            
         if self.isKeyDown["backward"] > 0:
-            player.setSpeed(-player.defaultSpeed)
-            #player.move(dx=-dx, dy=-dy)
-        
+            player.acceleration -= player.incAcceleration
+            
         if self.isKeyDown["turnLeft"] > 0:
             dh = player.rotationSpeed
             player.rotate(dh=dh)

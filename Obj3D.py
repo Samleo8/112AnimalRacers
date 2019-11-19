@@ -29,6 +29,9 @@ def add2Tuples(tuple1, tuple2):
         tup += tuple1[i] + tuple2[i]
     return tup
 
+def sameSign(n1, n2):
+    return n1 * n2 >= 0
+
 class Obj3D():
     # Set worldRenderer in app loadModels
     worldRenderer = None

@@ -11,10 +11,12 @@ class Racecar(Obj3D):
         self.maxSpeed = 1
         self.maxRotationSpeed = 5
 
-        self.defaultAcceleration = 0
+        # Will be multiplied by current speed to provide the stopping force
+        self.friction = 0.2
+        self.incAcceleration = self.friction + 0.1
 
-        self.setSpeed(self.defaultSpeed, self.defaultRotationSpeed)
-        self.setAcceleration(self.defaultAcceleration, 0)
+        self.setSpeed(0, 0)
+        self.setAcceleration(0, 0)
 
         # NOTE: When you scale, whatever coordinates used also scales
         self.scaleAll(1)
@@ -88,8 +90,18 @@ class Racecar(Obj3D):
         self.setSpeed(self.speed + dv, self.rotationSpeed + self.rotationAcceleration)
 
     def updateMovement(self):
-        # First update the car's speed based on its acceleration
+        # First 
+        self.acceleration -= self.friction * self.speed
+        prevSpeed = self.speed
+
+        # Update the car's speed based on its acceleration
         self.incSpeed(dv=self.acceleration, dw=self.rotationAcceleration)
+
+        # Direction changed
+        print(prevSpeed, self.speed)
+        if not sameSign(prevSpeed, self.speed):
+            self.setSpeed(0, self.rotationSpeed)
+            self.setAcceleration(0, self.rotationAcceleration)
 
         # Get car's current forward facing direction based on its yaw angle
         # Then calculate dx and dy
