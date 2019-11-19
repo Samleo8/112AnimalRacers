@@ -71,10 +71,6 @@ class Obj3D():
         self.setPos(x, y, z)
         self.setHpr(h, p, r)
 
-        # Init speeds and accelerations
-        self.setSpeed(0, 0, 0)
-        self.setAcceleration(0, 0, 0)
-
         # Set dimensions
         # Note that when the object is scaled, the coordinate systems are scaled as well.
         # Hence, the relative dimensions stay the same, and are used for anything which is a child of the object (such as collision boxes).
