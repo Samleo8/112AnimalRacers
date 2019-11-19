@@ -40,6 +40,7 @@ class Racecar(Obj3D):
 
         # Credits to https://discourse.panda3d.org/t/collisions/58/7
         self.colPusher.addCollider(colNode, self.model, base.drive.node())
+
         self.colPusher.addInPattern('%fn-in-%in')
         self.colPusher.addOutPattern('%fn-out-%in')
         
@@ -50,10 +51,10 @@ class Racecar(Obj3D):
         self.gameObj.accept("car-out-crate", self.exitCrate)
 
     def collideCrate(self, entry):
-        self.setSpeed(self.defaultSpeed/3)
+        self.setSpeed(self.defaultSpeed/3, self.rotationSpeed)
         
     def exitCrate(self, entry):
-        self.setSpeed(self.defaultSpeed)
+        self.setSpeed(self.defaultSpeed, self.rotationSpeed)
         
     # Speeds and Acceleration handling
     # Note that speed/accel is singluar direction (where the car is facing)
