@@ -259,5 +259,12 @@ class Game(ShowBase):
     def togglePause(self):
         self.paused ^= True
 
+        # We need to pause music too
+        for nm in self.audio:
+            sound = self.audio[nm]
+
+            playRate = 0 if self.paused else 1
+            sound.setPlayRate(playRate)
+
 game = Game()
 game.run()
