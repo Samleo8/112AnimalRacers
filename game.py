@@ -23,7 +23,8 @@ class Racecar(Obj3D):
         self.gameObj = gameObj
 
         # Speed, positioning and sizing
-        self.speed = 0.5
+        self.defaultSpeed = 0.5
+        self.speed = self.defaultSpeed
         self.rotationSpeed = 2
 
         # NOTE: When you scale, whatever coordinates used also scales
@@ -48,15 +49,15 @@ class Racecar(Obj3D):
 
         colNode = self.getCollisionNode("car")
         
-        pusher = CollisionHandlerPusher()
+        # Initialise pusher collision handling
+        self.colPusher = CollisionHandlerPusher()
 
-        '''pusher.addCollider(
-            colNode, 
-            self.gameObj.crate.model
-        )'''
-        pusher.addCollider(colNode, base.camera, base.drive.node())
-
-        base.cTrav.addCollider(colNode, pusher)
+        # Credits to https://discourse.panda3d.org/t/collisions/58/7
+        self.colPusher.addCollider(colNode, self.model, base.drive.node())
+        self.colPusher.addInPattern('%fn-in-%in')
+        self.colPusher.addOutPattern('%fn-out-%in')
+        
+        base.cTrav.addCollider(colNode, self.colPusher)
 
 class Passenger(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
@@ -272,18 +273,17 @@ class Game(ShowBase):
     def collisionSetup(self, showCollisions=False):
         base.cTrav = CollisionTraverser()
 
-        if True or showCollisions:
+        if showCollisions:
             base.cTrav.showCollisions(render)
 
-        '''
-        self.notifier = CollisionHandlerEvent()
-        self.notifier.addInPattern("%fn-in-%in")
+        self.accept("car-in-crate", self.carCollideCrate)
+        self.accept("car-out-crate", self.carExitCrate)
 
-        self.accept("car-in-crate", self.onCollision)
-        '''
+    def carCollideCrate(self, entry):
+        print(entry.getFromNodePath())
 
-    def onCollision(self, entry):
-        print("Collide", entry)
+    def carExitCrate(self, entry):
+        print(entry.getFromNodePath())
 
 game = Game()
-base.run()
+game.run()
