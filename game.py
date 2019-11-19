@@ -91,8 +91,9 @@ class Game(ShowBase):
         yOffset = -camDistance * math.cos(thetha)
 
         # Camera has a slight tilt
-        phi = -30 # in degress
-        camHeight = player.dimZ + 20
+        # TODO: Calculate one from the other (preferably angle from camHeight)
+        camHeight = player.dimZ + 15
+        phi = -30  # in degress
 
         self.camera.setPos(x + xOffset, y + yOffset, z + camHeight)
         self.camera.setHpr(radToDeg(thetha), phi, 0)
