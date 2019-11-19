@@ -26,6 +26,7 @@ class Crate(Obj3D):
         self.move(dz=self.dimZ/2)
 
         self.initSurroundingCollisionObj("crate")
+
 class Game(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
@@ -38,6 +39,9 @@ class Game(ShowBase):
 
         # Load collision handlers
         self.collisionSetup()
+
+        # Load Music
+        self.loadAudio()
 
         # Load lights and the fancy background
         self.loadBackground()
@@ -86,6 +90,17 @@ class Game(ShowBase):
         self.camera.setHpr(radToDeg(thetha), phi, 0)
 
         return Task.cont
+
+    # Load Audio
+    def loadAudio(self):
+        self.audio = {}
+
+        # Bg audio
+        bgAudio = base.loader.loadSfx("audio/alpha_century.mp3")
+        bgAudio.setLoop(True)
+        bgAudio.play()
+
+        self.audio["bg"] = bgAudio
 
     # Load lights
     def loadLights(self):
