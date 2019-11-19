@@ -23,7 +23,7 @@ class Crate(Obj3D):
         self.gameObj = gameObj
 
         self.scaleAll(0.01)
-        self.move(dz=self.dimZ/2)
+        self.move(dz=self.dimZ/2-self.offsetZ)
 
         self.initSurroundingCollisionObj("crate")
 
@@ -71,6 +71,11 @@ class Game(ShowBase):
         x, y, z = player.getPos()
         h, p, r = player.getHpr()
 
+        # Offset centers
+        x += player.offsetX
+        y += player.offsetY
+        z += player.offsetZ
+
         # Math to make camera always facing player
         # And at a constant distance camDistance away
         # Note that cam distance is in the
@@ -86,7 +91,7 @@ class Game(ShowBase):
         yOffset = -camDistance * math.cos(thetha)
 
         # Camera has a slight tilt
-        phi = -45 # in degress
+        phi = -30 # in degress
         camHeight = player.dimZ + 20
 
         self.camera.setPos(x + xOffset, y + yOffset, z + camHeight)
@@ -198,6 +203,7 @@ class Game(ShowBase):
         # (fn, key list)
         keyReleaseMap = [
             (self.oobe, ["m"]),
+            (self.oobeCull, ["n"]),
             (self.togglePause, ["p", "esc"])
         ]
 

@@ -24,7 +24,7 @@ class Racecar(Obj3D):
         self.scaleAll(1)
 
         # general way of making sure vehicle is always on the ground, regardless of that vehicle's center
-        self.move(dz=self.relDimZ/2-self.offsetZ) 
+        self.move(dz=self.dimZ/2-self.offsetZ) 
         
         # Add passenger
         self.personName = "penguin"
@@ -102,7 +102,7 @@ class Racecar(Obj3D):
 
     def updateMovement(self):
         # Friction
-        useSpeedBasedFriction = False #self.acceleration > self.friction
+        useSpeedBasedFriction = self.acceleration > self.friction
         if useSpeedBasedFriction:
             self.incAcceleration(-self.friction * self.speed)
         else:
