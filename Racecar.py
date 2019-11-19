@@ -13,8 +13,8 @@ class Racecar(Obj3D):
         self.maxRotationSpeed = 5
 
         # Will be multiplied by current speed to provide the stopping force
-        self.friction = 0.02
-        self.accInc = self.friction + 0.01
+        self.friction = 0.03
+        self.accInc = self.friction + 0.005
         self.defaultRotationAcceleration = -0.1
 
         self.setSpeed(0, 0)
@@ -102,13 +102,16 @@ class Racecar(Obj3D):
 
     def updateMovement(self):
         # Friction
-        if self.speed > 0: 
-            self.incAcceleration(-self.friction)
-        elif self.speed < 0:
-            self.incAcceleration(self.friction)
+        useSpeedBasedFriction = False #self.acceleration > self.friction
+        if useSpeedBasedFriction:
+            self.incAcceleration(-self.friction * self.speed)
+        else:
+            if self.speed > 0:
+                self.incAcceleration(-self.friction)
+            elif self.speed < 0:
+                self.incAcceleration(self.friction)
 
-        #self.incAcceleration(-self.friction * self.speed)
-
+        
         # Update the car's speed based on its acceleration
         prevSpeed = self.speed
         prevRotSpeed = self.rotationSpeed
@@ -124,6 +127,9 @@ class Racecar(Obj3D):
             self.setSpeed(rotSpd=0)
             self.setAcceleration(rotAcc=0)
 
+        # Rotate first
+        self.rotate(dh=self.rotationSpeed)
+
         # Get car's current forward facing direction based on its yaw angle
         # Then calculate dx and dy
         dirAngle, _, _ = self.getHpr()
@@ -134,7 +140,6 @@ class Racecar(Obj3D):
         dx = self.speed * math.sin(dirAngle)
 
         self.move(dx=dx, dy=dy)
-        self.rotate(dh=self.rotationSpeed)
 
 class Passenger(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):

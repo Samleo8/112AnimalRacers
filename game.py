@@ -197,7 +197,7 @@ class Game(ShowBase):
         # Only need the key-release events
         # (fn, key list)
         keyReleaseMap = [
-            (self.oobeCull, ["m"]),
+            (self.oobe, ["m"]),
             (self.togglePause, ["p", "esc"])
         ]
 
@@ -233,11 +233,12 @@ class Game(ShowBase):
         if self.isKeyDown["backward"] > 0:
             player.incAcceleration(-1 * player.accInc)
             
-        if self.isKeyDown["turnLeft"] > 0:
+        # NOTE: We don't wanna keep turning unless the car is moving
+        if self.isKeyDown["turnLeft"] > 0 and player.speed != 0:
             player.setSpeed(rotSpd=player.defaultRotationSpeed)
             player.setAcceleration(rotAcc=player.defaultRotationAcceleration)
             
-        if self.isKeyDown["turnRight"] > 0:
+        if self.isKeyDown["turnRight"] > 0 and player.speed != 0:
             player.setSpeed(rotSpd=-1*player.defaultRotationSpeed)
             player.setAcceleration(rotAcc=-1*player.defaultRotationAcceleration)
 
