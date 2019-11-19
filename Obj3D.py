@@ -43,8 +43,6 @@ class Obj3D():
         
         try:
             self.model = loader.loadModel(modelFile)
-            
-            Obj3D.nodePathToSelf[self.model] = self
         except:
             raise Exception(f"Model {model} cannot be loaded")
 

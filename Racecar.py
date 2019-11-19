@@ -47,10 +47,10 @@ class Racecar(Obj3D):
         self.gameObj.accept("car-out-crate", self.exitCrate)
 
     def collideCrate(self, entry):
-        print(entry)
-
+        self.speed = self.defaultSpeed/3
+        
     def exitCrate(self, entry):
-        print(entry)
+        self.speed = self.defaultSpeed
         
 class Passenger(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
