@@ -84,8 +84,14 @@ class Obj3D():
         name = name if name != None else self.modelName
         colNode = self.addCollisionNode(name)
 
-        # TODO: Find other kinds of collision objects
-        # Collision box surrounding the object
+        # Dynamically create a collision solid surrounding the object:
+        # Shape:
+        #   Box (default)
+        #   Sphere 
+        #   Capsule/Cylinder - requires args["axis"] to be set
+        # Args:
+        #   Axis: for capsule/cylinder
+        #   Padding
         obj = self.genCollisionSolid(shape, args)
 
         colNode.node().addSolid(obj)
@@ -98,45 +104,56 @@ class Obj3D():
     # Create a collision solid dynamically based on 
     # offset center, dimensions and specified arguments
     def genCollisionSolid(self, shape="box", args=None):
+        # Defaults
+        padding = (0, 0, 0)
+        axis = "y"
+        
+        # Load args if exists; else load defaults
+        if isinstance(args, dict):
+            axis = args.get("axis", axis)
+            padding = args.get("padding", padding)
+
+        padX, padY, padZ = padding
+
         if shape in [ "box" ]:
             return CollisionBox(
-                self.relativeOffset,  # calculated true center
-                self.relDimX/2, self.relDimY/2, self.relDimZ/2  # dx, dy, dz
+                # calculated true center
+                self.relativeOffset,  
+                # dx, dy, dz
+                self.relDimX/2 + padX, self.relDimY/2 + padY, self.relDimZ/2 + padZ
             )
         elif shape in [ "sphere" ]:
             return CollisionSphere(
-                self.relOffsetX, self.relOffsetY, self.relOffsetZ, # calculated true center
-                max(self.relativeDim)/2 #radius will be max of component of relative dimension
+                # calculated true center
+                self.relOffsetX, self.relOffsetY, self.relOffsetZ, 
+                # radius will be max of component of relative dimension
+                max(self.relDimX + padX, self.relDimX + padY, self.relDimZ + padZ)/2
             )
         elif shape in [ "cylinder", "capsule" ]:
+            # Get calcutated true center first
             sx, sy, sz = self.relativeOffset
             ex, ey, ez = self.relativeOffset
 
-            # Defaults: y-axis
-            radMax = max(self.dimX, self.dimZ)/2
-            radMin = min(self.dimX, self.dimZ)/2
+            if axis == "x":
+                radMax = max(self.dimY + padY, self.dimZ + padZ)/2
+                radMin = min(self.dimY + padY, self.dimZ + padZ)/2
+                sx += self.dimX/2 - (radMin + padX)
+                ex -= self.dimX/2 - (radMin + padX)
+            elif axis == "y":
+                radMax = max(self.dimX + padX, self.dimZ + padZ)/2
+                radMin = min(self.dimX + padX, self.dimZ + padZ)/2
 
-            sy += self.dimY/2 - radMin
-            ey -= self.dimY/2 - radMin
-
-            if isinstance(args, dict) and args.get("axis")!=None:
-                axis = args.get("axis")
-                if axis == "x":
-                    radMax = max(self.dimY, self.dimZ)/2
-                    radMin = min(self.dimY, self.dimZ)/2
-                    sx += self.dimX/2 - radMin
-                    ex -= self.dimX/2 - radMin
-                elif axis == "z":
-                    radMax = max(self.dimX, self.dimY)/2
-                    radMin = min(self.dimX, self.dimY)/2
-                    sz += self.dimZ/2 - radMin
-                    ez -= self.dimZ/2 - radMin
-                else:
-                    pass #default to y-axis
-            else:
-                # default to y-axis
-                pass
-
+                sy += self.dimY/2 - (radMin + padY)
+                ey -= self.dimY/2 - (radMin + padY)
+            elif axis == "z":
+                radMax = max(self.dimX, self.dimY)/2
+                radMin = min(self.dimX, self.dimY)/2
+                sz += self.dimZ/2 - (radMin + padZ)
+                ez -= self.dimZ/2 - (radMin + padZ)
+            else: 
+                raise Exception("Invalid axis {axis} used!")
+                return
+            
             return CollisionCapsule(
                 sx, sy, sz, # start point
                 ex, ey, ez, # end point
