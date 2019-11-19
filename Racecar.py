@@ -6,16 +6,16 @@ class Racecar(Obj3D):
         self.gameObj = gameObj
 
         # Speed, positioning and sizing
-        self.defaultSpeed = 0.5
         self.defaultRotationSpeed = 2
-        self.maxSpeed = 1
-        self.maxSpeedBackwards = -0.8
+        self.maxSpeed = 2
+        self.maxSpeedBackwards = -2
 
         self.maxRotationSpeed = 5
 
         # Will be multiplied by current speed to provide the stopping force
-        self.friction = 0.2
-        self.incAcceleration = self.friction + 0.1
+        self.friction = 0.02
+        self.accInc = self.friction + 0.01
+        self.defaultRotationAcceleration = -0.1
 
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
@@ -58,23 +58,29 @@ class Racecar(Obj3D):
         self.gameObj.accept("car-out-crate", self.exitCrate)
 
     def collideCrate(self, entry):
-        self.setSpeed(self.defaultSpeed/3, self.rotationSpeed)
+        self.setAcceleration(self.friction, self.rotationAcceleration)
         
     def exitCrate(self, entry):
-        self.setSpeed(self.defaultSpeed, self.rotationSpeed)
+        return
         
     # Speeds and Acceleration handling
     # Note that speed/accel is singluar direction (where the car is facing)
     # There is also angular velocity
 
     # Set/get/change velocities and accelerations
-    def setSpeed(self, spd=0, rotSpd=0):
-        self.speed = min(max(spd, self.maxSpeedBackwards), self.maxSpeed) 
-        self.rotationSpeed = min(rotSpd, self.maxRotationSpeed)
+    def setSpeed(self, spd=None, rotSpd=None):
+        if isinstance(spd, float) or isinstance(spd, int):
+            self.speed = min(max(spd, self.maxSpeedBackwards), self.maxSpeed) 
+
+        if isinstance(rotSpd, float) or isinstance(rotSpd, int):
+            self.rotationSpeed = min(rotSpd, self.maxRotationSpeed)
 
     def setAcceleration(self, acc=0, rotAcc=0):
-        self.acceleration = acc
-        self.rotationAcceleration = rotAcc
+        if isinstance(acc, float) or isinstance(acc, int):
+            self.acceleration = acc
+
+        if isinstance(rotAcc, float) or isinstance(rotAcc, int):
+            self.rotationAcceleration = rotAcc
 
     def getSpeed(self):
         return self.speed
@@ -89,22 +95,34 @@ class Racecar(Obj3D):
         return self.rotationAcceleration
 
     def incSpeed(self, dv=0, dw=0):
-        self.setSpeed(self.speed + dv, self.rotationSpeed + self.rotationAcceleration)
+        self.setSpeed(self.speed + dv, self.rotationSpeed + dw)
+
+    def incAcceleration(self, da=0, dalpha=0):
+        self.setAcceleration(self.acceleration + da, self.rotationAcceleration + dalpha)
 
     def updateMovement(self):
-        # First 
-        self.acceleration -= self.friction * self.speed
-        prevSpeed = self.speed
+        # Friction
+        if self.speed > 0: 
+            self.incAcceleration(-self.friction)
+        elif self.speed < 0:
+            self.incAcceleration(self.friction)
+
+        #self.incAcceleration(-self.friction * self.speed)
 
         # Update the car's speed based on its acceleration
+        prevSpeed = self.speed
+        prevRotSpeed = self.rotationSpeed
         self.incSpeed(dv=self.acceleration, dw=self.rotationAcceleration)
 
         # Direction changed
         if not sameSign(prevSpeed, self.speed):
-            self.setSpeed(0, self.rotationSpeed)
-            self.setAcceleration(0, self.rotationAcceleration)
-        
-        if self.speed: print(prevSpeed, self.speed)
+            self.setSpeed(spd=0)
+            self.setAcceleration(rotAcc=self.rotationAcceleration)
+
+        # Direction changed
+        if not sameSign(prevRotSpeed, self.rotationSpeed):
+            self.setSpeed(rotSpd=0)
+            self.setAcceleration(rotAcc=0)
 
         # Get car's current forward facing direction based on its yaw angle
         # Then calculate dx and dy
@@ -116,7 +134,7 @@ class Racecar(Obj3D):
         dx = self.speed * math.sin(dirAngle)
 
         self.move(dx=dx, dy=dy)
-
+        self.rotate(dh=self.rotationSpeed)
 
 class Passenger(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):

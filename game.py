@@ -228,18 +228,18 @@ class Game(ShowBase):
 
         player = self.player
         if self.isKeyDown["forward"] > 0:
-            player.acceleration += player.incAcceleration
+            player.incAcceleration(player.accInc)
             
         if self.isKeyDown["backward"] > 0:
-            player.acceleration -= player.incAcceleration
+            player.incAcceleration(-1 * player.accInc)
             
         if self.isKeyDown["turnLeft"] > 0:
-            dh = player.rotationSpeed
-            player.rotate(dh=dh)
-
+            player.setSpeed(rotSpd=player.defaultRotationSpeed)
+            player.setAcceleration(rotAcc=player.defaultRotationAcceleration)
+            
         if self.isKeyDown["turnRight"] > 0:
-            dh = player.rotationSpeed * -1
-            player.rotate(dh=dh)
+            player.setSpeed(rotSpd=-1*player.defaultRotationSpeed)
+            player.setAcceleration(rotAcc=-1*player.defaultRotationAcceleration)
 
         self.camConfig = self.camConfigDefault
         if self.isKeyDown["camConfigRotate"] > 0:
