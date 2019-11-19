@@ -244,14 +244,5 @@ class Game(ShowBase):
         if showCollisions:
             base.cTrav.showCollisions(render)
 
-        self.accept("car-in-crate", self.carCollideCrate)
-        self.accept("car-out-crate", self.carExitCrate)
-
-    def carCollideCrate(self, entry):
-        print(entry.getFromNodePath())
-
-    def carExitCrate(self, entry):
-        print(entry.getFromNodePath())
-
 game = Game()
 game.run()

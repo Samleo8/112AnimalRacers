@@ -42,7 +42,9 @@ class Obj3D():
                 break
         
         try:
-            self.model = loader.loadModel(modelFile)                
+            self.model = loader.loadModel(modelFile)
+            
+            Obj3D.nodePathToSelf[self.model] = self
         except:
             raise Exception(f"Model {model} cannot be loaded")
 
@@ -74,9 +76,7 @@ class Obj3D():
         self.relOffsetX, self.relOffsetY, self.relOffsetZ = self.relativeOffset
 
         # Collisions
-        self.collisionNodes = {
-
-        }
+        self.collisionNodes = { }
 
     # Collision Handling
     # Initialise a an object surrounding the whole player

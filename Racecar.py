@@ -42,6 +42,16 @@ class Racecar(Obj3D):
         
         base.cTrav.addCollider(colNode, self.colPusher)
 
+        # Collision 
+        self.gameObj.accept("car-in-crate", self.collideCrate)
+        self.gameObj.accept("car-out-crate", self.exitCrate)
+
+    def collideCrate(self, entry):
+        print(entry)
+
+    def exitCrate(self, entry):
+        print(entry)
+        
 class Passenger(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
         super().__init__(model, renderParent, pos, hpr)
