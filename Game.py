@@ -26,7 +26,7 @@ class Crate(Obj3D):
         self.move(dz=self.dimZ/2-self.offsetZ)
 
         args = {
-            "padding": (self.relDimZ*5, self.relDimZ*5, self.relDimZ*5)
+            "padding": (0, self.relDimZ*5, self.relDimZ*5)
         }
 
         self.initSurroundingCollisionObj("crate", args=args, show=True)
@@ -173,12 +173,11 @@ class Game(ShowBase):
     def loadModels(self):
         for i in range(0):
             crate = Crate(self, "crate", self.render)
-            crate.move(dx=i*crate.dimX, dy=20)
+            crate.move(dx=i*crate.dimX, dy=crate.dimY*5)
 
 
         crate = Crate(self, "crate", self.render)
-        crate.move(10, 10, 0)
-
+        crate.move(dx=crate.dimX, dy=crate.dimY*5)
 
         self.player = Racecar(self, "groundroamer", self.render)
 
@@ -191,7 +190,7 @@ class Game(ShowBase):
             "backward": [ "arrow_down" ],
             "turnLeft": [ "arrow_left" ],
             "turnRight": [ "arrow_right" ],
-            "camConfigRotate": ["space"],
+            "camConfigRotate": ["enter"],
         }
 
         for fn in functionToKeys:
