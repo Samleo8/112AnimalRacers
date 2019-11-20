@@ -87,7 +87,7 @@ class Obj3D():
 
     # Collision Handling
     # Initialise a an object surrounding the whole player
-    def initSurroundingCollisionObj(self, name=None, shape="box", show=True, args=None):
+    def initSurroundingCollisionObj(self, name=None, shape="box", show=False, args=None):
         name = name if name != None else self.modelName
         colNode = self.addCollisionNode(name)
 

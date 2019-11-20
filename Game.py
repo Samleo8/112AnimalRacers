@@ -38,7 +38,7 @@ class Game(ShowBase):
         Obj3D.worldRenderer = self.render
 
         # Load collision handlers
-        self.collisionSetup()
+        self.collisionSetup(showCollisions=False)
 
         # Load Music
         self.loadAudio()
