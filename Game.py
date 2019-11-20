@@ -25,7 +25,11 @@ class Crate(Obj3D):
         self.scaleAll(0.01)
         self.move(dz=self.dimZ/2-self.offsetZ)
 
-        self.initSurroundingCollisionObj("crate")
+        args = {
+            "padding": (self.relDimZ*5, self.relDimZ*5, self.relDimZ*5)
+        }
+
+        self.initSurroundingCollisionObj("crate", args=args, show=True)
 
 class Game(ShowBase):
     def __init__(self):
@@ -167,9 +171,14 @@ class Game(ShowBase):
         self.sky = Obj3D("FarmSky")
 
     def loadModels(self):
-        for i in range(10):
+        for i in range(0):
             crate = Crate(self, "crate", self.render)
             crate.move(dx=i*crate.dimX, dy=20)
+
+
+        crate = Crate(self, "crate", self.render)
+        crate.move(10, 10, 0)
+
 
         self.player = Racecar(self, "groundroamer", self.render)
 

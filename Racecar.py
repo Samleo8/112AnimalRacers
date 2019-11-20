@@ -20,6 +20,8 @@ class Racecar(Obj3D):
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
 
+        self.isColliding = False
+
         # NOTE: When you scale, whatever coordinates used also scales
         self.scaleAll(1)
 
@@ -47,10 +49,15 @@ class Racecar(Obj3D):
 
         # Credits to https://discourse.panda3d.org/t/collisions/58/7
         self.colPusher.addCollider(colNode, self.model, base.drive.node())
+        self.colPusher.addCollider(colNode, base.camera , base.drive.node())
 
         self.colPusher.addInPattern('%fn-in-%in')
         self.colPusher.addOutPattern('%fn-out-%in')
         
+        # Problem is the racecar will attempt to scale the wall
+        # Unfortunately still does not fix it
+        self.colPusher.setHorizontal(True)
+
         base.cTrav.addCollider(colNode, self.colPusher)
 
         # Collision 
@@ -58,9 +65,13 @@ class Racecar(Obj3D):
         self.gameObj.accept("car-out-crate", self.exitCrate)
 
     def collideCrate(self, entry):
-        #self.setAcceleration(self.friction, self.rotationAcceleration)
+        self.isColliding = True
+        #self.setSpeed(0, 0)
+        self.incAcceleration(da=-self.friction)
+        return
         
     def exitCrate(self, entry):
+        self.isColliding = False
         return
         
     # Speeds and Acceleration handling
