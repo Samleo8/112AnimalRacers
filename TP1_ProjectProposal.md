@@ -131,6 +131,17 @@ Racetrack will be created by generating multiple bricks/crates
 
     After this, will most likely read from a file the positions of the walls and floor elevations 
 
+## Enemies
+2 main types of enemies: roaming enemy (boulder rolling back and forth) and an oscillating enemy (wall moving up and down)
+
+- [ ] Movement 
+
+    Enemy is a class which contains x and y positions. Use intervals to move the enemy
+
+- [ ] Effects and Collisions 
+    
+    Collision handling will be the same as if the enemies were normal walls; effects will also be the same, ie the player will slow down
+
 ## Timeline Plan
 1. Get racetrack walls working
 2. Get racetrack floor working
@@ -138,7 +149,7 @@ Racetrack will be created by generating multiple bricks/crates
 4. Add laps
 5. Create simple collectable powerups
 6. Create moving enemies
-7. Misc. add-ons (music, sfx, speedbar)
+7. Misc. add-ons (music, sfx, speedbar, minimap)
 8. Enemy cars
 
 More details under [Projects](https://github.com/Samleo8/112LegoRacers/projects) tab.
