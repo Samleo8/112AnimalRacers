@@ -57,6 +57,7 @@ class Racecar(Obj3D):
         #self.colPusher.addCollider(colNode, base.camera , base.drive.node())
 
         self.colPusher.addInPattern('%fn-in-%in')
+        self.colPusher.addInPattern('%fn-again-%in')
         self.colPusher.addOutPattern('%fn-out-%in')
         
         # Problem is the racecar will attempt to scale the wall
@@ -77,6 +78,7 @@ class Racecar(Obj3D):
 
         # Collision Events
         self.gameObj.accept("car-in-crate", self.onCollideCrate)
+        self.gameObj.accept("car-again-crate", self.onCollideCrate)
         self.gameObj.accept("car-out-crate", self.onExitCrate)
 
     def onCollideCrate(self, entry):
