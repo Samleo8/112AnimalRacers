@@ -17,20 +17,7 @@ import time
 # 3D Object super class
 from Obj3D import *
 from Racecar import *
-class Crate(Obj3D):
-    def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
-        super().__init__(model, renderParent, pos, hpr)
-        self.gameObj = gameObj
-
-        self.scaleAll(0.01)
-        self.move(dz=self.dimZ/2-self.offsetZ)
-
-        args = {
-            "padding": (0, self.relDimZ*5, self.relDimZ*5)
-        }
-
-        self.initSurroundingCollisionObj("crate", args=args, show=True)
-
+from Racetrack import *
 class Game(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)

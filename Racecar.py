@@ -76,16 +76,16 @@ class Racecar(Obj3D):
         #base.cTrav.addCollider(colNode, self.colLifter)
 
         # Collision Events
-        self.gameObj.accept("car-in-crate", self.collideCrate)
-        self.gameObj.accept("car-out-crate", self.exitCrate)
+        self.gameObj.accept("car-in-crate", self.onCollideCrate)
+        self.gameObj.accept("car-out-crate", self.onExitCrate)
 
-    def collideCrate(self, entry):
+    def onCollideCrate(self, entry):
         self.isColliding = True
-        #self.setSpeed(0, 0)
-        self.incAcceleration(da=-self.friction)
+        self.setSpeed(0, 0)
+        self.setAcceleration(0)
         return
         
-    def exitCrate(self, entry):
+    def onExitCrate(self, entry):
         self.isColliding = False
         return
         
