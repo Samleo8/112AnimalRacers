@@ -26,7 +26,8 @@ def radToDeg(rad):
 def add2Tuples(tuple1, tuple2):
     tup = tuple()
     for i in range(len(tuple1)):
-        tup += tuple1[i] + tuple2[i]
+        tup += (tuple1[i] + tuple2[i],)
+    print(tup)
     return tup
 
 def sameSign(n1, n2):
@@ -122,7 +123,7 @@ class Obj3D():
 
         padX, padY, padZ = padding
 
-        if shape in [ "box" ]:
+        if shape in [ "box", "rect", "square", "rectangle" ]:
             return CollisionBox(
                 # calculated true center
                 self.relativeOffset,  
@@ -134,7 +135,7 @@ class Obj3D():
                 # calculated true center
                 self.relOffsetX, self.relOffsetY, self.relOffsetZ, 
                 # radius will be max of component of relative dimension
-                max(add2Tuples(self.relativeOffset, padding))/2
+                max(self.relOffsetX + padX, self.relOffsetY + padY, self.relOffsetZ + padZ)/2
             )
         elif shape in [ "cylinder", "capsule" ]:
             # Get calcutated true center first

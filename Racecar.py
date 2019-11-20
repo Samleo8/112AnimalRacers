@@ -44,7 +44,7 @@ class Racecar(Obj3D):
 
     def initCollisions(self):
         # Initialise bounding box
-        self.initSurroundingCollisionObj("car", "capsule")
+        self.initSurroundingCollisionObj("car", "box", show=True)
 
         colNode = self.getCollisionNode("car")
         
@@ -61,7 +61,8 @@ class Racecar(Obj3D):
         
         # Problem is the racecar will attempt to scale the wall
         # Unfortunately still does not fix it
-        self.colPusher.setHorizontal(False)
+        # TODO: Try http://www.panda3d.org/manual/?title=Rapidly-Moving_Objects
+        self.colPusher.setHorizontal(True)
 
         base.cTrav.addCollider(colNode, self.colPusher)
 

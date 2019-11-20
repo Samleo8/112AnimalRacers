@@ -8,61 +8,37 @@ class Application(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         self.cam.setPos(0, -50, 10)
-        self.setupCD()
         self.addSmiley()
-        self.addFloor()
-
-        pusher = 
-
-        taskMgr.add(self.updateSmiley, "UpdateSmiley")
-
-    def setupCD(self):
-        base.cTrav = CollisionTraverser()
-        base.cTrav.showCollisions(render)
-
-        self.notifier = CollisionHandlerEvent()
-
-        self.notifier.addInPattern("%fn-in-%in")
-
-        self.accept("frowney-in-floor", self.onCollision)
 
     def addSmiley(self):
-        self.frowney = loader.loadModel("models/penguin")
-        self.frowney.reparentTo(render)
+        self.car = loader.loadModel("smiley")
+        self.car.reparentTo(render)
+        self.car.setPos(0, 0, 10)
 
-        self.frowney.setPos(0, 0, 10)
-
-        self.frowney.setPythonTag("velocity", 0)
-
-        col = self.frowney.attachNewNode(CollisionNode("frowney"))
+        col = self.car.attachNewNode(CollisionNode("car"))
         col.node().addSolid(CollisionSphere(0, 0, 0, 1.1))
         col.show()
-        base.cTrav.addCollider(col, self.notifier)
 
-    def addFloor(self):
-        floor = render.attachNewNode(CollisionNode("floor"))
-        floor.node().addSolid(
-            CollisionPlane(
-                Plane(Vec3(0, 0, 1),
-                Point3(0, 0, 0))))
-        floor.show()
+        base.cTrav = CollisionTraverser()
+        base.cTrav.showCollisions(render)
+        pusher = CollisionHandlerPusher()
 
-    def onCollision(self, entry):
-        print(entry)
-        vel = random.uniform(0.01, 0.2)
-        self.frowney.setPythonTag("velocity", vel)
+        pusher.addCollider(col, self.car, base.drive.node())
+        #pusher.addCollider(colNode, base.camera , base.drive.node())
+
+        # Unfortunately still does not fix it; fixes wall scaling part though?
+        # TODO: Try http://www.panda3d.org/manual/?title=Rapidly-Moving_Objects
+        pusher.setHorizontal(True)
+
+        base.cTrav.addCollider(col, pusher)
+
+    def initKeyEvents(self):
+        self.accept("arrow_right-up", self.keyPress, ["right", 1])
+        self.accept("arrow_left-up", self.keyPress, ["left", 1])
+
+    
 
     def updateSmiley(self, task):
-        vel = self.frowney.getPythonTag("velocity")
-
-        z = self.frowney.getZ()
-
-        self.frowney.setZ(z + vel)
-
-        vel -= 0.001
-
-        self.frowney.setPythonTag("velocity", vel)
-
         return task.cont
 
 app = Application()
