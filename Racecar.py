@@ -53,7 +53,7 @@ class Racecar(Obj3D):
         self.colPusher = CollisionHandlerPusher()
 
         # Credits to https://discourse.panda3d.org/t/collisions/58/7
-        self.colPusher.addCollider(colNode, self.model)#, base.drive.node())
+        self.colPusher.addCollider(colNode, self.model, base.drive.node())
         #self.colPusher.addCollider(colNode, base.camera , base.drive.node())
 
         self.colPusher.addInPattern('%fn-in-%in')
@@ -61,7 +61,7 @@ class Racecar(Obj3D):
         
         # Problem is the racecar will attempt to scale the wall
         # Unfortunately still does not fix it
-        # self.colPusher.setHorizontal(True)
+        self.colPusher.setHorizontal(False)
 
         base.cTrav.addCollider(colNode, self.colPusher)
 
