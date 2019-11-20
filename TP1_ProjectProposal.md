@@ -74,10 +74,74 @@ The full file structure of the project can be see in the Git repository.
 Project structure with sub-projects can be seen under [Github Projects](https://github.com/Samleo8/112LegoRacers/projects), and is dynamically updated.
 
 ## Algorithmic Plan
-A detailed algorithmic plan for how you will approach the trickiest part of the project.
+More details of sub-projects and sub-tasks are found under the [Projects](https://github.com/Samleo8/112LegoRacers/projects) tab.
+
+### Race Car dynamics
+
+#### Collision
+
+ - [x] Collide and slide along wall
+
+    Handle with `CollisionPusher`
+
+    `CollisionEvent` that fires will also alter the car's speed and acceleration
+
+ - [ ] 3D floor handling and collision
+
+    Handle with `CollisionRay` and `CollisionFloor`
+
+ - [ ] With other cars
+    More complicated; but again handle with `CollisionPusher`
+            
+    Will require speed and direction to change; trigger through a `CollisionEvent`
+
+    Might also trigger other effects that would happen if the player struck an enemy or obstacle (*KIV*).
+
+#### Movement
+Car will have movement that includes friction, acceleration and velocity etc:
+ - [x] Friction and Front/Back Movement
+
+    Friction will be proportional to speed; with acceleration in opposite direction
+
+    Pressing arrow keys will increase the acceleration
+    Overall this will give the illusion of acceleration and friction
+
+ - [x] Rotational Movement
+ 
+    Similar to front back movement, except it'll just set a rotational speed, and a negative acceleration, causing the car to turn but then slowly deccelerate to a stop
+
+    Need to ensure that car will not start rotating unless also moving forward
+
+### Racetrack Generation
+Racetrack will be created by generating multiple bricks/crates 
+
+- [ ] Walls
+
+    All `CollisionSolid`s associated with the `Crate/Brick` object into one `CollisionNode`
+
+    Helps get rid of issues with car running straight through crate/walls.
+
+- [ ] Floor
+
+    Floor needs to have elevation too. Will need `CollisionRay` and `CollisionPlane`, combined with `CollisionHandlerFloor`
+
+- [ ] Representing race track
+
+    First test will probably be hardcoded
+
+    After this, will most likely read from a file the positions of the walls and floor elevations 
 
 ## Timeline Plan
-A timeline for when you intend to complete the major features of the project.
+1. Get racetrack walls working
+2. Get racetrack floor working
+3. Fix camera views (easyfix)
+4. Add laps
+5. Create simple collectable powerups
+6. Create moving enemies
+7. Misc. add-ons (music, sfx, speedbar)
+8. Enemy cars
+
+More details under [Projects](https://github.com/Samleo8/112LegoRacers/projects) tab.
 
 ## Version Control Plan
 This [Github repository](https://github.com/Samleo8/112LegoRacers) controls both the code versions, as well as the structure and timeline of the project *(see [Projects](https://github.com/Samleo8/112LegoRacers/projects) and [Issues](https://github.com/Samleo8/112LegoRacers/issues))*. 
