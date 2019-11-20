@@ -58,7 +58,7 @@ class Racecar(Obj3D):
         self.gameObj.accept("car-out-crate", self.exitCrate)
 
     def collideCrate(self, entry):
-        self.setAcceleration(self.friction, self.rotationAcceleration)
+        #self.setAcceleration(self.friction, self.rotationAcceleration)
         
     def exitCrate(self, entry):
         return
