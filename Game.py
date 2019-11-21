@@ -46,7 +46,7 @@ class Game(ShowBase):
         self.createKeyControls()
 
         # Init camera
-        self.camConfigDefault = "fixed"
+        self.camConfigDefault = "perspective"
         self.camConfig = self.camConfigDefault
         self.taskMgr.add(self.setCameraToPlayer, "SetCameraToPlayer")
 
@@ -73,7 +73,7 @@ class Game(ShowBase):
         camDistance = player.dimY * 1.5
 
         # Allow for variable camera configuration
-        if self.camConfig == "rotate":
+        if "_rotate" in self.camConfig:
             thetha = task.time * 2.5
         else:
             thetha = degToRad(h)
@@ -85,6 +85,12 @@ class Game(ShowBase):
         # TODO: Calculate one from the other (preferably angle from camHeight)
         camHeight = player.dimZ + 15
         phi = -30  # in degress
+
+        if self.camConfig == "birdsEye":
+            xOffset = 0
+            yOffset = 0
+            camHeight = camDistance * 3
+            phi = -90
 
         self.camera.setPos(x + xOffset, y + yOffset, z + camHeight)
         self.camera.setHpr(radToDeg(thetha), phi, 0)
@@ -194,16 +200,22 @@ class Game(ShowBase):
                 self.accept(key+"-up", self.setKeyDown, [fn, -1])
 
         # Only need the key-release events
-        # (fn, key list)
+        # (fn, key list, args)
         keyReleaseMap = [
-            (self.oobe, ["m"]),
-            (self.oobeCull, ["n"]),
-            (self.togglePause, ["p", "esc"])
+            (self.setCameraView, ["1"], ["perspective"]),
+            (self.setCameraView, ["2"], ["birdsEye"]),
+            (self.setCameraView, ["3"], ["firstPerson"]),
+            (self.oobe, ["m"], None),
+            (self.oobeCull, ["n"], None),
+            (self.togglePause, ["p", "esc"], None)
         ]
 
-        for fn, keys in keyReleaseMap:
+        for fn, keys, args in keyReleaseMap:
             for key in keys:
-                self.accept(key+"-up", fn)
+                if isinstance(args, list) and len(args) > 0:
+                    self.accept(key+"-up", fn, args)
+                else:
+                    self.accept(key+"-up", fn)
 
     def setKeyDown(self, key, value):
         # In order to account for multiple keys
@@ -218,6 +230,10 @@ class Game(ShowBase):
         # below 0 for any reason
         if self.isKeyDown[key] < 0:
             self.isKeyDown[key] = 0
+
+    def setCameraView(self, view):
+        self.camConfig = view
+        print("Camera view set to: " + self.camConfig)
 
     def keyPressHandler(self, task):
         # NOTE: In order to allow for diagonal movement
@@ -242,9 +258,10 @@ class Game(ShowBase):
             player.setSpeed(rotSpd=-1*player.defaultRotationSpeed)
             player.setAcceleration(rotAcc=-1*player.defaultRotationAcceleration)
 
-        self.camConfig = self.camConfigDefault
         if self.isKeyDown["camConfigRotate"] > 0:
-            self.camConfig = "rotate"
+            self.camConfig += "_rotate"
+        else: 
+            self.camConfig = self.camConfig.replace("_rotate", "")
 
         return Task.cont
 
