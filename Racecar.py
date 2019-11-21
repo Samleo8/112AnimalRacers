@@ -44,11 +44,16 @@ class Racecar(Obj3D):
 
     def initCollisions(self):
         # Initialise bounding box
-        self.initSurroundingCollisionObj("car", "box", show=True)
+        self.initSurroundingCollisionObj("car", "capsule", show=True)
 
         colNode = self.getCollisionNode("car")
         
         # Wall Handling
+        # NOTE: The way that pusher works is that it updates the NodePath model position on the collision
+        # This means that the positions used to update the positions must be constantly updated from the 
+        # __NodePath__ positions, not internal x,y,z positions stored in the class.
+        # https://discourse.panda3d.org/t/player-goes-straight-through-walls-despite-collisionpusher/25368/7
+
         # Initialise pusher collision handling
         self.colPusher = CollisionHandlerPusher()
 
@@ -61,8 +66,7 @@ class Racecar(Obj3D):
         self.colPusher.addOutPattern('%fn-out-%in')
         
         # Problem is the racecar will attempt to scale the wall
-        # Unfortunately still does not fix it
-        # TODO: Try http://www.panda3d.org/manual/?title=Rapidly-Moving_Objects
+        # TODO: Possible improvement: http://www.panda3d.org/manual/?title=Rapidly-Moving_Objects
         self.colPusher.setHorizontal(True)
 
         base.cTrav.addCollider(colNode, self.colPusher)
