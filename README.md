@@ -21,6 +21,10 @@ Then, run the game with `python Game.py`. Note that only Python 3 is supported.
 
 [Alpha century](https://opengameart.org/content/alpha-century) by *Johan Brodd*
 
+### Code Reference
+[Panda 3D Manual](https://www.panda3d.org/manual/)
+
+[Panda 3D API Reference](https://www.panda3d.org/reference/python/index.html)
 
 ## Project Details
 Elaborated in document [here](TP1_ProjectProposal.md).
