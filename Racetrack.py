@@ -14,26 +14,29 @@ class Wall(Obj3D):
 
         self.initSurroundingCollisionObj("wall", args=args)
 
-
 '''
 Class holds all walls and floors
 '''
 class Racetrack(Obj3D):
     def __init__(self, id=0):
+        
+
+        self.defaultWallSpacing = 10
+
         for i in range(10):
-            center = (0, 0, 0)
+            center = (0, i * 20, 0)
             facingAngle = (0, 0, 0) # hpr
             self.createWallPair(center, facingAngle)
 
     def createWallPair(self, centerPos, facingAngle, spacing=None):
-        spacing = self.defaultWallSpacing if spacing != None else spacing 
+        spacing = self.defaultWallSpacing if spacing == None else spacing 
 
-        positiveSpacing = (spacing, 0, 0)
-        negativeSpacing = (spacing, 0, 0)
+        positiveSpacing = (spacing/2, 0, 0)
+        negativeSpacing = (-spacing/2, 0, 0)
 
         h, p, r = facingAngle
 
-        wall1 = Wall(self, "crate")
-        wall2 = Wall(self, "crate")
+        wall1 = Wall(self, "crate", pos=add2Tuples(centerPos, positiveSpacing))
+        wall2 = Wall(self, "crate", pos=add2Tuples(centerPos, negativeSpacing))
 
         return

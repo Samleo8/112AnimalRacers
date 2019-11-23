@@ -45,7 +45,7 @@ class Racecar(Obj3D):
 
     def initCollisions(self):
         # Initialise bounding box
-        self.initSurroundingCollisionObj("car", "capsule", show=True)
+        self.initSurroundingCollisionObj("car", "capsule")
 
         colNode = self.getCollisionNode("car")
         
@@ -73,13 +73,13 @@ class Racecar(Obj3D):
         base.cTrav.addCollider(colNode, self.colPusher)
 
         # Floor Handling
-        self.colLifter = CollisionHandlerFloor()
+        self.colLifter = CollisionHandlerGravity()
 
         # Create the ray pointing from the bottom
         colNode.node().addSolid(CollisionRay(0, 0, 0, 0, 0, -1))
         self.colLifter.addCollider(colNode, self.model)
 
-        #base.cTrav.addCollider(colNode, self.colLifter)
+        base.cTrav.addCollider(colNode, self.colLifter)
 
         # Collision Events
         self.gameObj.accept("car-in-wall", self.onCollideCrate)
@@ -88,7 +88,7 @@ class Racecar(Obj3D):
 
     def onCollideCrate(self, entry):
         self.setSpeed(0, 0)
-        self.setAcceleration(0)
+        self.setAcceleration(0, 0)
         return
         
     def onExitCrate(self, entry):
