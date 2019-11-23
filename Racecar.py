@@ -157,7 +157,7 @@ class Racecar(Obj3D):
         # Direction changed
         if not sameSign(prevRotSpeed, self.rotationSpeed):
             self.setSpeed(rotSpd=0)
-            self.setAcceleration(rotAcc=0)
+            self.setAcceleration(acc=0, rotAcc=0)
 
         # Rotate first
         self.rotate(dh=self.rotationSpeed)
