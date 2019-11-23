@@ -14,10 +14,11 @@ from direct.interval.LerpInterval import *
 from direct.task.Task import Task
 import time
 
-# 3D Object super class
+# Import External Classes
 from Obj3D import *
 from Racecar import *
 from Racetrack import *
+from Terrain import *
 class Game(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
@@ -81,19 +82,32 @@ class Game(ShowBase):
         xOffset = camDistance * math.sin(thetha)
         yOffset = -camDistance * math.cos(thetha)
 
-        # Camera has a slight tilt
-        # TODO: Calculate one from the other (preferably angle from camHeight)
-        camHeight = player.dimZ + 15
-        phi = -30  # in degress
-
+        # Top-down view
         if self.camConfig == "birdsEye":
             xOffset = 0
             yOffset = 0
             camHeight = camDistance * 3
+
             phi = -90
 
+            self.camera.setHpr(radToDeg(thetha), phi, 0)
+        # Camera has a slight tilt
+        else:
+            camHeight = player.dimZ * 2
+
         self.camera.setPos(x + xOffset, y + yOffset, z + camHeight)
-        self.camera.setHpr(radToDeg(thetha), phi, 0)
+        
+        # Look forward a bit
+        # Remember to calculate the perspective offset accordingly
+        if self.camConfig in [ "perspective" ]:
+            perspectiveOffset = 10
+            xOffset = perspectiveOffset * math.sin(-thetha)
+            yOffset = perspectiveOffset * math.cos(-thetha)
+            self.camera.lookAt(x + xOffset, y + yOffset, z)
+
+        # Look at center of car
+        if "_rotate" in self.camConfig:
+            self.camera.lookAt(x, y, z)
 
         return Task.cont
 
@@ -157,11 +171,7 @@ class Game(ShowBase):
         render.setLight(plight6NodePath)
 
     def loadBackground(self):
-        # Load the environment model.
-        self.scene = Obj3D("environment")
-
-        # Sky
-        self.sky = Obj3D("FarmSky")
+        self.terrain = Terrain(self)
 
     def loadModels(self):
         self.player = Racecar(self, "groundroamer", self.render)
@@ -170,7 +180,7 @@ class Game(ShowBase):
     # Key Events
     def createKeyControls(self):
         # Create a function to key maps
-        # "<function>": [ <list of key ids> ]
+        # "<function>": [ <list of key ids> ]   
         functionToKeys = {
             "forward": [ "arrow_up", "w" ],
             "backward": [ "arrow_down", "s" ],
@@ -266,9 +276,11 @@ class Game(ShowBase):
     # Collision Events
     def collisionSetup(self, showCollisions=False):
         base.cTrav = CollisionTraverser()
+        base.cTravScene = CollisionTraverser("scene")
 
         if showCollisions:
             base.cTrav.showCollisions(render)
+            base.cTravScene.showCollisions(render)
 
     def togglePause(self):
         self.paused ^= True
