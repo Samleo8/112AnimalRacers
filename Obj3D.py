@@ -287,6 +287,9 @@ class Obj3D():
     def setRenderParent(self, renderParent):
         self.model.reparentTo(renderParent)
 
+    def destroy(self):
+        self.model.removeNode()
+
     # Collisions
     def addCollisionNode(self, nodeName):
         colNode = self.model.attachNewNode(CollisionNode(nodeName))
