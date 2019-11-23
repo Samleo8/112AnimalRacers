@@ -34,9 +34,8 @@ class Racetrack(Obj3D):
         # Set wall spacing
         self.defaultWallSpacing = max(self.wallDim) + self.gameObj.player.dimX * 5 
 
-        self.trackPoints = Racetrack.parseTrackFile("test")
-        print(self.trackPoints)
-
+        self.generateRacetrackFromFile("test")
+        
     # Parse the special race track file
     # Ignore comments which start with #
     # Returns a list of tuples of points
@@ -65,6 +64,12 @@ class Racetrack(Obj3D):
             elif len(point) != 3:
                 raise Exception(f"Invalid format in line {lineNo} of {name}.track")
 
+            for i, coord in enumerate(point):
+                try:
+                    point[i] = float(coord)
+                except:
+                    raise Exception(f"Invalid format in line {lineNo} of {name}.track")
+
             points.append(tuple(point))
 
         # Handle closing
@@ -74,8 +79,35 @@ class Racetrack(Obj3D):
         f.close()
         return points
 
+    # Generate racetrack given name of track
+    def generateRacetrackFromFile(self, fileName):
+        self.trackPoints = Racetrack.parseTrackFile(fileName)
+
+        points = self.trackPoints
+
+        for i in range(len(points)-1):
+            self.genTrackFromPoint2Point(points[i], points[i+1])
+
+        return
+
     # Generate a track from point to point
     def genTrackFromPoint2Point(self, point1, point2):
+        directionVector = sub2Tuples(point2, point1)
+        distance = getVectorMagnitude(directionVector)
+
+        if distance == 0: return
+
+        # Walls needed to fill in the gap
+        wallSize = self.wallDim[1]
+        nWallsNeeded = math.ceil(distance / wallSize)
+        print("N Walls", nWallsNeeded, "Distance", distance)
+
+        for i in range(nWallsNeeded):
+            startPos = add2Tuples(
+                point1, multiplyVectorByScalar(directionVector, i * wallSize/distance)
+            )  
+            self.createWallPair(startPos, directionVector)
+
         return
 
     # Given a start pos, position two walls with defined spacing from the center position

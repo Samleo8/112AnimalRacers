@@ -29,6 +29,12 @@ def add2Tuples(tuple1, tuple2):
         tup += (tuple1[i] + tuple2[i],)
     return tup
 
+def sub2Tuples(tuple1, tuple2):
+    tup = tuple()
+    for i in range(len(tuple1)):
+        tup += (tuple1[i] - tuple2[i],)
+    return tup
+
 def isNumber(n):
     return isinstance(n, float) or isinstance(n, int)
 
@@ -39,7 +45,7 @@ def getVectorMagnitude(vec):
     sm = 0
     for i in vec:
         sm += i ** 2
-    return sm
+    return math.sqrt(sm)
 
 def multiplyVectorByScalar(vec, scal):
     newVector = tuple()
