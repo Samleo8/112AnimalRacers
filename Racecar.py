@@ -79,7 +79,7 @@ class Racecar(Obj3D):
         colNode.node().addSolid(CollisionRay(0, 0, 0, 0, 0, -1))
         self.colLifter.addCollider(colNode, self.model)
 
-        base.cTrav.addCollider(colNode, self.colLifter)
+        #base.cTrav.addCollider(colNode, self.colLifter)
 
         # Collision Events
         self.gameObj.accept("car-in-wall", self.onCollideCrate)

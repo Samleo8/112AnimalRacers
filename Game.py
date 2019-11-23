@@ -164,8 +164,8 @@ class Game(ShowBase):
         self.sky = Obj3D("FarmSky")
 
     def loadModels(self):
-        self.racetrack = Racetrack()
         self.player = Racecar(self, "groundroamer", self.render)
+        self.racetrack = Racetrack(self)
 
     # Key Events
     def createKeyControls(self):

@@ -18,13 +18,20 @@ class Wall(Obj3D):
 Class holds all walls and floors
 '''
 class Racetrack(Obj3D):
-    def __init__(self, id=0):
-        
+    def __init__(self, gameObj, id=0):
+        self.gameObj = gameObj
 
-        self.defaultWallSpacing = 10
+        # Get wall dimensions through a temporary wall
+        tempWall = Wall(self.gameObj, "crate")
+        self.wallDim = tempWall.getDimensions()
+        self.wallOffset = tempWall.getOffset()
+        tempWall.destroy()
+
+        # Set wall spacing
+        self.defaultWallSpacing = max(self.wallDim) + self.gameObj.player.dimX * 5 
 
         for i in range(10):
-            center = (0, i * 20, 0)
+            center = (0, i * self.wallDim[1], 0)
             facingAngle = (0, 0, 0) # hpr
             self.createWallPair(center, facingAngle)
 
@@ -36,7 +43,7 @@ class Racetrack(Obj3D):
 
         h, p, r = facingAngle
 
-        wall1 = Wall(self, "crate", pos=add2Tuples(centerPos, positiveSpacing))
-        wall2 = Wall(self, "crate", pos=add2Tuples(centerPos, negativeSpacing))
+        wall1 = Wall(self.gameObj, "crate", pos=add2Tuples(centerPos, positiveSpacing))
+        wall2 = Wall(self.gameObj, "crate", pos=add2Tuples(centerPos, negativeSpacing))
 
         return
