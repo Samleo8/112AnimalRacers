@@ -172,11 +172,12 @@ class Game(ShowBase):
         # Create a function to key maps
         # "<function>": [ <list of key ids> ]
         functionToKeys = {
-            "forward": [ "arrow_up" ],
-            "backward": [ "arrow_down" ],
-            "turnLeft": [ "arrow_left" ],
-            "turnRight": [ "arrow_right" ],
+            "forward": [ "arrow_up", "w" ],
+            "backward": [ "arrow_down", "s" ],
+            "turnLeft": [ "arrow_left", "a" ],
+            "turnRight": [ "arrow_right", "d" ],
             "camConfigRotate": ["enter"],
+            "drifting": [ "z" ]
         }
 
         for fn in functionToKeys:
@@ -236,6 +237,12 @@ class Game(ShowBase):
             return Task.cont
 
         player = self.player
+
+        if self.isKeyDown["drifting"] > 0:
+            player.drifting = True
+        else:
+            player.drifting = False
+
         if self.isKeyDown["forward"] > 0:
             player.doDrive("forward")
             
