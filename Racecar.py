@@ -17,7 +17,7 @@ class Racecar(Obj3D):
         self.accInc = self.friction + 0.005
         self.defaultRotationAcceleration = -0.1
 
-        self.drifting = True
+        self.drifting = False
         self.allowStaticTurning = False
 
         self.setSpeed(0, 0)
@@ -158,10 +158,7 @@ class Racecar(Obj3D):
         if not sameSign(prevRotSpeed, self.rotationSpeed):
             self.setSpeed(rotSpd=0)
             self.setAcceleration(acc=0, rotAcc=0)
-
-        # Rotate first
-        self.rotate(dh=self.rotationSpeed)
-
+        
         # Get car's current forward facing direction based on its yaw angle
         # Then calculate dx and dy
         dirAngle, _, _ = self.getHpr()
@@ -172,6 +169,7 @@ class Racecar(Obj3D):
         dx = self.speed * math.sin(dirAngle)
 
         self.move(dx=dx, dy=dy)
+        self.rotate(dh=self.rotationSpeed)
 
     # External Controls
     def doDrive(self, direction="forwards"):
@@ -183,7 +181,6 @@ class Racecar(Obj3D):
     def doTurn(self, direction="left"):
         # Prevent static turning unless specified
         if self.speed == 0 and not self.allowStaticTurning:
-            self.setAcceleration(rotAcc=0)
             return
 
         # Direction changes depending on speed of the car
@@ -196,7 +193,7 @@ class Racecar(Obj3D):
         rotAcc = _dir * self.defaultRotationAcceleration
 
         # Drifting!
-        acc = 0 if self.drifting else self.getAcceleration()
+        acc = 0 if self.drifting else None
 
         self.setSpeed(rotSpd=rotSpd)
         self.setAcceleration(acc=acc, rotAcc=rotAcc)
