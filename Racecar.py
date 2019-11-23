@@ -73,6 +73,7 @@ class Racecar(Obj3D):
         base.cTrav.addCollider(colNode, self.colPusher)
 
         # Floor Handling
+        # TODO: See https://www.panda3d.org/manual/?title=Bitmask_Example
         self.colLifter = CollisionHandlerGravity()
 
         # Create the ray pointing from the bottom

@@ -293,6 +293,10 @@ class Obj3D():
     def destroy(self):
         self.model.removeNode()
 
+    # https://www.panda3d.org/manual/?title=Removing_Custom_Class_Instances
+    def __del__(self):
+        print(f"Instance of Obj3D {self} Removed")
+
     # Collisions
     def addCollisionNode(self, nodeName):
         colNode = self.model.attachNewNode(CollisionNode(nodeName))
