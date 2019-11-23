@@ -12,6 +12,7 @@ class Scene(Obj3D):
             "padding": (0, 0, 0)
         }
 
+        # TODO: See https://www.panda3d.org/manual/?title=Bitmask_Example
         self.initSurroundingCollisionObj("wall", args=args, show=True)
 
 class Terrain():

@@ -116,6 +116,9 @@ class Game(ShowBase):
         if self.paused or self.isGameOver:
             return Task.cont
 
+        # Need to manually traverse the floor handling
+        base.cTravScene.traverse(self.render)
+
         self.player.updateMovement()
 
         return Task.cont

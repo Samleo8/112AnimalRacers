@@ -73,8 +73,7 @@ class Racecar(Obj3D):
         base.cTrav.addCollider(colNode, self.colPusher)
 
         # Floor Handling
-        # TODO: See https://www.panda3d.org/manual/?title=Bitmask_Example
-        self.colLifter = CollisionHandlerGravity()
+        self.colLifter = CollisionHandlerFloor()
 
         # Create the ray pointing from the bottom
         colNode.node().addSolid(CollisionRay(0, 0, 0, 0, 0, -1))
@@ -174,6 +173,7 @@ class Racecar(Obj3D):
         self.rotate(dh=self.rotationSpeed)
 
     # External Controls
+    # TODO: Try https://www.panda3d.org/manual/?title=Bullet_Vehicles
     def doDrive(self, direction="forwards"):
         if direction in [ "backward", "backwards", "back", "reverse" ]:
             self.incAcceleration(-1 * self.accInc)
