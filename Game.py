@@ -164,14 +164,7 @@ class Game(ShowBase):
         self.sky = Obj3D("FarmSky")
 
     def loadModels(self):
-        for i in range(0):
-            crate = Crate(self, "crate", self.render)
-            crate.move(dx=i*crate.dimX, dy=crate.dimY*5)
-
-
-        crate = Crate(self, "crate", self.render)
-        crate.move(dx=crate.dimX, dy=crate.dimY*5)
-
+        self.racetrack = Racetrack()
         self.player = Racecar(self, "groundroamer", self.render)
 
     # Key Events
@@ -185,7 +178,7 @@ class Game(ShowBase):
             "turnRight": [ "arrow_right" ],
             "camConfigRotate": ["enter"],
         }
-
+        
         for fn in functionToKeys:
             keys = functionToKeys[fn]
 

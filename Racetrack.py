@@ -9,7 +9,17 @@ class Crate(Obj3D):
         self.move(dz=self.dimZ/2-self.offsetZ)
 
         args = {
-            "padding": (self.relDimZ*5, self.relDimZ*5, 0)
+            "padding": (0, 0, 0)
         }
 
-        self.initSurroundingCollisionObj("crate", args=args, show=True)
+        self.initSurroundingCollisionObj("crate", args=args)
+
+
+'''
+Class holds all walls and floors
+'''
+class Racetrack(Obj3D):
+    def __init__(self, id=0):
+        for i in range(10):
+            crate = Crate(self, "crate")
+            crate.move(dx=i*crate.dimX, dy=crate.dimY*5)
