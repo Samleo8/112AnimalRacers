@@ -283,6 +283,9 @@ class Obj3D():
     def getDimensions(self):
         return self.dim
 
+    def getOffset(self):
+        return self.offset
+
     # Set parent to render to
     def setRenderParent(self, renderParent):
         self.model.reparentTo(renderParent)
