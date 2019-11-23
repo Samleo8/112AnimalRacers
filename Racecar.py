@@ -17,10 +17,11 @@ class Racecar(Obj3D):
         self.accInc = self.friction + 0.005
         self.defaultRotationAcceleration = -0.1
 
+        self.drifting = True
+        self.allowStaticTurning = False
+
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
-
-        self.isColliding = False
 
         # NOTE: When you scale, whatever coordinates used also scales
         self.scaleAll(1)
@@ -81,18 +82,16 @@ class Racecar(Obj3D):
         #base.cTrav.addCollider(colNode, self.colLifter)
 
         # Collision Events
-        self.gameObj.accept("car-in-crate", self.onCollideCrate)
-        self.gameObj.accept("car-again-crate", self.onCollideCrate)
-        self.gameObj.accept("car-out-crate", self.onExitCrate)
+        self.gameObj.accept("car-in-wall", self.onCollideCrate)
+        self.gameObj.accept("car-again-wall", self.onCollideCrate)
+        self.gameObj.accept("car-out-wall", self.onExitCrate)
 
     def onCollideCrate(self, entry):
-        self.isColliding = True
         self.setSpeed(0, 0)
         self.setAcceleration(0)
         return
         
     def onExitCrate(self, entry):
-        self.isColliding = False
         return
         
     # Speeds and Acceleration handling
@@ -101,17 +100,17 @@ class Racecar(Obj3D):
 
     # Set/get/change velocities and accelerations
     def setSpeed(self, spd=None, rotSpd=None):
-        if isinstance(spd, float) or isinstance(spd, int):
+        if isNumber(spd):
             self.speed = min(max(spd, self.maxSpeedBackwards), self.maxSpeed) 
 
-        if isinstance(rotSpd, float) or isinstance(rotSpd, int):
+        if isNumber(rotSpd):
             self.rotationSpeed = min(rotSpd, self.maxRotationSpeed)
 
-    def setAcceleration(self, acc=0, rotAcc=0):
-        if isinstance(acc, float) or isinstance(acc, int):
+    def setAcceleration(self, acc=None, rotAcc=None):
+        if isNumber(acc):
             self.acceleration = acc
 
-        if isinstance(rotAcc, float) or isinstance(rotAcc, int):
+        if isNumber(rotAcc):
             self.rotationAcceleration = rotAcc
 
     def getSpeed(self):
@@ -132,6 +131,7 @@ class Racecar(Obj3D):
     def incAcceleration(self, da=0, dalpha=0):
         self.setAcceleration(self.acceleration + da, self.rotationAcceleration + dalpha)
 
+    # Update movement
     def updateMovement(self):
         # Friction
         useSpeedBasedFriction = self.acceleration > self.friction
@@ -152,7 +152,7 @@ class Racecar(Obj3D):
         # Direction changed
         if not sameSign(prevSpeed, self.speed):
             self.setSpeed(spd=0)
-            self.setAcceleration(rotAcc=self.rotationAcceleration)
+            self.setAcceleration(acc=0)
 
         # Direction changed
         if not sameSign(prevRotSpeed, self.rotationSpeed):
@@ -172,6 +172,34 @@ class Racecar(Obj3D):
         dx = self.speed * math.sin(dirAngle)
 
         self.move(dx=dx, dy=dy)
+
+    # External Controls
+    def doDrive(self, direction="forwards"):
+        if direction in [ "backward", "backwards", "back", "reverse" ]:
+            self.incAcceleration(-1 * self.accInc)
+        else:
+            self.incAcceleration(+1 * self.accInc)
+
+    def doTurn(self, direction="left"):
+        # Prevent static turning unless specified
+        if self.speed == 0 and not self.allowStaticTurning:
+            self.setAcceleration(rotAcc=0)
+            return
+
+        # Direction changes depending on speed of the car
+        if direction in [ "right", "clockwise", "cw" ]:
+            _dir = -1 if self.speed >= 0 else +1 
+        else: 
+            _dir = +1 if self.speed >= 0 else -1
+
+        rotSpd = _dir * self.defaultRotationSpeed
+        rotAcc = _dir * self.defaultRotationAcceleration
+
+        # Drifting!
+        acc = 0 if self.drifting else self.getAcceleration()
+
+        self.setSpeed(rotSpd=rotSpd)
+        self.setAcceleration(acc=acc, rotAcc=rotAcc)
 
 class Passenger(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):

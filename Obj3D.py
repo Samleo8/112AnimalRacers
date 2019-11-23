@@ -29,6 +29,9 @@ def add2Tuples(tuple1, tuple2):
         tup += (tuple1[i] + tuple2[i],)
     return tup
 
+def isNumber(n):
+    return isinstance(n, float) or isinstance(n, int)
+
 def sameSign(n1, n2):
     return n1 * n2 >= 0
 

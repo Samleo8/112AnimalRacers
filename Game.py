@@ -178,7 +178,7 @@ class Game(ShowBase):
             "turnRight": [ "arrow_right" ],
             "camConfigRotate": ["enter"],
         }
-        
+
         for fn in functionToKeys:
             keys = functionToKeys[fn]
 
@@ -237,19 +237,16 @@ class Game(ShowBase):
 
         player = self.player
         if self.isKeyDown["forward"] > 0:
-            player.incAcceleration(player.accInc)
+            player.doDrive("forward")
             
         if self.isKeyDown["backward"] > 0:
-            player.incAcceleration(-1 * player.accInc)
-            
-        # NOTE: We don't wanna keep turning unless the car is moving
-        if self.isKeyDown["turnLeft"] > 0 and player.speed != 0:
-            player.setSpeed(rotSpd=player.defaultRotationSpeed)
-            player.setAcceleration(rotAcc=player.defaultRotationAcceleration)
-            
-        if self.isKeyDown["turnRight"] > 0 and player.speed != 0:
-            player.setSpeed(rotSpd=-1*player.defaultRotationSpeed)
-            player.setAcceleration(rotAcc=-1*player.defaultRotationAcceleration)
+            player.doDrive("backward")
+
+        if self.isKeyDown["turnLeft"] > 0:
+            player.doTurn("left")
+
+        if self.isKeyDown["turnRight"] > 0:
+            player.doTurn("right")
 
         if self.isKeyDown["camConfigRotate"] > 0:
             self.camConfig += "_rotate"
