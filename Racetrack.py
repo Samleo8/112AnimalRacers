@@ -41,10 +41,10 @@ class Racetrack(Obj3D):
     # Returns a list of tuples of points
     # Includes the end point as the start point if necessary (need to close the loop)
     @staticmethod
-    def parseTrackFile(name):
+    def parseTrackFile(fileName):
         points = []
 
-        f = open(f"{name}.track", "r")
+        f = open(f"{fileName}.track", "r")
         
         lineNo = 0
         for line in f:
@@ -62,13 +62,13 @@ class Racetrack(Obj3D):
             if len(point) == 2:
                 point.append(0)
             elif len(point) != 3:
-                raise Exception(f"Invalid format in line {lineNo} of {name}.track")
+                raise Exception(f"Invalid format in line {lineNo} of {fileName}.track")
 
             for i, coord in enumerate(point):
                 try:
                     point[i] = float(coord)
                 except:
-                    raise Exception(f"Invalid format in line {lineNo} of {name}.track")
+                    raise Exception(f"Invalid format in line {lineNo} of {fileName}.track")
 
             points.append(tuple(point))
 
@@ -76,23 +76,65 @@ class Racetrack(Obj3D):
         if points[0] != points[-1]:
             points.append(points[0])
 
+        if len(points) <= 3:
+            raise Exception(f"{fileName}.track: Not enough points to make a racetrack!")
+
         f.close()
         return points
 
-    # Generate racetrack given name of track
+    # Generate racetrack given fileName of track
     def generateRacetrackFromFile(self, fileName):
-        self.trackPoints = Racetrack.parseTrackFile(fileName)
+        points = Racetrack.parseTrackFile(fileName)
 
-        points = self.trackPoints
+        # line: startPoint, dirVector
+        lines = []
+        sideTrackPoints = []
+        N = len(points)
+        for i in range(N-1):
+            p0 = points[i]
+            p1 = points[(i+1) % N]
 
-        for i in range(len(points)-1):
-            self.genTrackFromPoint2Point(points[i], points[i+1])
+            startPoint = p0
+            directionVector = sub2Tuples(p1, p0)
+
+            if directionVector == (0, 0, 0): continue
+
+            line = (startPoint, directionVector)
+            lines.append(line)
+            sideTrackPoints.append(self.calculateSideTracks(line))
+
+        N = len(lines)
+        for i in range(N):
+            self.genTrackFromLineToLine(
+                sideTrackPoints[i], sideTrackPoints[(i+1) % N]
+            )
+
+        self.points = points
+        self.lines = lines
+        self.sideTrackPoints = sideTrackPoints
 
         return
 
-    # Generate a track from point to point
-    def genTrackFromPoint2Point(self, point1, point2):
-        directionVector = sub2Tuples(point2, point1)
+    # Generate a track from spaced position to spaced position
+    def genTrackFromLineToLine(self, sideTrack1, sideTrack2):
+        p1a, p1b, angles = sideTrack1
+        p2a, p2b, _ = sideTrack2
+
+        print(p1a, p1b, "|", p2a, p2b)
+
+        # First side track
+        self.genWallsFromPointToPoint(p1a, p2a, angles)
+
+        # Second side track
+        self.genWallsFromPointToPoint(p1b, p2b, angles)
+
+        return 
+
+    def genWallsFromPointToPoint(self, startPoint, endPoint, angles=None):
+        if angles == None: angles = (0, 0)
+        thetha, phi = angles
+
+        directionVector = sub2Tuples(endPoint, startPoint)
         distance = getVectorMagnitude(directionVector)
 
         if distance == 0: return
@@ -100,33 +142,35 @@ class Racetrack(Obj3D):
         # Walls needed to fill in the gap
         wallSize = self.wallDim[1]
         nWallsNeeded = math.ceil(distance / wallSize)
-        print("N Walls", nWallsNeeded, "Distance", distance)
 
         for i in range(nWallsNeeded):
-            startPos = add2Tuples(
-                point1, multiplyVectorByScalar(directionVector, i * wallSize/distance)
-            )  
-            self.createWallPair(startPos, directionVector)
+            pos = add2Tuples(
+                startPoint, 
+                multiplyVectorByScalar(directionVector, i * wallSize/distance)
+            )
+            wall1 = Wall(self.gameObj, "crate", pos=pos)
+            wall1.rotate(dh=thetha, dp=phi)
 
-        return
-
-    # Given a start pos, position two walls with defined spacing from the center position
+    # Given a start pos, calculate positions of side track points with defined spacing from the center position
     # and with the correct facing (yaw) 
-    def createWallPair(self, startPos, directionVector, spacing=None):
+    # Returns pos1, pos2, (thetha, phi) 
+    def calculateSideTracks(self, line, spacing=None):
+        startPos, directionVector = line
+
         spacing = self.defaultWallSpacing if spacing == None else spacing
 
         directionVector = normaliseVector(directionVector)
-        if directionVector == 0: return
+        if directionVector == (0, 0, 0): return
 
         x, y, z = startPos
-        directionVector= multiplyVectorByScalar(directionVector, spacing/2)
+        directionVector = multiplyVectorByScalar(directionVector, spacing/2)
         a, b, c = directionVector
 
         pos1 = x - b, y + a, z
         pos2 = x + b, y - a, z
 
         try:
-            thetha = radToDeg(math.atan(a/b))
+            thetha = -radToDeg(math.atan(a/b))
         except:
             thetha = 0 
 
@@ -139,12 +183,4 @@ class Racetrack(Obj3D):
             except:
                 phi = 0
 
-        print(pos1, pos2)
-
-        wall1 = Wall(self.gameObj, "crate", pos=pos1)
-        wall2 = Wall(self.gameObj, "crate", pos=pos2)
-
-        wall1.rotate(dh=thetha, dp=phi)
-        wall2.rotate(dh=thetha, dp=phi)
-
-        return
+        return pos1, pos2, (thetha, phi)
