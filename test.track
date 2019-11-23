@@ -2,5 +2,5 @@
 # x y z, space separated
 0 0 0
 0 20 0 # comment!
-20 0 0
-0 0 0
+20 0 # can miss z-coordinate
+# 0 0 0

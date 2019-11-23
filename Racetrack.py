@@ -34,24 +34,45 @@ class Racetrack(Obj3D):
         # Set wall spacing
         self.defaultWallSpacing = max(self.wallDim) + self.gameObj.player.dimX * 5 
 
-        self.trackPoints = self.parseRacetrackFile("test")
+        self.trackPoints = Racetrack.parseTrackFile("test")
+        print(self.trackPoints)
 
     # Parse the special race track file
     # Ignore comments which start with #
     # Returns a list of tuples of points
     # Includes the end point as the start point if necessary (need to close the loop)
-    def parseRacetrackFile(self, name):
-        startPoint = None
+    @staticmethod
+    def parseTrackFile(name):
         points = []
 
         f = open(f"{name}.track", "r")
         
+        lineNo = 0
         for line in f:
+            lineNo += 1
+            # Remove away comments
             line = re.sub(r"\#(.+)", "", line).strip()
-            print(line)
+
+            # Ignore empty lines
+            if len(line) == 0: 
+                continue
+            
+            point = line.split(" ")
+            # z-coordinate missing
+            # default to 0
+            if len(point) == 2:
+                point.append(0)
+            elif len(point) != 3:
+                raise Exception(f"Invalid format in line {lineNo} of {name}.track")
+
+            points.append(tuple(point))
+
+        # Handle closing
+        if points[0] != points[-1]:
+            points.append(points[0])
 
         f.close()
-        return
+        return points
 
     # Generate a track from point to point
     def genTrackFromPoint2Point(self, point1, point2):
