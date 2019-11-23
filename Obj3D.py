@@ -35,6 +35,23 @@ def isNumber(n):
 def sameSign(n1, n2):
     return n1 * n2 >= 0
 
+def getVectorMagnitude(vec):
+    sm = 0
+    for i in vec:
+        sm += i ** 2
+    return sm
+
+def normaliseVector(vec):
+    mag = getVectorMagnitude(vec)
+    normVector = tuple()
+    if mag == 0:
+        return vec
+    else:
+        for i in vec:
+            normVector += i/mag
+
+    return normVector
+
 class Obj3D():
     # Set worldRenderer in app loadModels
     worldRenderer = None

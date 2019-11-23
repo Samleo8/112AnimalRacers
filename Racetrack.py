@@ -30,11 +30,14 @@ class Racetrack(Obj3D):
         # Set wall spacing
         self.defaultWallSpacing = max(self.wallDim) + self.gameObj.player.dimX * 5 
 
-        for i in range(10):
+        for i in range(0):
             center = (0, i * self.wallDim[1], 0)
             facingAngle = (0, 0, 0) # hpr
             self.createWallPair(center, facingAngle)
 
+        self.createWallPair( (10, 10, 0), (0, 1, 0))
+
+    '''
     def createWallPair(self, centerPos, facingAngle, spacing=None):
         spacing = self.defaultWallSpacing if spacing == None else spacing 
 
@@ -45,5 +48,15 @@ class Racetrack(Obj3D):
 
         wall1 = Wall(self.gameObj, "crate", pos=add2Tuples(centerPos, positiveSpacing))
         wall2 = Wall(self.gameObj, "crate", pos=add2Tuples(centerPos, negativeSpacing))
+
+        return
+    '''
+
+    # Given a start pos, position two walls with defined spacing from the center position
+    # and with the correct facing (yaw) 
+    def createWallPair(self, startPos, directionVector, spacing=None):
+        spacing = self.defaultWallSpacing if spacing == None else spacing
+
+
 
         return
