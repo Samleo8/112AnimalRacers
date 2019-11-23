@@ -1,12 +1,16 @@
 from Obj3D import *
 
+import re
+
 class Wall(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
         super().__init__(model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
         self.scaleAll(0.01)
-        self.move(dz=self.dimZ/2-self.offsetZ)
+
+        self.repositionToCenter()
+        self.move(dz=self.dimZ/2)
 
         args = {
             "padding": (0, 0, 0)
@@ -30,33 +34,64 @@ class Racetrack(Obj3D):
         # Set wall spacing
         self.defaultWallSpacing = max(self.wallDim) + self.gameObj.player.dimX * 5 
 
-        for i in range(0):
-            center = (0, i * self.wallDim[1], 0)
-            facingAngle = (0, 0, 0) # hpr
-            self.createWallPair(center, facingAngle)
+        self.trackPoints = self.parseRacetrackFile("test")
 
-        self.createWallPair( (10, 10, 0), (0, 1, 0))
+    # Parse the special race track file
+    # Ignore comments which start with #
+    # Returns a list of tuples of points
+    # Includes the end point as the start point if necessary (need to close the loop)
+    def parseRacetrackFile(self, name):
+        startPoint = None
+        points = []
 
-    '''
-    def createWallPair(self, centerPos, facingAngle, spacing=None):
-        spacing = self.defaultWallSpacing if spacing == None else spacing 
+        f = open(f"{name}.track", "r")
+        
+        for line in f:
+            line = re.sub(r"\#(.+)", "", line).strip()
+            print(line)
 
-        positiveSpacing = (spacing/2, 0, 0)
-        negativeSpacing = (-spacing/2, 0, 0)
-
-        h, p, r = facingAngle
-
-        wall1 = Wall(self.gameObj, "crate", pos=add2Tuples(centerPos, positiveSpacing))
-        wall2 = Wall(self.gameObj, "crate", pos=add2Tuples(centerPos, negativeSpacing))
-
+        f.close()
         return
-    '''
+
+    # Generate a track from point to point
+    def genTrackFromPoint2Point(self, point1, point2):
+        return
 
     # Given a start pos, position two walls with defined spacing from the center position
     # and with the correct facing (yaw) 
     def createWallPair(self, startPos, directionVector, spacing=None):
         spacing = self.defaultWallSpacing if spacing == None else spacing
 
+        directionVector = normaliseVector(directionVector)
+        if directionVector == 0: return
 
+        x, y, z = startPos
+        directionVector= multiplyVectorByScalar(directionVector, spacing/2)
+        a, b, c = directionVector
+
+        pos1 = x - b, y + a, z
+        pos2 = x + b, y - a, z
+
+        try:
+            thetha = radToDeg(math.atan(a/b))
+        except:
+            thetha = 0 
+
+        # TODO: Fix the z angle component
+        try:
+            phi = -radToDeg(math.atan(c/b))
+        except:
+            try:
+                phi = -radToDeg(math.atan(c/a))
+            except:
+                phi = 0
+
+        print(pos1, pos2)
+
+        wall1 = Wall(self.gameObj, "crate", pos=pos1)
+        wall2 = Wall(self.gameObj, "crate", pos=pos2)
+
+        wall1.rotate(dh=thetha, dp=phi)
+        wall2.rotate(dh=thetha, dp=phi)
 
         return

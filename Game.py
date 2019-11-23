@@ -244,7 +244,7 @@ class Game(ShowBase):
         #       we cannot use elif
 
         if self.paused or self.isGameOver:
-            return Task.cont
+            return Task.cont    
 
         player = self.player
 

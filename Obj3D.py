@@ -41,16 +41,19 @@ def getVectorMagnitude(vec):
         sm += i ** 2
     return sm
 
+def multiplyVectorByScalar(vec, scal):
+    newVector = tuple()
+    for i in vec:
+        newVector += (i * scal,)
+
+    return newVector
+
 def normaliseVector(vec):
     mag = getVectorMagnitude(vec)
-    normVector = tuple()
     if mag == 0:
         return vec
     else:
-        for i in vec:
-            normVector += i/mag
-
-    return normVector
+        return multiplyVectorByScalar(vec, 1/mag)
 
 class Obj3D():
     # Set worldRenderer in app loadModels
@@ -91,7 +94,7 @@ class Obj3D():
         x, y, z = self.pos
         h, p, r = self.hpr
 
-        self.setPos(x, y, z)
+        self.setPos(x, y, z, centered=False)
         self.setHpr(h, p, r)
 
         # Set dimensions
@@ -200,23 +203,33 @@ class Obj3D():
     # Relative movement and rotations
     def move(self, dx=0, dy=0, dz=0):
         x, y, z = self.getPos()
-        self.setPos(x + dx, y + dy, z + dz)
+        self.setPos(x + dx, y + dy, z + dz, centered=False)
     
     def rotate(self, dh=0, dp=0, dr=0):
         h, p, r = self.getHpr()
         self.setHpr(h + dh, p + dp, r + dr)
 
     # Set and get positions and roll pitch yaw (hpr)
-    def setPos(self, x, y, z):
+    def setPos(self, x, y, z, centered=True):
         self.x = x
         self.y = y
         self.z = z
         self.pos = (x, y, z)
         self.model.setPos(x, y, z)
+        
+        if centered: 
+            self.repositionToCenter()
 
     def setHpr(self, h, p, r):
         self.hpr = (h, p, r)
         self.model.setHpr(h, p, r)
+
+    def repositionToCenter(self):
+        self.move(dx=-self.offsetX, dy=-self.offsetY, dz=-self.offsetZ)
+
+    def lookAt(self, point):
+        x, y, z = point
+        self.model.lookAt(x, y, z)
 
     def getPos(self):
         self.pos = self.model.getPos()

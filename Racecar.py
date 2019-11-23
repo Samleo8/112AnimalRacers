@@ -27,7 +27,8 @@ class Racecar(Obj3D):
         self.scaleAll(1)
 
         # general way of making sure vehicle is always on the ground, regardless of that vehicle's center
-        self.move(dz=self.dimZ/2-self.offsetZ) 
+        self.repositionToCenter()
+        self.move(dz=self.dimZ/2) 
         
         # Add passenger
         self.personName = "penguin"

@@ -6,7 +6,7 @@ class Scene(Obj3D):
         self.gameObj = gameObj
 
         self.scaleAll(1)
-        self.move(dz=self.dimZ/2-self.offsetZ)
+        self.move(dz=self.dimZ/2)
 
         args = {
             "padding": (0, 0, 0)
