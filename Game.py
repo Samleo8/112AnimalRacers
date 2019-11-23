@@ -116,9 +116,6 @@ class Game(ShowBase):
         if self.paused or self.isGameOver:
             return Task.cont
 
-        # Need to manually traverse the floor handling
-        base.cTravScene.traverse(self.render)
-
         self.player.updateMovement()
 
         return Task.cont
@@ -279,11 +276,9 @@ class Game(ShowBase):
     # Collision Events
     def collisionSetup(self, showCollisions=False):
         base.cTrav = CollisionTraverser()
-        base.cTravScene = CollisionTraverser("scene")
 
         if showCollisions:
             base.cTrav.showCollisions(render)
-            base.cTravScene.showCollisions(render)
 
     def togglePause(self):
         self.paused ^= True

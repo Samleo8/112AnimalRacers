@@ -73,14 +73,18 @@ class Racecar(Obj3D):
         base.cTrav.addCollider(colNode, self.colPusher)
 
         # Floor Handling
-        self.colLifter = CollisionHandlerFloor()
+        self.colLifter = CollisionHandlerGravity()
 
         # Create the ray pointing from the bottom
-        colNode.node().addSolid(CollisionRay(0, 0, 0, 0, 0, -1))
+        colNode.node().addSolid(CollisionRay(
+            #self.offsetX, self.offsetY, self.passenger.offsetZ+self.passenger.dimZ, 
+            0, 0, 0,
+            0, 0, -1
+        ))
         self.colLifter.addCollider(colNode, self.model)
 
         # Note the cTrav scene will be under a different collider system
-        base.cTravScene.addCollider(colNode, self.colLifter)
+        # base.cTrav.addCollider(colNode, self.colLifter)
 
         # Collision Events
         self.gameObj.accept("car-in-wall", self.onCollideCrate)

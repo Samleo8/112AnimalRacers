@@ -13,15 +13,17 @@ class Scene(Obj3D):
         }
 
         # TODO: See https://www.panda3d.org/manual/?title=Bitmask_Example
-        self.initSurroundingCollisionObj("wall", args=args, show=True)
+        self.initSurroundingCollisionObj("wall", args=args, show=False)
 
 class Terrain():
     def __init__(self, gameObj):
         self.gameObj = gameObj
 
         # Load floor/scene
+        self.ground = Scene(self.gameObj, "ground")
         self.scene = Scene(self.gameObj, "cornfield")
+        self.scene.move(dz=0)
 
         # Sky
-        self.sky = Obj3D("FarmSky")
+        #self.sky = Obj3D("FarmSky")
 
