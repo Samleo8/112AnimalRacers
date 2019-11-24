@@ -6,9 +6,9 @@ class Racecar(Obj3D):
         self.gameObj = gameObj
 
         # Speed, positioning and sizing
-        self.defaultRotationSpeed = 2
-        self.maxSpeed = 2
-        self.maxSpeedBackwards = -2
+        self.defaultRotationSpeed = 1
+        self.maxSpeed = 5
+        self.maxSpeedBackwards = -3
 
         self.maxRotationSpeed = 5
 
@@ -140,7 +140,7 @@ class Racecar(Obj3D):
     # Update movement
     def updateMovement(self):
         # Friction
-        useSpeedBasedFriction = self.acceleration > self.friction
+        useSpeedBasedFriction = self.acceleration > 1.5 * self.friction
         if useSpeedBasedFriction:
             self.incAcceleration(-self.friction * self.speed)
         else:
