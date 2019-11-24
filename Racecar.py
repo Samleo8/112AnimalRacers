@@ -34,8 +34,7 @@ class Racecar(Obj3D):
         self.personName = "penguin"
         self.passenger = Passenger(
             self.gameObj,
-            self.personName, self.model,
-            pos, hpr
+            self.personName, self.model
         )
 
         # Passenger's positions need to be adjusted to the actual center of the object
@@ -85,7 +84,7 @@ class Racecar(Obj3D):
         self.colLifter.addCollider(colNode, self.model)
 
         # Note the cTrav scene will be under a different collider system
-        # base.cTrav.addCollider(colNode, self.colLifter)
+        #base.cTrav.addCollider(colNode, self.colLifter)
 
         # Collision Events
         self.gameObj.accept("car-in-wall", self.onCollideCrate)

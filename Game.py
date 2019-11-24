@@ -175,8 +175,11 @@ class Game(ShowBase):
 
     def loadModels(self):
         self.racetrack = Racetrack(self)
-        
-        self.player = Racecar(self, "groundroamer", self.render, pos=self.racetrack.points[0])
+
+        pos = self.racetrack.points[0]
+        self.player = Racecar(self, "groundroamer", self.render, pos=pos)
+
+        self.player.rotate(dh=self.racetrack.leftTrackPoints[0][1][0])
         
     # Key Events
     def createKeyControls(self):

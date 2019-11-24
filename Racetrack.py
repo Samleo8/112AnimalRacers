@@ -139,6 +139,8 @@ class Racetrack(Obj3D):
             self.genWallsFromPointToPoint(p0, p1, angles)
 
         self.points = points
+        self.leftTrackPoints = leftTrackPoints
+        self.rightTrackPoints = rightTrackPoints
 
         return
 
