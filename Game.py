@@ -174,9 +174,10 @@ class Game(ShowBase):
         self.terrain = Terrain(self)
 
     def loadModels(self):
-        self.player = Racecar(self, "groundroamer", self.render)
         self.racetrack = Racetrack(self)
-
+        
+        self.player = Racecar(self, "groundroamer", self.render, pos=self.racetrack.points[0])
+        
     # Key Events
     def createKeyControls(self):
         # Create a function to key maps

@@ -1,4 +1,5 @@
 from Obj3D import *
+from Racecar import *
 
 import re
 
@@ -31,9 +32,16 @@ class Racetrack(Obj3D):
         self.wallOffset = tempWall.getOffset()
         tempWall.destroy()
 
-        # Set wall spacing
-        self.defaultWallSpacing = max(self.wallDim) + self.gameObj.player.dimX * 5 
+        # Get racecar dimensions through a temporary wall
+        tempCar = Racecar(self.gameObj, "groundroamer")
+        tempCarDim = tempCar.getDimensions()
+        tempCar.destroy()
 
+        # Set wall spacing
+        self.defaultWallSpacing = max(self.wallDim) + tempCarDim[0] * 5
+
+        # Generate racetrack
+        self.points = []
         self.generateRacetrackFromFile("hexagon")
         
     # Parse the special race track file
@@ -129,6 +137,8 @@ class Racetrack(Obj3D):
             p1, _ = rightTrackPoints[(i+1) % N]
 
             self.genWallsFromPointToPoint(p0, p1, angles)
+
+        self.points = points
 
         return
 
