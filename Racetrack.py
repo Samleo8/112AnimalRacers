@@ -34,7 +34,7 @@ class Racetrack(Obj3D):
         # Set wall spacing
         self.defaultWallSpacing = max(self.wallDim) + self.gameObj.player.dimX * 5 
 
-        self.generateRacetrackFromFile("test")
+        self.generateRacetrackFromFile("hexagon")
         
     # Parse the special race track file
     # Ignore comments which start with #
@@ -44,7 +44,7 @@ class Racetrack(Obj3D):
     def parseTrackFile(fileName):
         points = []
 
-        f = open(f"{fileName}.track", "r")
+        f = open(f"racetracks/{fileName}.track", "r")
         
         lineNo = 0
         for line in f:
@@ -72,9 +72,9 @@ class Racetrack(Obj3D):
 
             points.append(tuple(point))
 
-        # Handle closing
-        if points[0] != points[-1]:
-            points.append(points[0])
+        # TODO: Handle unless points
+        if points[0] == points[-1]:
+            points.pop()
 
         if len(points) <= 3:
             raise Exception(f"{fileName}.track: Not enough points to make a racetrack!")
@@ -86,49 +86,51 @@ class Racetrack(Obj3D):
     def generateRacetrackFromFile(self, fileName):
         points = Racetrack.parseTrackFile(fileName)
 
-        # line: startPoint, dirVector
-        lines = []
-        sideTrackPoints = []
+        # line: (startPoint, dirVector)
+        # sideTrack: (sidetrackPoint1, sideTrack2, angles)
         N = len(points)
-        for i in range(N-1):
-            p0 = points[i]
-            p1 = points[(i+1) % N]
 
-            startPoint = p0
-            directionVector = sub2Tuples(p1, p0)
+        leftTrackPoints = []
+        rightTrackPoints = []
 
-            if directionVector == (0, 0, 0): continue
-
-            line = (startPoint, directionVector)
-            lines.append(line)
-            sideTrackPoints.append(self.calculateSideTracks(line))
-
-        N = len(lines)
+        # Find bounds of inner and outer tracks
         for i in range(N):
-            self.genTrackFromLineToLine(
-                sideTrackPoints[i], sideTrackPoints[(i+1) % N]
-            )
+            point = points[i]
 
-        self.points = points
-        self.lines = lines
-        self.sideTrackPoints = sideTrackPoints
+            dir1 = sub2Tuples(points[i-1], point)
+            dir2 = sub2Tuples(points[(i+1) % N], point)
+
+            # Remember to swap positions due to the way the points are calculated!
+            p1a, p1b, _ = self.calculateSideTracks((point, dir1))
+            p2b, p2a, angles = self.calculateSideTracks((point, dir2))
+
+            # Left track
+            sideLine1 = (p1a, dir1)
+            sideLine2 = (p2a, dir2)
+            pos = intersectionOfLines(sideLine1, sideLine2)
+            leftTrackPoints.append((pos, angles))
+
+            # Right track
+            sideLine1 = (p1b, dir1)
+            sideLine2 = (p2b, dir2)
+            pos = intersectionOfLines(sideLine1, sideLine2)
+            rightTrackPoints.append((pos, angles))
+        
+        # Now actually generate the tracks!
+        for i in range(N):
+            # Left Track
+            p0, angles = leftTrackPoints[i]
+            p1, _ = leftTrackPoints[(i+1) % N]
+
+            self.genWallsFromPointToPoint(p0, p1, angles)
+
+            # Right Track
+            p0, angles = rightTrackPoints[i]
+            p1, _ = rightTrackPoints[(i+1) % N]
+
+            self.genWallsFromPointToPoint(p0, p1, angles)
 
         return
-
-    # Generate a track from spaced position to spaced position
-    def genTrackFromLineToLine(self, sideTrack1, sideTrack2):
-        p1a, p1b, angles = sideTrack1
-        p2a, p2b, _ = sideTrack2
-
-        print(p1a, p1b, "|", p2a, p2b)
-
-        # First side track
-        self.genWallsFromPointToPoint(p1a, p2a, angles)
-
-        # Second side track
-        self.genWallsFromPointToPoint(p1b, p2b, angles)
-
-        return 
 
     def genWallsFromPointToPoint(self, startPoint, endPoint, angles=None):
         if angles == None: angles = (0, 0)

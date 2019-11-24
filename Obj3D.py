@@ -61,6 +61,22 @@ def normaliseVector(vec):
     else:
         return multiplyVectorByScalar(vec, 1/mag)
 
+def intersectionOfLines(line1, line2):
+    start1, dir1 = line1
+    start2, dir2 = line2
+
+    a0, b0, _ = dir1
+    a1, b1, _ = dir2
+
+    x, y, _ = sub2Tuples(start1, start2)
+    
+    det = a1*b0 - a0*b1
+    if det == 0: return None
+
+    k = (b1*x - a1*y)/det
+    
+    return add2Tuples(start1, multiplyVectorByScalar(dir1, k))
+
 class Obj3D():
     # Set worldRenderer in app loadModels
     worldRenderer = None
