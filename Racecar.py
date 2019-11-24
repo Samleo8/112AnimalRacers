@@ -86,6 +86,7 @@ class Racecar(Obj3D):
         # Note the cTrav scene will be under a different collider system
         #base.cTrav.addCollider(colNode, self.colLifter)
 
+
         # Collision Events
         self.gameObj.accept("car-in-wall", self.onCollideCrate)
         self.gameObj.accept("car-again-wall", self.onCollideCrate)
