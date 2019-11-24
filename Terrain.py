@@ -13,7 +13,11 @@ class Scene(Obj3D):
         }
 
         # TODO: See https://www.panda3d.org/manual/?title=Bitmask_Example
-        self.initSurroundingCollisionObj("wall", args=args, show=False)
+        # TODO: Integrate https://discourse.panda3d.org/t/panda3d-collisions-made-simple/7441/12
+        self.initSurroundingCollisionObj("floor", args=args, show=False)
+
+        colNode = self.getCollisionNode("floor")
+        colNode.node().setIntoCollideMask(self.gameObj.colBitMask["floor"])
 
 class Terrain():
     def __init__(self, gameObj):

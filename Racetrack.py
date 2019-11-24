@@ -18,6 +18,10 @@ class Wall(Obj3D):
         }
 
         self.initSurroundingCollisionObj("wall", args=args)
+        
+        colNode = self.getCollisionNode("wall")
+        colNode.node().setIntoCollideMask(self.gameObj.colBitMask["wall"])
+
 
 '''
 Class holds all walls and floors
