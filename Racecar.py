@@ -26,6 +26,7 @@ class Racecar(Obj3D):
         self.allowStaticTurning = False
 
         self.isCollidingWall = False
+        self.passedCheckpoints = []
 
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
@@ -58,7 +59,9 @@ class Racecar(Obj3D):
         self.initSurroundingCollisionObj(self.getColNodeName(), "capsule")
 
         colNode = self.getCollisionNode(self.getColNodeName())
-        colNode.node().setFromCollideMask(self.gameObj.colBitMask["wall"])
+        colNode.node().setFromCollideMask(
+            self.gameObj.colBitMask["wall"] | self.gameObj.colBitMask["checkpoint"]
+        )
         
         # Wall Handling
         # NOTE: The way that pusher works is that it updates the NodePath model position on the collision
