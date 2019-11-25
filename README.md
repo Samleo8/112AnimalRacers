@@ -15,11 +15,7 @@ Then, run the game with `python Game.py`. Note that only Python 3 is supported.
 [Alice Gallery](http://alice.org/pandagallery/index.html)
 
 ### Audio
-[Runaround](https://opengameart.org/content/runaround) by *Yubatake*
-
-[Game Music Loop - Rising](https://opengameart.org/content/game-music-loop-rising) by *HorrorPen*
-
-[Alpha century](https://opengameart.org/content/alpha-century) by *Johan Brodd*
+Main music adapted from [Purple Passion](https://www.youtube.com/watch?v=ERbmI4_x1Xc) by *Diana Boncheva*
 
 ### Code Reference
 [Panda 3D Manual](https://www.panda3d.org/manual/)
@@ -27,4 +23,4 @@ Then, run the game with `python Game.py`. Note that only Python 3 is supported.
 [Panda 3D API Reference](https://www.panda3d.org/reference/python/index.html)
 
 ## Project Details
-Elaborated in document [here](TP1_ProjectProposal.md).
+Elaborated in document [here](ProjectProposal.md).

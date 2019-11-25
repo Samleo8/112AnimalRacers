@@ -11,6 +11,8 @@ Hence, instead of the original single player mode, it's now a race against other
 
 4. I changed musical sound track too.
 
+See more details on changes in [Structural](#structural-plan) and [Algorithmic](#algorithmic-plan) plan
+
 ## Competitive Analysis
 The first racing game to analyse will of course be **Lego Racers** itself. This will naturally be a hard game to beat in terms of playability, mechanics and features. However, this remake++ version will not only incorporate the good features of Lego Racers, but also add on some features:
  
@@ -39,9 +41,10 @@ When we compare against other racing games, the key difference we see is that fi
         Handles racecar with calculations/functions for positioning, rotations, speeds and acceleration. Also handles friction and collision with Racetrack/walls and floors. 
         Handles the passenger too. Purposely made to be scalable for future customisability 
     |
-    |-- Racetrack.py (TODO)
+    |-- Racetrack.py
         Racetrack Class: Subclass of Obj3D.
-        Handles racetrack by housing collision solids, and is made through generation of bricks/walls and a floor
+        Handles racetrack by housing collision solids, and is made through dynamic generation of bricks/walls and a floor
+        Generated from self-defined .track file
     |
     |-- Enemy.py (TODO)
         Enemy Class: Subclass of Obj3D. Contains subclasses of enemy types. Note that enemies here are more like obstacles and are different from enemy cars.
@@ -57,8 +60,14 @@ When we compare against other racing games, the key difference we see is that fi
     |-- audio
     |   |-- backgroundMusic.mp3
     |   |-- collisionSFX.mp3
-    |   |-- engineSFX.mp3
     |   |-- menuSFX.mp3
+    |   
+    |-- racetracks
+    |       Self defined racetrack file. See test.track for syntax details
+    |
+    |   |-- test.track 
+    |   |-- hexagon.track
+    |   |-- octagon.track
     |   
     |-- models
         |-- crate.egg
@@ -72,7 +81,8 @@ When we compare against other racing games, the key difference we see is that fi
                 Racecars
         |
         |-- penguin.egg
-        |-- person.egg
+        |-- bunny.egg
+        |-- chicken.egg
                 Passengers
         |
         |-- tex
@@ -96,11 +106,15 @@ More details of sub-projects and sub-tasks are found under the [Projects](https:
 
     `CollisionEvent` that fires will also alter the car's speed and acceleration
 
- - [ ] 3D floor handling and collision
+ - [x] 3D floor handling and collision
 
     Handle with `CollisionRay` and `CollisionFloor`
 
- - [ ] With other cars
+-  [x] Checkpoint collision
+
+    Handle with normal `CollisionEvent`. Use bitmasking
+
+ - [x] With other cars
     More complicated; but again handle with `CollisionPusher`
             
     Will require speed and direction to change; trigger through a `CollisionEvent`
@@ -125,7 +139,7 @@ Car will have movement that includes friction, acceleration and velocity etc:
 ### Racetrack Generation
 Racetrack will be created by generating multiple bricks/crates 
 
-- [ ] Walls
+- [x] Walls
 
     All `CollisionSolid`s associated with the `Crate/Brick` object into one `CollisionNode`
 
@@ -135,9 +149,9 @@ Racetrack will be created by generating multiple bricks/crates
 
     Floor needs to have elevation too. Will need `CollisionRay` and `CollisionPlane`, combined with `CollisionHandlerFloor`
 
-- [ ] Representing race track
+- [x] Representing race track
 
-    First test will probably be hardcoded
+    ~First test will probably be hardcoded~
 
     After this, will most likely read from a file the positions of the walls and floor elevations 
 
@@ -158,7 +172,7 @@ Racetrack will be created by generating multiple bricks/crates
 3. Fix camera views (easyfix)
 4. Add laps
 5. Create simple collectable powerups
-6. Create moving enemies
+6. Create moving enemies 
 7. Misc. add-ons (music, sfx, speedbar, minimap)
 8. Enemy cars
 
