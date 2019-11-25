@@ -86,6 +86,14 @@ class Racecar(Obj3D):
 
         base.cTrav.addCollider(colNode, self.colPusher)
 
+        # Collision Events
+        # Make this dependent on the player ID to allow for individual event triggering
+        colNodeName = self.getColNodeName("wall")
+
+        self.gameObj.accept(f"{colNodeName}-in-wall", self.onCollideWall)
+        self.gameObj.accept(f"{colNodeName}-again-wall", self.onCollideWall)
+        self.gameObj.accept(f"{colNodeName}-out-wall", self.onExitWall)
+
         '''
         Floor Handling
         '''
@@ -109,25 +117,30 @@ class Racecar(Obj3D):
         '''
         Checkpoint Handling
         '''
-        # Initialise bounding box for checkpoint
-        self.initSurroundingCollisionObj(
-            self.getColNodeName("checkpoint"), "box")
+        # Init Event
+        self.colCheckpointEvent = CollisionHandlerEvent()
+        self.colCheckpointEvent.addOutPattern('%fn-out-%in')
 
-        colNodeCheckpoint = self.getCollisionNode(
-            self.getColNodeName("checkpoint"))
-        colNodeCheckpoint.node().setFromCollideMask(
-            self.gameObj.colBitMask["checkpoint"]
+        # Initialise simple sphere just to check for checkpoint passing
+        colSphere = CollisionSphere(0, 0, 0, 1)
+        self.colCheckpointNode = Obj3D.createIsolatedCollisionObj(
+            self.getColNodeName("checkpoint"), colSphere, parentNode=self.model,
+            fromBitmask=self.gameObj.colBitMask["checkpoint"], intoBitmask=self.gameObj.colBitMask["off"],
+            show=True
         )
-        '''
 
         # Collision Events
         # Make this dependent on the player ID to allow for individual event triggering
-        colNodeName = self.getColNodeName("wall")
+        colNodeName = self.getColNodeName("checkpoint")
 
-        self.gameObj.accept(f"{colNodeName}-in-wall", self.onCollideWall)
-        self.gameObj.accept(f"{colNodeName}-again-wall", self.onCollideWall)
-        self.gameObj.accept(f"{colNodeName}-out-wall", self.onExitWall)
+        base.cTrav.addCollider(self.colCheckpointNode, self.colCheckpointEvent)
 
+        self.gameObj.accept(f"{colNodeName}-out-checkpoint", self.onPassCheckpoint)
+    
+    def onPassCheckpoint(self, entry):
+        # TODO: Which checkpoint does this correspond to
+        print(entry.getIntoNodePath().getPythonTag("checkpointID"))
+        
     def onCollideWall(self, entry):
         #self.isCollidingWall = True
         self.setSpeed(0, 0)

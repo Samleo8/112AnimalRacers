@@ -73,10 +73,13 @@ class Racetrack(Obj3D):
                 checkPointRad
             )
 
-            Obj3D.createIsolatedCollisionObj(
+            colNode = Obj3D.createIsolatedCollisionObj(
                 "checkpoint", colBox, intoBitmask=self.gameObj.colBitMask["checkpoint"],
                 show=True
             )
+
+            colNode.setPythonTag("checkpointID", i)
+
         return
 
     # Parse the special race track file

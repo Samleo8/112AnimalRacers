@@ -216,8 +216,10 @@ class Obj3D():
 
     # Isolated collision node
     @staticmethod
-    def createIsolatedCollisionObj(name, colSolid, fromBitmask=None, intoBitmask=None, show=False):
-        colNode = Obj3D.worldRenderer.attachNewNode(
+    def createIsolatedCollisionObj(name, colSolid, parentNode=None, fromBitmask=None, intoBitmask=None, show=False):
+        parentNode = Obj3D.worldRenderer if parentNode == None else parentNode
+        
+        colNode = parentNode.attachNewNode(
             CollisionNode(name)
         )
         colNode.node().addSolid(colSolid)

@@ -117,7 +117,7 @@ class Game(ShowBase):
             return Task.cont
 
         self.player.updateMovement()
-        self.stupidCar.updateMovement()
+        #self.stupidCar.updateMovement()
 
         return Task.cont
 
@@ -181,10 +181,10 @@ class Game(ShowBase):
         self.player = Racecar(self, "groundroamer", "penguin", self.render, pos=pos)
         self.player.rotate(dh=self.racetrack.leftTrackPoints[0][1][0])
 
-        self.stupidCar = StupidCar(self, "groundroamer", "bunny", self.render)
-        self.stupidCar.rotate(dh=self.racetrack.leftTrackPoints[0][1][0])
+        #self.stupidCar = StupidCar(self, "groundroamer", "bunny", self.render)
+        #self.stupidCar.rotate(dh=self.racetrack.leftTrackPoints[0][1][0])
 
-        #self.player.passedCheckpoints = [0 for i in range(len(self.racetrack.checkpoints))]
+        self.player.passedCheckpoints = [0 for i in range(len(self.racetrack.checkpoints))]
         
     # Key Events
     def createKeyControls(self):
@@ -292,6 +292,7 @@ class Game(ShowBase):
         # Set bitmasks
         # Reference: https://www.panda3d.org/manual/?title=Bitmask_Example
         self.colBitMask = {
+            "off": BitMask32.allOff(),
             "wall": BitMask32.bit(0x04),
             "floor": BitMask32.bit(0x02),
             "checkpoint": BitMask32.bit(0x01)
