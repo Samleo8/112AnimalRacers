@@ -26,6 +26,8 @@ class Racecar(Obj3D):
         self.allowStaticTurning = False
 
         self.isCollidingWall = False
+
+        self.currLap = 0
         self.passedCheckpoints = []
 
         self.setSpeed(0, 0)
@@ -150,6 +152,8 @@ class Racecar(Obj3D):
         self.rotate(dh=yawFacing)
 
         # Init Passed Checkpoints array
+        self.currLap = 0
+
         self.passedCheckpoints = [0 for i in range(len(trackPoints))]
         self.passedCheckpoints[0] = 1 # the first checkpoint is always passed
 
@@ -159,16 +163,20 @@ class Racecar(Obj3D):
         # Get passed checkpoint ID
         checkpointID = entry.getIntoNodePath().getPythonTag("checkpointID")
         
-        # TODO: Update passed checkpoint accordingly
+        print(self.passedCheckpoints, self.currLap)
+
         # Make sure that previous checkpoint was passed before update
         if self.passedCheckpoints[checkpointID-1] > self.passedCheckpoints[checkpointID]:
             print(f"Car {self.id} successfully passed checkpoint {checkpointID}")
             self.passedCheckpoints[checkpointID] += 1
+        # New lap
+        elif checkpointID == 0 and self.passedCheckpoints[0] == self.currLap:
+            self.currLap += 1
+            print(f"Car {self.id} starting new lap {self.currLap}!")
         else:
             N = len(self.passedCheckpoints)
             print(f"Car {self.id} needs to pass checkpoint {(checkpointID+N-1)%N} first")
 
-        
 
     def onCollideWall(self, entry):
         #self.isCollidingWall = True
