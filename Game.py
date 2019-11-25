@@ -135,6 +135,7 @@ class Game(ShowBase):
 
         self.player.updateMovement()
         self.stupidCar.updateMovement()
+        self.stupidCar2.updateMovement()
 
         return Task.cont
 
@@ -192,13 +193,14 @@ class Game(ShowBase):
         self.terrain = Terrain(self)
 
     def loadModels(self):
-        self.racetrack = Racetrack(self)
+        self.racetrack = Racetrack(self, "hexagon")
 
         # Only the positions are updated here because we want to space them out
         # But car facing and checkpoint handling are handled inside the init function
         pos = self.racetrack.points[0]
         self.player = Racecar(self, "groundroamer", "penguin", self.render, pos=pos)
         self.stupidCar = StupidCar(self, "groundroamer", "bunny", self.render)
+        self.stupidCar2 = StupidCar(self, "racecar", "chicken", self.render)
 
     # Key Events
     def createKeyControls(self):

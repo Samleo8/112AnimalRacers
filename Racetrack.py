@@ -27,7 +27,7 @@ class Wall(Obj3D):
 Class holds all walls and floors
 '''
 class Racetrack(Obj3D):
-    def __init__(self, gameObj, id=0):
+    def __init__(self, gameObj, trackName="test"):
         self.gameObj = gameObj
 
         # Get wall dimensions through a temporary wall
@@ -47,7 +47,7 @@ class Racetrack(Obj3D):
 
         # Generate racetrack
         self.points = []
-        self.generateRacetrackFromFile("hexagon")
+        self.generateRacetrackFromFile(trackName)
 
         # Generate checkpoints
         self.checkpoints = []

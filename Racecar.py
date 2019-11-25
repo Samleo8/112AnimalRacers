@@ -310,16 +310,20 @@ import random
 class StupidCar(Racecar):
     def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
         super().__init__(gameObj, model, passenger, renderParent, pos, hpr)
+        
+        # Stupid, but faster
+        self.maxSpeed = 10
+        self.friction = 0.01
+        self.accInc = self.friction + 0.005
 
     def artificialStupidity(self):
         r = random.random()
         if r < 0.25:
             self.doDrive("backwards")
-
         else:
             self.doDrive("forward")
         
-        if r < 0.5:
+        if r < 0.8:
             if random.random() < 0.5:
                 self.doTurn("right")
             else:
