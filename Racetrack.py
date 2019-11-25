@@ -10,6 +10,8 @@ class Wall(Obj3D):
 
         self.scaleAll(0.01)
 
+        self.initTexture("concrete")
+
         self.repositionToCenter()
         self.move(dz=self.dimZ/2)
 
