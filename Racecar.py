@@ -7,6 +7,8 @@ class Racecar(Obj3D):
         super().__init__(model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
+        # Audio
+
         self.id = Racecar.nRacecars
         Racecar.nRacecars += 1
 
@@ -56,6 +58,12 @@ class Racecar(Obj3D):
             self.initOnRacetrack()
 
         self.initCollisions()
+
+        self.initAudio()
+
+    # Init 3D audio
+    def initAudio(self):
+        self.attachAudio("collision")
 
     def getColNodeName(self, extras):
         return f"car_{self.id}_{extras}"
@@ -188,6 +196,10 @@ class Racecar(Obj3D):
         self.isCollidingWall = True
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
+
+        self.audio["collision"].play()
+
+        # TODO: 3D audio!
         return
         
     def onExitWall(self, entry):

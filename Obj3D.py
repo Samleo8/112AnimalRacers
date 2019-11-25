@@ -12,6 +12,9 @@ for more complicated objects
 from panda3d.core import *
 from direct.showbase.ShowBase import ShowBase
 
+# Audio managers
+from direct.showbase import Audio3DManager
+
 # Other libraries
 import os
 import math
@@ -77,9 +80,11 @@ def intersectionOfLines(line1, line2):
     
     return add2Tuples(start1, multiplyVectorByScalar(dir1, k))
 
-class Obj3D():
+
+class Obj3D(object):
     # Set worldRenderer in app loadModels
     worldRenderer = None
+    audio3d = None
 
     def __init__(self, model, renderParent=None, pos=None, hpr=None):
         # Set model
@@ -129,6 +134,9 @@ class Obj3D():
 
         # Collisions
         self.collisionNodes = { }
+
+        # 3D Audio
+        self.audio = { }
 
     # Collision Handling
     # Initialise a an object surrounding the whole player
@@ -246,6 +254,28 @@ class Obj3D():
         '''
         self.model.setTexture(texture, override)
 
+    # Audio
+    def attachAudio(self, audioName):
+        audioTypes = ["wav", "ogg", "mp3"]  # in order of priority
+        audioFile = f"audio/{audioName}"
+
+        for audioType in audioTypes:
+            tempaudioFile = audioFile + "." + audioType
+
+            if os.path.exists(tempaudioFile):
+                audioFile = tempaudioFile
+                break
+
+        try:
+            audio = Obj3D.audio3d.loadSfx(audioFile)
+        except:
+            raise Exception(f"Audio {audio} cannot be loaded")
+        
+        audio.setLoop(False)
+        
+        Obj3D.audio3d.attachSoundToObject(audio, self.model)
+        self.audio[audioName] = audio
+        
     # Relative movement and rotations
     def move(self, dx=0, dy=0, dz=0):
         x, y, z = self.getPos()

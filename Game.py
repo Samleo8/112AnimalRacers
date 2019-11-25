@@ -1,6 +1,7 @@
 # Core imports
 from panda3d.core import *
 from direct.showbase.ShowBase import ShowBase
+
 import sys
 import math
 import os
@@ -13,6 +14,9 @@ from direct.interval.LerpInterval import *
 # Task managers
 from direct.task.Task import Task
 import time
+
+# Audio managers
+from direct.showbase import Audio3DManager
 
 # Import External Classes
 from Obj3D import *
@@ -34,12 +38,13 @@ class Game(ShowBase):
         # Load collision handlers
         self.collisionSetup(showCollisions=False)
 
-        # Load Music
-        self.loadAudio()
-
         # Load lights and the fancy background
         self.loadBackground()
-        self.loadLights()
+        #self.loadLights()
+
+        # Load Music
+        # NOTE: Do before models so that cars can have audio3d object preinitialised
+        self.loadAudio()
 
         # Load the various models
         self.loadModels()
@@ -133,14 +138,18 @@ class Game(ShowBase):
         if self.paused or self.isGameOver:
             return Task.cont
 
-        self.player.updateMovement()
-        self.stupidCar.updateMovement()
-        self.stupidCar2.updateMovement()
+        for car in self.cars:
+            car.updateMovement()
 
         return Task.cont
 
     # Load Audio
     def loadAudio(self):
+        audio3d = Audio3DManager.Audio3DManager(
+            base.sfxManagerList[0], base.camera
+        )
+        Obj3D.audio3d = audio3d
+
         self.audio = {}
 
         # Bg audio
@@ -193,14 +202,19 @@ class Game(ShowBase):
         self.terrain = Terrain(self)
 
     def loadModels(self):
+        self.cars = []
         self.racetrack = Racetrack(self, "hexagon")
 
         # Only the positions are updated here because we want to space them out
         # But car facing and checkpoint handling are handled inside the init function
         pos = self.racetrack.points[0]
         self.player = Racecar(self, "groundroamer", "penguin", self.render, pos=pos)
-        self.stupidCar = StupidCar(self, "groundroamer", "bunny", self.render)
-        self.stupidCar2 = StupidCar(self, "racecar", "chicken", self.render)
+        car1 = StupidCar(self, "groundroamer", "bunny", self.render)
+        car2 = NotSoStupidCar(self, "racecar", "chicken", self.render)
+
+        self.cars.append(self.player)
+        self.cars.append(car1)
+        self.cars.append(car2)
 
     # Key Events
     def createKeyControls(self):
