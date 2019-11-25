@@ -37,4 +37,4 @@ class Terrain():
         self.scene.move(dz=0)
 
         # Sky
-        self.sky = Obj3D("FarmSky")
+        #self.sky = Obj3D("FarmSky")

@@ -1,14 +1,19 @@
 from Obj3D import *
 
 class Racecar(Obj3D):
+    nRacecars = 0 # this will serve as the unique ID for collision node
+
     def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
         super().__init__(model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
+        self.id = Racecar.nRacecars
+        Racecar.nRacecars += 1
+
         # Speed, positioning and sizing
         self.defaultRotationSpeed = 1
         self.maxSpeed = 5
-        self.maxSpeedBackwards = -3
+        self.maxSpeedBackwards = -3.5
 
         self.maxRotationSpeed = 5
 
@@ -19,6 +24,8 @@ class Racecar(Obj3D):
 
         self.drifting = False
         self.allowStaticTurning = False
+
+        self.isCollidingWall = False
 
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
@@ -43,11 +50,14 @@ class Racecar(Obj3D):
 
         self.initCollisions()
 
+    def getColNodeName(self):
+        return f"car_{self.id}"
+
     def initCollisions(self):
         # Initialise bounding box
-        self.initSurroundingCollisionObj("car", "capsule")
+        self.initSurroundingCollisionObj(self.getColNodeName(), "capsule")
 
-        colNode = self.getCollisionNode("car")
+        colNode = self.getCollisionNode(self.getColNodeName())
         
         # Wall Handling
         # NOTE: The way that pusher works is that it updates the NodePath model position on the collision
@@ -92,16 +102,21 @@ class Racecar(Obj3D):
         base.cTrav.addCollider(floorRayNode, self.colLifter)
 
         # Collision Events
-        self.gameObj.accept("car-in-wall", self.onCollideCrate)
-        self.gameObj.accept("car-again-wall", self.onCollideCrate)
-        self.gameObj.accept("car-out-wall", self.onExitCrate)
+        # Make this the player name to allow for individual event triggering
+        colNodeName = self.getColNodeName()
 
-    def onCollideCrate(self, entry):
+        self.gameObj.accept(f"{colNodeName}-in-wall", self.onCollideWall)
+        self.gameObj.accept(f"{colNodeName}-again-wall", self.onCollideWall)
+        self.gameObj.accept(f"{colNodeName}-out-wall", self.onExitWall)
+
+    def onCollideWall(self, entry):
+        #self.isCollidingWall = True
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
         return
         
-    def onExitCrate(self, entry):
+    def onExitWall(self, entry):
+        #self.isCollidingWall = False
         return
         
     # Speeds and Acceleration handling
@@ -184,10 +199,11 @@ class Racecar(Obj3D):
     # External Controls
     # TODO: Try https://www.panda3d.org/manual/?title=Bullet_Vehicles
     def doDrive(self, direction="forwards"):
+        accInc = self.accInc
         if direction in [ "backward", "backwards", "back", "reverse" ]:
-            self.incAcceleration(-1 * self.accInc)
+            self.incAcceleration(-1 * accInc)
         else:
-            self.incAcceleration(+1 * self.accInc)
+            self.incAcceleration(+1 * accInc)
 
     def doTurn(self, direction="left"):
         # Prevent static turning unless specified
