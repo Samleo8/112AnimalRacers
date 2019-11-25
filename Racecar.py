@@ -197,9 +197,9 @@ class Racecar(Obj3D):
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
 
+        # TODO: 3D audio!
         self.audio["collision"].play()
 
-        # TODO: 3D audio!
         return
         
     def onExitWall(self, entry):

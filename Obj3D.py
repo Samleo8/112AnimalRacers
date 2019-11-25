@@ -255,8 +255,9 @@ class Obj3D(object):
         self.model.setTexture(texture, override)
 
     # Audio
+    # NOTE: Stereo audio will not work; must convert to mono
     def attachAudio(self, audioName):
-        audioTypes = ["mp3", "ogg", "wav"]  # in order of priority
+        audioTypes = ["wav", "ogg", "mp3"]  # in order of priority
         audioFile = f"audio/{audioName}"
 
         for audioType in audioTypes:
