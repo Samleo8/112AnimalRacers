@@ -256,7 +256,7 @@ class Obj3D(object):
 
     # Audio
     def attachAudio(self, audioName):
-        audioTypes = ["wav", "ogg", "mp3"]  # in order of priority
+        audioTypes = ["mp3", "ogg", "wav"]  # in order of priority
         audioFile = f"audio/{audioName}"
 
         for audioType in audioTypes:
