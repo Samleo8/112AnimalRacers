@@ -8,8 +8,8 @@ class Wall(Obj3D):
         super().__init__(model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
-        self.scaleAll(1)
-        self.initTexture("concrete")
+        self.scaleAll(0.01)
+        #self.initTexture("concrete")
 
         self.repositionToCenter()
         self.move(dz=self.dimZ/2)
@@ -30,7 +30,7 @@ Class holds all walls and floors
 class Racetrack(Obj3D):
     def __init__(self, gameObj, trackName="test"):
         self.gameObj = gameObj
-        self.wallType = "smoking_cube"
+        self.wallType = "crate"
 
         # Get wall dimensions through a temporary wall
         tempWall = Wall(self.gameObj, self.wallType)

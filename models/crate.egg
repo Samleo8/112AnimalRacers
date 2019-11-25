@@ -1,6 +1,6 @@
 <CoordinateSystem> { y-up-left }
 
-<Texture> crate_Material_#11_CL { "maps/crate_Material_#11_CL.tif"
+<Texture> crate_Material_#11_CL { "maps/concrete_crate.png"
 	<Scalar> format { rgb }
 	<Scalar> wrap { repeat }
 }
