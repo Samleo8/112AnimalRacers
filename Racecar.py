@@ -230,10 +230,26 @@ class Passenger(Obj3D):
         super().__init__(model, renderParent, pos, hpr)
         self.gameObj = gameObj
     
+import random
+
 class StupidCar(Racecar):
     def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
-        super().__init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None)
+        super().__init__(gameObj, model, passenger, renderParent, pos, hpr)
 
     def artificialStupidity(self):
         self.doDrive("forward")
+
+        r = random.random()
+        if r < 0.2:
+            if random.random() < 0.5:
+                self.doTurn("right")
+            else:
+                self.doTurn("left")
+        if r < 0.1:
+            self.doDrive("backwards")
+
         return
+
+    def updateMovement(self):
+        self.artificialStupidity()
+        super().updateMovement()

@@ -117,6 +117,7 @@ class Game(ShowBase):
             return Task.cont
 
         self.player.updateMovement()
+        self.stupidCar.updateMovement()
 
         return Task.cont
 
@@ -181,6 +182,7 @@ class Game(ShowBase):
         self.player.rotate(dh=self.racetrack.leftTrackPoints[0][1][0])
 
         self.stupidCar = StupidCar(self, "groundroamer", "bunny", self.render)
+        self.stupidCar.rotate(dh=self.racetrack.leftTrackPoints[0][1][0])
         
     # Key Events
     def createKeyControls(self):
