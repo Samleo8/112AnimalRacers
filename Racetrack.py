@@ -36,10 +36,11 @@ class Racetrack(Obj3D):
         self.wallOffset = tempWall.getOffset()
         tempWall.destroy()
 
-        # Get racecar dimensions through a temporary wall
+        # Get racecar dimensions through a temporary car
         tempCar = Racecar(self.gameObj, "groundroamer")
         tempCarDim = tempCar.getDimensions()
         tempCar.destroy()
+        Racecar.nRacecars -= 1
 
         # Set wall spacing
         self.defaultWallSpacing = max(self.wallDim) + tempCarDim[0] * 5

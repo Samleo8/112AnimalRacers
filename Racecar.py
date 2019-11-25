@@ -49,8 +49,9 @@ class Racecar(Obj3D):
         self.passenger.scaleAll(2.5)
         self.passenger.move(dx=self.offsetX, dy=self.offsetY, dz=self.offsetZ)
 
-        # Init position on racetrack
-        self.initOnRacetrack()
+        # Init position on racetrack iff racetrack exists
+        if hasattr(self.gameObj, "racetrack"):
+            self.initOnRacetrack()
 
         self.initCollisions()
 
@@ -157,11 +158,17 @@ class Racecar(Obj3D):
     def onPassCheckpoint(self, entry):
         # Get passed checkpoint ID
         checkpointID = entry.getIntoNodePath().getPythonTag("checkpointID")
-        print(self.id, checkpointID)
         
         # TODO: Update passed checkpoint accordingly
         # Make sure that previous checkpoint was passed before update
-        if checkpointID == 0 and 
+        if self.passedCheckpoints[checkpointID-1] > self.passedCheckpoints[checkpointID]:
+            print(f"Car {self.id} successfully passed checkpoint {checkpointID}")
+            self.passedCheckpoints[checkpointID] += 1
+        else:
+            N = len(self.passedCheckpoints)
+            print(f"Car {self.id} needs to pass checkpoint {(checkpointID+N-1)%N} first")
+
+        
 
     def onCollideWall(self, entry):
         #self.isCollidingWall = True
