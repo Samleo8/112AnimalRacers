@@ -185,13 +185,13 @@ class Racecar(Obj3D):
 
 
     def onCollideWall(self, entry):
-        #self.isCollidingWall = True
+        self.isCollidingWall = True
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
         return
         
     def onExitWall(self, entry):
-        #self.isCollidingWall = False
+        self.isCollidingWall = False
         return
         
     # Speeds and Acceleration handling
@@ -316,6 +316,8 @@ class StupidCar(Racecar):
         self.friction = 0.01
         self.accInc = self.friction + 0.005
 
+        self.allowStaticTurning = True 
+
     def artificialStupidity(self):
         r = random.random()
         if r < 0.25:
@@ -334,3 +336,20 @@ class StupidCar(Racecar):
     def updateMovement(self):
         self.artificialStupidity()
         super().updateMovement()
+
+class NotSoStupidCar(StupidCar):
+    def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
+        super().__init__(gameObj, model, passenger, renderParent, pos, hpr)
+
+    def artificialStupidity(self):
+        if self.isCollidingWall:
+            self.doDrive("backwards")
+
+            if random.random() > 0.5:
+                self.doTurn("right")
+            else:
+                self.doTurn("left")
+        else: 
+            self.doDrive("forwards")
+
+        return
