@@ -144,7 +144,7 @@ class Game(ShowBase):
         self.audio = {}
 
         # Bg audio
-        bgAudio = base.loader.loadSfx("audio/alpha_century.mp3")
+        bgAudio = base.loader.loadSfx("audio/purple_passion.mp3")
         bgAudio.setLoop(True)
         bgAudio.play()
 

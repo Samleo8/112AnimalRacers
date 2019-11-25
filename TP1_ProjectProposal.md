@@ -1,6 +1,14 @@
 # Lego Racers: Remake++
 An attempt to remake my childhood favourite Lego Racers, with added features, including intelligent enemies, powerups and obstacles.
 
+## TP2 Update
+I was unexpectedly able to code out the enemy cars in time. 
+Hence, instead of the original single player mode, it's now a race against other (very stupid) AI cars.
+
+Obstacles will be added if necessary before TP3.
+
+I changed musical sound track too.
+
 ## Competitive Analysis
 The first racing game to analyse will of course be **Lego Racers** itself. This will naturally be a hard game to beat in terms of playability, mechanics and features. However, this remake++ version will not only incorporate the good features of Lego Racers, but also add on some features:
  
@@ -10,7 +18,7 @@ Powerups | Intelligent enemies and obstacles
 \- | Different camera views
 Tracks, racecar & character selection | Will not be able to customise fully
 *Customisable racecars (KIV)* | 
-*Enemy cars (KIV)* | Single player mode
+Enemy cars | *Single player mode (KIV)*
 Supports Windows | Coded in Python, so **multiplatform**!
  | 
 
