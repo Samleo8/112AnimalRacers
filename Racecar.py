@@ -230,3 +230,10 @@ class Passenger(Obj3D):
         super().__init__(model, renderParent, pos, hpr)
         self.gameObj = gameObj
     
+class StupidCar(Racecar):
+    def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
+        super().__init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None)
+
+    def artificialStupidity(self):
+        self.doDrive("forward")
+        return

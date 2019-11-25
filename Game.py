@@ -180,7 +180,7 @@ class Game(ShowBase):
         self.player = Racecar(self, "groundroamer", "penguin", self.render, pos=pos)
         self.player.rotate(dh=self.racetrack.leftTrackPoints[0][1][0])
 
-        self.panda = Racecar(self, "groundroamer", "person", self.render)
+        self.stupidCar = StupidCar(self, "groundroamer", "bunny", self.render)
         
     # Key Events
     def createKeyControls(self):
