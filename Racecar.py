@@ -51,19 +51,19 @@ class Racecar(Obj3D):
 
         self.initCollisions()
 
-    def getColNodeName(self):
-        return f"car_{self.id}"
+    def getColNodeName(self, extras):
+        return f"car_{self.id}_{extras}"
 
     def initCollisions(self):
-        # Initialise bounding box
-        self.initSurroundingCollisionObj(self.getColNodeName(), "capsule")
+        # Initialise bounding box for wall
+        self.initSurroundingCollisionObj(self.getColNodeName("wall"), "capsule")
 
-        colNode = self.getCollisionNode(self.getColNodeName())
-        colNode.node().setFromCollideMask(
-            self.gameObj.colBitMask["wall"] | self.gameObj.colBitMask["checkpoint"]
-        )
+        colNode = self.getCollisionNode(self.getColNodeName("wall"))
+        colNode.node().setFromCollideMask(self.gameObj.colBitMask["wall"])
         
-        # Wall Handling
+        '''
+        Wall Handling
+        '''
         # NOTE: The way that pusher works is that it updates the NodePath model position on the collision
         # This means that the positions used to update the positions must be constantly updated from the 
         # __NodePath__ positions, not internal x,y,z positions stored in the class.
@@ -86,7 +86,9 @@ class Racecar(Obj3D):
 
         base.cTrav.addCollider(colNode, self.colPusher)
 
-        # Floor Handling
+        '''
+        Floor Handling
+        '''
         self.colLifter = CollisionHandlerFloor()
         self.colLifter.setMaxVelocity(10)
 
@@ -102,12 +104,25 @@ class Racecar(Obj3D):
 
         self.colLifter.addCollider(floorRayNode, self.model)
 
-        # Note the cTrav scene will be under a different collider system
         base.cTrav.addCollider(floorRayNode, self.colLifter)
 
+        '''
+        Checkpoint Handling
+        '''
+        # Initialise bounding box for checkpoint
+        self.initSurroundingCollisionObj(
+            self.getColNodeName("checkpoint"), "box")
+
+        colNodeCheckpoint = self.getCollisionNode(
+            self.getColNodeName("checkpoint"))
+        colNodeCheckpoint.node().setFromCollideMask(
+            self.gameObj.colBitMask["checkpoint"]
+        )
+        '''
+
         # Collision Events
-        # Make this the player name to allow for individual event triggering
-        colNodeName = self.getColNodeName()
+        # Make this dependent on the player ID to allow for individual event triggering
+        colNodeName = self.getColNodeName("wall")
 
         self.gameObj.accept(f"{colNodeName}-in-wall", self.onCollideWall)
         self.gameObj.accept(f"{colNodeName}-again-wall", self.onCollideWall)
