@@ -27,6 +27,8 @@ class Game(ShowBase):
         self.paused = False
         self.isGameOver = False
 
+        self.totalLaps = 2
+
         Obj3D.worldRenderer = self.render
 
         # Load collision handlers
