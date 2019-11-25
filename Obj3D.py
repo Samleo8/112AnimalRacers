@@ -236,12 +236,15 @@ class Obj3D():
         return colNode
 
     # Set texture
-    def initTexture(self, textureName):
+    def initTexture(self, textureName, override=1):
         texture = loader.loadTexture(f"models/tex/{textureName}.png")
         
+        '''
         self.model.setTexGen(
-            TextureStage.getDefault(), TexGenAttrib.MWorldPosition)
-        self.model.setTexture(texture)
+            TextureStage.getDefault(), TexGenAttrib.MWorldPosition
+        )
+        '''
+        self.model.setTexture(texture, override)
 
     # Relative movement and rotations
     def move(self, dx=0, dy=0, dz=0):

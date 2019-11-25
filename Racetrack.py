@@ -8,8 +8,7 @@ class Wall(Obj3D):
         super().__init__(model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
-        self.scaleAll(0.01)
-
+        self.scaleAll(1)
         self.initTexture("concrete")
 
         self.repositionToCenter()
@@ -31,9 +30,10 @@ Class holds all walls and floors
 class Racetrack(Obj3D):
     def __init__(self, gameObj, trackName="test"):
         self.gameObj = gameObj
+        self.wallType = "smoking_cube"
 
         # Get wall dimensions through a temporary wall
-        tempWall = Wall(self.gameObj, "crate")
+        tempWall = Wall(self.gameObj, self.wallType)
         self.wallDim = tempWall.getDimensions()
         self.wallOffset = tempWall.getOffset()
         tempWall.destroy()
@@ -203,7 +203,7 @@ class Racetrack(Obj3D):
                 startPoint, 
                 multiplyVectorByScalar(directionVector, i * wallSize/distance)
             )
-            wall = Wall(self.gameObj, "crate", pos=pos)
+            wall = Wall(self.gameObj, self.wallType, pos=pos)
             wall.rotate(dh=thetha, dp=phi)
 
     # Given a start pos, calculate positions of side track points with defined spacing from the center position
