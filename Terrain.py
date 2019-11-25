@@ -1,6 +1,6 @@
 from Obj3D import *
 
-class Scene(Obj3D):
+class Ground(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
         super().__init__(model, renderParent, pos, hpr)
         self.gameObj = gameObj
@@ -12,7 +12,6 @@ class Scene(Obj3D):
             "padding": (0, 0, 0)
         }
 
-        # TODO: See https://www.panda3d.org/manual/?title=Bitmask_Example
         # TODO: Integrate https://discourse.panda3d.org/t/panda3d-collisions-made-simple/7441/12
         self.initSurroundingCollisionObj("floor", args=args, show=False)
 
@@ -23,11 +22,16 @@ class Terrain():
     def __init__(self, gameObj):
         self.gameObj = gameObj
 
-        # Load floor/scene
-        self.ground = Scene(self.gameObj, "ground")
-        self.scene = Scene(self.gameObj, "cornfield")
-        self.scene.move(dz=0)
+        # Load infinitely extending floor
+        floorPlane = Obj3D.worldRenderer.attachNewNode(CollisionNode("floor"))
+        floorPlane.node().addSolid(CollisionPlane(
+            Plane(Vec3(0, 0, 1), Point3(0, 0, 0))
+        ))
+        floorPlane.node().setIntoCollideMask(self.gameObj.colBitMask["floor"])
+
+        # Load ground
+        self.ground = Ground(self.gameObj, "ground")
+        self.scene = Ground(self.gameObj, "cornfield")
 
         # Sky
         #self.sky = Obj3D("FarmSky")
-

@@ -1,7 +1,7 @@
 from Obj3D import *
 
 class Racecar(Obj3D):
-    def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
+    def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
         super().__init__(model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
@@ -31,7 +31,7 @@ class Racecar(Obj3D):
         self.move(dz=self.dimZ/2) 
         
         # Add passenger
-        self.personName = "penguin"
+        self.personName = "penguin" if passenger == None else passenger
         self.passenger = Passenger(
             self.gameObj,
             self.personName, self.model

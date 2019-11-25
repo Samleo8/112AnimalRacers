@@ -177,8 +177,8 @@ class Game(ShowBase):
         self.racetrack = Racetrack(self)
 
         pos = self.racetrack.points[0]
-        self.player = Racecar(self, "groundroamer", self.render, pos=pos)
-        self.panda = Racecar(self, "groundroamer", self.render)
+        self.player = Racecar(self, "groundroamer", "penguin", self.render, pos=pos)
+        self.panda = Racecar(self, "groundroamer", "person", self.render)
 
         self.player.rotate(dh=self.racetrack.leftTrackPoints[0][1][0])
         
@@ -289,7 +289,8 @@ class Game(ShowBase):
         # Reference: https://www.panda3d.org/manual/?title=Bitmask_Example
         self.colBitMask = {
             "wall": BitMask32.bit(0x01),
-            "floor": BitMask32.bit(0x02)
+            "floor": BitMask32.bit(0x02),
+            "checkpoints": BitMask32.bit(0x04)
         }
 
     def togglePause(self):
