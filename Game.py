@@ -117,7 +117,7 @@ class Game(ShowBase):
             return Task.cont
 
         self.player.updateMovement()
-        #self.stupidCar.updateMovement()
+        self.stupidCar.updateMovement()
 
         return Task.cont
 
@@ -181,8 +181,8 @@ class Game(ShowBase):
         self.player = Racecar(self, "groundroamer", "penguin", self.render, pos=pos)
         self.player.rotate(dh=self.racetrack.leftTrackPoints[0][1][0])
 
-        #self.stupidCar = StupidCar(self, "groundroamer", "bunny", self.render)
-        #self.stupidCar.rotate(dh=self.racetrack.leftTrackPoints[0][1][0])
+        self.stupidCar = StupidCar(self, "groundroamer", "bunny", self.render)
+        self.stupidCar.rotate(dh=self.racetrack.leftTrackPoints[0][1][0])
 
         self.player.passedCheckpoints = [0 for i in range(len(self.racetrack.checkpoints))]
         

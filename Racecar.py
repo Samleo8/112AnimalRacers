@@ -138,8 +138,9 @@ class Racecar(Obj3D):
         self.gameObj.accept(f"{colNodeName}-out-checkpoint", self.onPassCheckpoint)
     
     def onPassCheckpoint(self, entry):
-        # TODO: Which checkpoint does this correspond to
-        print(entry.getIntoNodePath().getPythonTag("checkpointID"))
+        # TODO: Update passed checkpoint accordingly
+        checkpointID = entry.getIntoNodePath().getPythonTag("checkpointID")
+        print(self.id, checkpointID)
         
     def onCollideWall(self, entry):
         #self.isCollidingWall = True
