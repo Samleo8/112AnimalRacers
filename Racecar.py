@@ -49,6 +49,9 @@ class Racecar(Obj3D):
         self.passenger.scaleAll(2.5)
         self.passenger.move(dx=self.offsetX, dy=self.offsetY, dz=self.offsetZ)
 
+        # Init position on racetrack
+        self.initOnRacetrack()
+
         self.initCollisions()
 
     def getColNodeName(self, extras):
@@ -137,11 +140,29 @@ class Racecar(Obj3D):
 
         self.gameObj.accept(f"{colNodeName}-out-checkpoint", self.onPassCheckpoint)
     
+    def initOnRacetrack(self):
+        # Assumes that racetrack has already been generated
+        trackPoints = self.gameObj.racetrack.leftTrackPoints
+        yawFacing = trackPoints[0][1][0]
+
+        # Rotate to face the closest checkpoint
+        self.rotate(dh=yawFacing)
+
+        # Init Passed Checkpoints array
+        self.passedCheckpoints = [0 for i in range(len(trackPoints))]
+        self.passedCheckpoints[0] = 1 # the first checkpoint is always passed
+
+        return
+
     def onPassCheckpoint(self, entry):
-        # TODO: Update passed checkpoint accordingly
+        # Get passed checkpoint ID
         checkpointID = entry.getIntoNodePath().getPythonTag("checkpointID")
         print(self.id, checkpointID)
         
+        # TODO: Update passed checkpoint accordingly
+        # Make sure that previous checkpoint was passed before update
+        if checkpointID == 0 and 
+
     def onCollideWall(self, entry):
         #self.isCollidingWall = True
         self.setSpeed(0, 0)

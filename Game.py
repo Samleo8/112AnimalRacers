@@ -177,15 +177,12 @@ class Game(ShowBase):
     def loadModels(self):
         self.racetrack = Racetrack(self)
 
+        # Only the positions are updated here because we want to space them out
+        # But car facing and checkpoint handling are handled inside the init function
         pos = self.racetrack.points[0]
         self.player = Racecar(self, "groundroamer", "penguin", self.render, pos=pos)
-        self.player.rotate(dh=self.racetrack.leftTrackPoints[0][1][0])
-
         self.stupidCar = StupidCar(self, "groundroamer", "bunny", self.render)
-        self.stupidCar.rotate(dh=self.racetrack.leftTrackPoints[0][1][0])
 
-        self.player.passedCheckpoints = [0 for i in range(len(self.racetrack.checkpoints))]
-        
     # Key Events
     def createKeyControls(self):
         # Create a function to key maps
