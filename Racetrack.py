@@ -47,7 +47,38 @@ class Racetrack(Obj3D):
         # Generate racetrack
         self.points = []
         self.generateRacetrackFromFile("hexagon")
-        
+
+        # Generate checkpoints
+        self.checkpoints = []
+        self.generateCheckpoints()
+    
+    # Generate checkpoints
+    # Basically collision boxes from left to right side point
+    def generateCheckpoints(self):
+        leftTrackPoints = self.leftTrackPoints
+        rightTrackPoints = self.rightTrackPoints
+
+        checkPointRad = self.wallDim[1]
+
+        for i in range(len(leftTrackPoints)):
+            leftPos, _ = leftTrackPoints[i]
+            rightPos, _ = rightTrackPoints[i]
+
+            x0, y0, z0 = leftPos
+            x1, y1, z1 = rightPos
+
+            colBox = CollisionCapsule(
+                (x0, y0, 0),
+                (x1, y1, 0),
+                checkPointRad
+            )
+
+            Obj3D.createIsolatedCollisionObj(
+                "checkpoint", colBox, intoBitmask=self.gameObj.colBitMask["checkpoint"],
+                show=True
+            )
+        return
+
     # Parse the special race track file
     # Ignore comments which start with #
     # Returns a list of tuples of points
@@ -166,8 +197,8 @@ class Racetrack(Obj3D):
                 startPoint, 
                 multiplyVectorByScalar(directionVector, i * wallSize/distance)
             )
-            wall1 = Wall(self.gameObj, "crate", pos=pos)
-            wall1.rotate(dh=thetha, dp=phi)
+            wall = Wall(self.gameObj, "crate", pos=pos)
+            wall.rotate(dh=thetha, dp=phi)
 
     # Given a start pos, calculate positions of side track points with defined spacing from the center position
     # and with the correct facing (yaw) 

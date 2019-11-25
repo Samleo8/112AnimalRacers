@@ -290,9 +290,9 @@ class Game(ShowBase):
         # Set bitmasks
         # Reference: https://www.panda3d.org/manual/?title=Bitmask_Example
         self.colBitMask = {
-            "wall": BitMask32.bit(0x01),
+            "wall": BitMask32.bit(0x04),
             "floor": BitMask32.bit(0x02),
-            "checkpoints": BitMask32.bit(0x04)
+            "checkpoint": BitMask32.bit(0x01)
         }
 
     def togglePause(self):

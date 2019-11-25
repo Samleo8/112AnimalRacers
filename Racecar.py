@@ -58,6 +58,7 @@ class Racecar(Obj3D):
         self.initSurroundingCollisionObj(self.getColNodeName(), "capsule")
 
         colNode = self.getCollisionNode(self.getColNodeName())
+        colNode.node().setFromCollideMask(self.gameObj.colBitMask["wall"])
         
         # Wall Handling
         # NOTE: The way that pusher works is that it updates the NodePath model position on the collision

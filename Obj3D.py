@@ -214,6 +214,25 @@ class Obj3D():
 
         return None
 
+    # Isolated collision node
+    @staticmethod
+    def createIsolatedCollisionObj(name, colSolid, fromBitmask=None, intoBitmask=None, show=False):
+        colNode = Obj3D.worldRenderer.attachNewNode(
+            CollisionNode(name)
+        )
+        colNode.node().addSolid(colSolid)
+
+        if fromBitmask != None:
+            colNode.node().setFromCollideMask(fromBitmask)
+
+        if intoBitmask != None: 
+            colNode.node().setIntoCollideMask(intoBitmask)
+
+        if show:
+            colNode.show()
+
+        return colNode
+
     # Set texture
     def initTexture(self, textureName):
         texture = loader.loadTexture(f"models/tex/{textureName}.png")

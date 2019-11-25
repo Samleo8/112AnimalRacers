@@ -23,11 +23,13 @@ class Terrain():
         self.gameObj = gameObj
 
         # Load infinitely extending floor
-        floorPlane = Obj3D.worldRenderer.attachNewNode(CollisionNode("floor"))
-        floorPlane.node().addSolid(CollisionPlane(
+        planeSolid = CollisionPlane(
             Plane(Vec3(0, 0, 1), Point3(0, 0, 0))
-        ))
-        floorPlane.node().setIntoCollideMask(self.gameObj.colBitMask["floor"])
+        )
+
+        floorPlane = Obj3D.createIsolatedCollisionObj(
+            "floor", planeSolid, intoBitmask=self.gameObj.colBitMask["floor"]
+        )
 
         # Load ground
         self.ground = Ground(self.gameObj, "ground")
