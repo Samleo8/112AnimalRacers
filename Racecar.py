@@ -312,16 +312,18 @@ class StupidCar(Racecar):
         super().__init__(gameObj, model, passenger, renderParent, pos, hpr)
 
     def artificialStupidity(self):
-        self.doDrive("forward")
-
         r = random.random()
+        if r < 0.25:
+            self.doDrive("backwards")
+
+        else:
+            self.doDrive("forward")
+        
         if r < 0.5:
             if random.random() < 0.5:
                 self.doTurn("right")
             else:
                 self.doTurn("left")
-        if r < 0.25:
-            self.doDrive("backwards")
 
         return
 
