@@ -172,11 +172,13 @@ class Racecar(Obj3D):
             self.currLap += 1
             self.passedCheckpoints[0] += 1 
 
-            # TODO: Check win condition
-            if self.currLap >= self.gameObj.totalLaps:
-                print(f"Player {self.id+1} has won!")
+            # Check win condition
+            # TODO: Gameover function
+            totalLaps = self.gameObj.totalLaps
+            if self.currLap >= totalLaps:
+                self.gameObj.gameOver(self)
             else:
-                print(f"Car {self.id} starting new lap {self.currLap}!")
+                print(f"Car {self.id} starting new lap {self.currLap} of {totalLaps}!")
         else:
             N = len(self.passedCheckpoints)
             print(f"Car {self.id} needs to pass checkpoint {(checkpointID+N-1)%N} first")

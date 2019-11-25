@@ -27,7 +27,7 @@ class Game(ShowBase):
         self.paused = False
         self.isGameOver = False
 
-        self.totalLaps = 2
+        self.totalLaps = 3
 
         Obj3D.worldRenderer = self.render
 
@@ -112,6 +112,19 @@ class Game(ShowBase):
             self.camera.lookAt(x, y, z)
 
         return Task.cont
+
+    # Game over handling
+    def gameOver(self, car):
+        self.isGameOver = True
+        
+        if car.id == 0: # player
+            winMsg = f"Yay! You have won the game, beating {Racecar.nRacecars-1} other cars!"
+        else:
+            winMsg = f"Oh no! You have been beaten by car {car.id+1}!"
+
+        print(winMsg)
+
+        return
 
     # Game Timer
     def gameTimer(self, task):
