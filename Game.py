@@ -96,25 +96,26 @@ class Game(ShowBase):
         camDistance = player.dimY * 1.5
 
         # Allow for variable camera configuration
-        thetha = degToRad(h)
+        theta = degToRad(h)
 
         if "_rotate" in self.camConfig:
             if self.isGameOver and self.gameOverTime == 0:
-                    self.gameOverTime = task.time
+                self.gameOverTime = task.time
             
-            thetha = (task.time - self.gameOverTime + degToRad(h)) * 2.5
-
+            print(self.gameOverTime, task.time)
+            theta = (task.time - self.gameOverTime + degToRad(h)) * 2.5
+            
             # Stop rotation after n rotations
-            nRotations = 1
-            if self.isGameOver and thetha >= nRotations * 2 * math.pi:
+            nRotations = 3
+            if self.isGameOver and theta >= -(nRotations * 2 * math.pi + math.pi + degToRad(h)):
                 self.setCameraView("perspective_behind_win")
                 self.pauseAudio()
 
         if "_behind" in self.camConfig:
-            thetha = degToRad(h - 180)
+            theta = degToRad(h - 180)
 
-        xOffset = camDistance * math.sin(thetha)
-        yOffset = -camDistance * math.cos(thetha)
+        xOffset = camDistance * math.sin(theta)
+        yOffset = -camDistance * math.cos(theta)
 
         # Top-down view
         if self.camConfig == "birdsEye":
@@ -124,7 +125,7 @@ class Game(ShowBase):
 
             phi = -90
 
-            self.camera.setHpr(radToDeg(thetha), phi, 0)
+            self.camera.setHpr(radToDeg(theta), phi, 0)
         # Camera has a slight tilt
         else:
             camHeight = player.dimZ * 2
@@ -135,8 +136,8 @@ class Game(ShowBase):
         # Remember to calculate the perspective offset accordingly
         if "perspective" in self.camConfig:
             perspectiveOffset = 10
-            xOffset = perspectiveOffset * math.sin(-thetha)
-            yOffset = perspectiveOffset * math.cos(-thetha)
+            xOffset = perspectiveOffset * math.sin(-theta)
+            yOffset = perspectiveOffset * math.cos(-theta)
             self.camera.lookAt(x + xOffset, y + yOffset, z)
 
         # Look at center of car
@@ -155,7 +156,13 @@ class Game(ShowBase):
         else:
             winMsg = f"Oh no! You have been beaten by car {car.id+1}!"
 
-        print(winMsg)
+        self.texts["lap"].destroy()
+
+        self.texts["gameOver"] = OnscreenText(
+            text=winMsg, pos=(0, 0.8), scale=0.1,
+            bg=(255, 255, 255, 0.7), wordwrap=100, 
+            align=TextNode.ACenter, mayChange=False
+        )
 
         # Make camera move and have the audio stop after
         self.setCameraView("perspective_rotate_win")
