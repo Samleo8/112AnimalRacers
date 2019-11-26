@@ -11,6 +11,8 @@ Hence, instead of the original single player mode, it's now a race against other
 
 4. I changed musical sound track too.
 
+5. The GUI for racecar selection and customisable racetrack is incomplete, but elements for it are there.
+
 See more details on changes in [Structural](#structural-plan) and [Algorithmic](#algorithmic-plan) plan
 
 ## Competitive Analysis
