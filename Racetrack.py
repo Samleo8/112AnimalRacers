@@ -123,9 +123,23 @@ class Racetrack(Obj3D):
 
             points.append(tuple(point))
 
-        # TODO: Handle unless points
+        # TODO: Handle useless points
         if points[0] == points[-1]:
             points.pop()
+
+        for i in range(len(points)-2, 0, -1):
+            # Check if direction vectors are parallel
+            dir1 = LVector3f(points[i]) - LVector3f(points[i-1])
+            dir2 = LVector3f(points[i]) - LVector3f(points[i+1])
+
+            dir1.normalize()
+            dir2.normalize()
+
+            # Vectors are parallel, remove them otherwise they'll cause problems
+            if dir1.cross(dir2) == LVector3f.zero():
+                points.pop(i)
+
+            continue
 
         if len(points) <= 3:
             raise Exception(f"{fileName}.track: Not enough points to make a racetrack!")
