@@ -184,6 +184,12 @@ class Racecar(Obj3D):
             # Check win condition
             # TODO: Gameover function
             totalLaps = self.gameObj.totalLaps
+
+            # Player, so update on screen text
+            if self.id == 0:
+                self.gameObj.texts["lap"].setText(
+                    f'Lap {self.currLap}/{totalLaps}')
+
             if self.currLap >= totalLaps:
                 self.gameObj.gameOver(self)
             else:

@@ -18,6 +18,9 @@ import time
 # Audio managers
 from direct.showbase import Audio3DManager
 
+# GUI
+from direct.gui.OnscreenText import OnscreenText
+
 # Import External Classes
 from Obj3D import *
 from Racecar import *
@@ -35,6 +38,14 @@ class Game(ShowBase):
         self.totalLaps = 3
 
         Obj3D.worldRenderer = self.render
+
+        # Generate texts
+        self.texts = {}
+        self.texts["lap"] = OnscreenText(
+            text=f'Lap 0/{self.totalLaps}', pos=(-1.25, 0.9), scale=0.08,
+            bg=(255,255,255,0.7),
+            align=TextNode.ALeft, mayChange=True
+        )
 
         # Load collision handlers
         self.collisionSetup(showCollisions=False)
