@@ -30,8 +30,9 @@ class Game(ShowBase):
         # Get other stuff ready
         self.paused = False
         self.isGameOver = False
+        self.gameOverTime = 0 # for camera rotation
 
-        self.totalLaps = 3
+        self.totalLaps = 1
 
         Obj3D.worldRenderer = self.render
 
@@ -66,7 +67,10 @@ class Game(ShowBase):
         self.taskMgr.add(self.gameTimer, "GameTimer")
 
     def setCameraToPlayer(self, task):
-        player = self.player
+        # Focus on winning car when gameover
+        player = self.player \
+            if not self.isGameOver else self.winningCar
+        
         x, y, z = player.getPos()
         h, p, r = player.getHpr()
 
@@ -81,10 +85,22 @@ class Game(ShowBase):
         camDistance = player.dimY * 1.5
 
         # Allow for variable camera configuration
+        thetha = degToRad(h)
+
         if "_rotate" in self.camConfig:
-            thetha = task.time * 2.5
-        else:
-            thetha = degToRad(h)
+            if self.isGameOver and self.gameOverTime == 0:
+                    self.gameOverTime = task.time
+            
+            thetha = (task.time - self.gameOverTime + degToRad(h)) * 2.5
+
+            # Stop rotation after n rotations
+            nRotations = 3
+            if self.isGameOver and thetha >= nRotations * 2 * math.pi:
+                self.setCameraView("perspective_win")
+                self.pauseAudio()
+
+        if self.camConfig == "perspective_win":
+            thetha = -degToRad(h)
 
         xOffset = camDistance * math.sin(thetha)
         yOffset = -camDistance * math.cos(thetha)
@@ -106,7 +122,7 @@ class Game(ShowBase):
         
         # Look forward a bit
         # Remember to calculate the perspective offset accordingly
-        if self.camConfig in [ "perspective" ]:
+        if self.camConfig in [ "perspective", "perspective_win" ]:
             perspectiveOffset = 10
             xOffset = perspectiveOffset * math.sin(-thetha)
             yOffset = perspectiveOffset * math.cos(-thetha)
@@ -121,6 +137,7 @@ class Game(ShowBase):
     # Game over handling
     def gameOver(self, car):
         self.isGameOver = True
+        self.winningCar = car  # self.cars[1]
         
         if car.id == 0: # player
             winMsg = f"Yay! You have won the game, beating {Racecar.nRacecars-1} other cars!"
@@ -129,8 +146,8 @@ class Game(ShowBase):
 
         print(winMsg)
 
-        # Make camera 
-
+        # Make camera move and have the audio stop after
+        self.setCameraView("perspective_rotate_win")
         return
 
     # Game Timer
@@ -252,7 +269,7 @@ class Game(ShowBase):
             (self.setCameraView, ["3"], ["firstPerson"]),
             (self.oobe, ["="], None),
             (self.oobeCull, ["-"], None),
-            (self.togglePause, ["p", "esc"], None)
+            (self.togglePause, ["p", "Esc"], None)
         ]
 
         for fn, keys, args in keyReleaseMap:
@@ -277,6 +294,10 @@ class Game(ShowBase):
             self.isKeyDown[key] = 0
 
     def setCameraView(self, view):
+        # Once win, only allow for win camera view
+        if self.isGameOver and "_win" not in view:
+            return
+
         self.camConfig = view
         print("Camera view set to: " + self.camConfig)
 
@@ -332,12 +353,14 @@ class Game(ShowBase):
 
     def togglePause(self):
         self.paused ^= True
+        self.pauseAudio()
 
+    def pauseAudio(self):
         # We need to pause music too
         for nm in self.audio:
             sound = self.audio[nm]
 
-            playRate = 0 if self.paused else 1
+            playRate = 0 if self.paused or self.isGameOver else 1
             sound.setPlayRate(playRate)
 
 game = Game()
