@@ -94,7 +94,7 @@ class Game(ShowBase):
             thetha = (task.time - self.gameOverTime + degToRad(h)) * 2.5
 
             # Stop rotation after n rotations
-            nRotations = 2
+            nRotations = 1
             if self.isGameOver and thetha >= nRotations * 2 * math.pi:
                 self.setCameraView("perspective_behind_win")
                 self.pauseAudio()
@@ -269,7 +269,6 @@ class Game(ShowBase):
             (self.setCameraView, ["2"], ["birdsEye"]),
             (self.setCameraView, ["3"], ["firstPerson"]),
             (self.oobe, ["="], None),
-            (self.oobeCull, ["-"], None),
             (self.togglePause, ["p", "Esc"], None)
         ]
 
