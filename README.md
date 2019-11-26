@@ -17,6 +17,9 @@ Then, run the game with `python Game.py`. Note that only Python 3 is supported.
 ### Audio
 Main music adapted from [Purple Passion](https://www.youtube.com/watch?v=ERbmI4_x1Xc) by *Diana Boncheva*
 
+### Fonts
+[American Captain](https://www.fontspace.com/the-fontry/american-captain) by *The Fontry*
+
 ### Code Reference
 [Panda 3D Manual](https://www.panda3d.org/manual/)
 

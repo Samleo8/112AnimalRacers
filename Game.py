@@ -41,9 +41,13 @@ class Game(ShowBase):
 
         # Generate texts
         self.texts = {}
+        self.fonts = {}
+        
+        self.fonts["AmericanCaptain"] = loader.loadFont('AmericanCaptain.ttf')
+
         self.texts["lap"] = OnscreenText(
-            text=f'Lap 0/{self.totalLaps}', pos=(-1.25, 0.9), scale=0.08,
-            bg=(255,255,255,0.7),
+            text=f'Lap 0/{self.totalLaps}', pos=(-1.25, 0.8), scale=0.15,
+            bg=(255, 255, 255, 0.7), font=self.fonts["AmericanCaptain"],
             align=TextNode.ALeft, mayChange=True
         )
 
@@ -76,6 +80,8 @@ class Game(ShowBase):
 
         # Start a game timer
         self.taskMgr.add(self.gameTimer, "GameTimer")
+
+        self.gameOver(self.player)
 
     def setCameraToPlayer(self, task):
         # Focus on winning car when gameover
@@ -158,8 +164,9 @@ class Game(ShowBase):
         self.texts["lap"].destroy()
 
         self.texts["gameOver"] = OnscreenText(
-            text=winMsg, pos=(0, 0.8), scale=0.1,
-            bg=(255, 255, 255, 0.7), wordwrap=100, 
+            text=winMsg, pos=(0, 0.8), scale=0.15,
+            bg=(255, 255, 255, 0.7), wordwrap=20, 
+            font=self.fonts["AmericanCaptain"],
             align=TextNode.ACenter, mayChange=False
         )
 
