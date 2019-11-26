@@ -26,7 +26,14 @@ from Obj3D import *
 from Racecar import *
 from Racetrack import *
 from Terrain import *
+
 class Game(ShowBase):
+    def __init__(self):
+        ShowBase.__init__(self)
+        self.destroy()
+
+        racingGame = RacingGame()
+class RacingGame(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
 
@@ -290,6 +297,7 @@ class Game(ShowBase):
             (self.setCameraView, ["1"], ["perspective"]),
             (self.setCameraView, ["2"], ["birdsEye"]),
             (self.setCameraView, ["3"], ["firstPerson"]),
+            (self.restartGame, ["r"], None),
             (self.oobe, ["="], None),
             (self.togglePause, ["p", "Esc"], None)
         ]
@@ -373,9 +381,9 @@ class Game(ShowBase):
         # Reference: https://www.panda3d.org/manual/?title=Bitmask_Example
         self.colBitMask = {
             "off": BitMask32.allOff(),
-            "wall": BitMask32.bit(0x04),
+            "wall": BitMask32.bit(0x01),
             "floor": BitMask32.bit(0x02),
-            "checkpoint": BitMask32.bit(0x01)
+            "checkpoint": BitMask32.bit(0x04)
         }
 
     def togglePause(self):
@@ -389,6 +397,10 @@ class Game(ShowBase):
 
             playRate = 0 if self.paused or self.isGameOver else 1
             sound.setPlayRate(playRate)
+
+    def restartGame(self):
+        self.destroy()
+        Game()
 
 game = Game()
 game.run()
