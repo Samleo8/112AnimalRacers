@@ -32,7 +32,7 @@ class Game(ShowBase):
         self.isGameOver = False
         self.gameOverTime = 0 # for camera rotation
 
-        self.totalLaps = 1
+        self.totalLaps = 3
 
         Obj3D.worldRenderer = self.render
 
@@ -94,13 +94,13 @@ class Game(ShowBase):
             thetha = (task.time - self.gameOverTime + degToRad(h)) * 2.5
 
             # Stop rotation after n rotations
-            nRotations = 3
+            nRotations = 2
             if self.isGameOver and thetha >= nRotations * 2 * math.pi:
-                self.setCameraView("perspective_win")
+                self.setCameraView("perspective_behind_win")
                 self.pauseAudio()
 
-        if self.camConfig == "perspective_win":
-            thetha = -degToRad(h)
+        if "behind" in self.camConfig:
+            thetha = degToRad(h - 180)
 
         xOffset = camDistance * math.sin(thetha)
         yOffset = -camDistance * math.cos(thetha)
@@ -245,6 +245,7 @@ class Game(ShowBase):
             "turnLeft": [ "arrow_left", "a" ],
             "turnRight": [ "arrow_right", "d" ],
             "camConfigRotate": ["enter"],
+            "camConfigBehind": ["behind"],
             "drifting": [ "z" ]
         }
 
@@ -331,6 +332,11 @@ class Game(ShowBase):
             self.camConfig += "_rotate"
         else: 
             self.camConfig = self.camConfig.replace("_rotate", "")
+
+        if self.isKeyDown["camConfigBehind"] > 0:
+            self.camConfig += "_behind"
+        else:
+            self.camConfig = self.camConfig.replace("_behind", "")
 
         return Task.cont
 
