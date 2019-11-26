@@ -360,7 +360,7 @@ class NotSoStupidCar(StupidCar):
 
     def artificialStupidity(self):
         if self.isCollidingWall:
-            self.doDrive("backwards")
+            #self.doDrive("backwards")
 
             if random.random() > 0.5:
                 self.doTurn("right")
