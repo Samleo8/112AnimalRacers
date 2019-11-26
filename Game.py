@@ -99,7 +99,7 @@ class Game(ShowBase):
                 self.setCameraView("perspective_behind_win")
                 self.pauseAudio()
 
-        if "behind" in self.camConfig:
+        if "_behind" in self.camConfig:
             thetha = degToRad(h - 180)
 
         xOffset = camDistance * math.sin(thetha)
@@ -122,7 +122,7 @@ class Game(ShowBase):
         
         # Look forward a bit
         # Remember to calculate the perspective offset accordingly
-        if self.camConfig in [ "perspective", "perspective_win" ]:
+        if "perspective" in self.camConfig:
             perspectiveOffset = 10
             xOffset = perspectiveOffset * math.sin(-thetha)
             yOffset = perspectiveOffset * math.cos(-thetha)
@@ -245,7 +245,7 @@ class Game(ShowBase):
             "turnLeft": [ "arrow_left", "a" ],
             "turnRight": [ "arrow_right", "d" ],
             "camConfigRotate": ["enter"],
-            "camConfigBehind": ["behind"],
+            "camConfigBehind": ["space"],
             "drifting": [ "z" ]
         }
 
