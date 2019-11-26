@@ -40,7 +40,7 @@ class Game(ShowBase):
 
         # Load lights and the fancy background
         self.loadBackground()
-        #self.loadLights()
+        self.loadLights()
 
         # Load Music
         # NOTE: Do before models so that cars can have audio3d object preinitialised
@@ -155,7 +155,7 @@ class Game(ShowBase):
         # Bg audio
         bgAudio = base.loader.loadSfx("audio/purple_passion.mp3")
         bgAudio.setLoop(True)
-        bgAudio.play()
+        #bgAudio.play()
 
         self.audio["bg"] = bgAudio
 

@@ -256,7 +256,7 @@ class Obj3D(object):
 
     # Audio
     # NOTE: Stereo audio will not work; must convert to mono
-    def attachAudio(self, audioName):
+    def attachAudio(self, audioName, loop=False):
         audioTypes = ["wav", "ogg", "mp3"]  # in order of priority
         audioFile = f"audio/{audioName}"
 
@@ -267,14 +267,19 @@ class Obj3D(object):
                 audioFile = tempaudioFile
                 break
 
+        audio3d = Audio3DManager.Audio3DManager(
+            base.sfxManagerList[0], base.camera
+        ) if Obj3D.audio3d == None else Obj3D.audio3d
+
         try:
-            audio = Obj3D.audio3d.loadSfx(audioFile)
+            audio = audio3d.loadSfx(audioFile)
         except:
             raise Exception(f"Audio {audio} cannot be loaded")
         
-        audio.setLoop(False)
+        audio.setLoop(loop)
         
-        Obj3D.audio3d.attachSoundToObject(audio, self.model)
+        audio3d.attachSoundToObject(audio, self.model)
+        
         self.audio[audioName] = audio
         
     # Relative movement and rotations
