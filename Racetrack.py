@@ -123,7 +123,7 @@ class Racetrack(Obj3D):
 
             points.append(tuple(point))
 
-        # TODO: Handle useless points
+        # Handle useless points
         if points[0] == points[-1]:
             points.pop()
 
