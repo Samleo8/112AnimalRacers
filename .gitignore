@@ -1,6 +1,7 @@
 ./models/*/*.bphys
 blendercache*
 *.bphys
+*tutorial/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
