@@ -102,12 +102,11 @@ class Game(ShowBase):
             if self.isGameOver and self.gameOverTime == 0:
                 self.gameOverTime = task.time
             
-            print(self.gameOverTime, task.time)
-            theta = (task.time - self.gameOverTime + degToRad(h)) * 2.5
-            
+            theta = (task.time - self.gameOverTime) * 2.5 + degToRad(h)
+
             # Stop rotation after n rotations
             nRotations = 3
-            if self.isGameOver and theta >= -(nRotations * 2 * math.pi + math.pi + degToRad(h)):
+            if self.isGameOver and theta - degToRad(h) >= ( (nRotations-1) * 2 * math.pi + math.pi):
                 self.setCameraView("perspective_behind_win")
                 self.pauseAudio()
 
