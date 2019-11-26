@@ -155,8 +155,10 @@ class Game(ShowBase):
         # Bg audio
         bgAudio = base.loader.loadSfx("audio/purple_passion.mp3")
         bgAudio.setLoop(True)
-        #bgAudio.play()
+        bgAudio.setVolume(0.05)
 
+        bgAudio.play()
+        
         self.audio["bg"] = bgAudio
 
     # Load lights

@@ -63,7 +63,8 @@ class Racecar(Obj3D):
 
     # Init 3D audio
     def initAudio(self):
-        self.attachAudio("collision", loop=False, dropOffFactor=0.3)
+        self.attachAudio("collision", loop=False,
+                         volume=1.5, dropOffFactor=0.3)
 
     def getColNodeName(self, extras):
         return f"car_{self.id}_{extras}"
@@ -197,11 +198,8 @@ class Racecar(Obj3D):
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
 
-        # TODO: 3D audio!
-        print(self.audio["collision"], self)
+        # 3D audio yay!
         self.audio["collision"].play()
-
-        return
         
     def onExitWall(self, entry):
         self.isCollidingWall = False

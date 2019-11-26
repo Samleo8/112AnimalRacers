@@ -254,9 +254,9 @@ class Obj3D(object):
         '''
         self.model.setTexture(texture, override)
 
-    # Audio
+    # 3D Audio
     # NOTE: Stereo audio will not work; must convert to mono
-    def attachAudio(self, audioName, loop=False, dropOffFactor=1):
+    def attachAudio(self, audioName, loop=False, volume=1, dropOffFactor=1):
         audioTypes = ["wav", "ogg", "mp3"]  # in order of priority
         audioFile = f"audio/{audioName}"
 
@@ -277,10 +277,11 @@ class Obj3D(object):
             raise Exception(f"Audio {audio} cannot be loaded")
         
         audio.setLoop(loop)
-        audio.setDropOffFactor(dropOffFactor)
-        
+        audio.setVolume(volume)
+
         audio3d.attachSoundToObject(audio, self.model)
-        
+        audio3d.setDropOffFactor(dropOffFactor)
+
         self.audio[audioName] = audio
         
     # Relative movement and rotations
