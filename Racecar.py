@@ -337,7 +337,7 @@ class StupidCar(Racecar):
 
     def artificialStupidity(self):
         r = random.random()
-        if r < 0.25:
+        if r < 0.2:
             self.doDrive("backwards")
         else:
             self.doDrive("forward")
