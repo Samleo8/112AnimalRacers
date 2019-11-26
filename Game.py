@@ -81,8 +81,6 @@ class Game(ShowBase):
         # Start a game timer
         self.taskMgr.add(self.gameTimer, "GameTimer")
 
-        self.gameOver(self.player)
-
     def setCameraToPlayer(self, task):
         # Focus on winning car when gameover
         player = self.player \
