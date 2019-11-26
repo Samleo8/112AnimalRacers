@@ -250,8 +250,8 @@ class Game(ShowBase):
             (self.setCameraView, ["1"], ["perspective"]),
             (self.setCameraView, ["2"], ["birdsEye"]),
             (self.setCameraView, ["3"], ["firstPerson"]),
-            (self.oobe, ["m"], None),
-            (self.oobeCull, ["n"], None),
+            (self.oobe, ["="], None),
+            (self.oobeCull, ["-"], None),
             (self.togglePause, ["p", "esc"], None)
         ]
 
