@@ -256,7 +256,7 @@ class Obj3D(object):
 
     # Audio
     # NOTE: Stereo audio will not work; must convert to mono
-    def attachAudio(self, audioName, loop=False):
+    def attachAudio(self, audioName, loop=False, dropOffFactor=1):
         audioTypes = ["wav", "ogg", "mp3"]  # in order of priority
         audioFile = f"audio/{audioName}"
 
@@ -277,6 +277,7 @@ class Obj3D(object):
             raise Exception(f"Audio {audio} cannot be loaded")
         
         audio.setLoop(loop)
+        audio.setDropOffFactor(dropOffFactor)
         
         audio3d.attachSoundToObject(audio, self.model)
         
