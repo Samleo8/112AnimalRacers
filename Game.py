@@ -20,6 +20,8 @@ from direct.showbase import Audio3DManager
 
 # GUI
 from direct.gui.OnscreenText import OnscreenText
+from direct.gui.OnscreenImage import OnscreenImage
+from direct.gui.DirectGui import *
 
 # Import External Classes
 from Obj3D import *
@@ -28,12 +30,66 @@ from Racetrack import *
 from Terrain import *
 
 class Game(ShowBase):
+    fonts = {}
+
     def __init__(self):
         ShowBase.__init__(self)
+        
+        Game.fonts["AmericanCaptain"] = loader.loadFont('AmericanCaptain.ttf')
+
+        concreteBg = OnscreenImage(
+            image="models/tex/concrete.png",
+            scale=(1.5, 1.5, 1)
+        )
+
+        title = OnscreenText(
+            text='Lego Racers: Remake++', pos=(0, 0.25), scale=0.25,
+            font=Game.fonts["AmericanCaptain"],
+            align=TextNode.ACenter, mayChange=False
+        )
+
+        startGameButton = DirectButton(
+            text="Start  Game", text_font=Game.fonts["AmericanCaptain"],
+            scale=0.15, command=self.startGame,
+            pad=(0.3, 0.3),
+            pos=(0, 0, -0.15)
+        )
+
+        helpButton = DirectButton(
+            text="Help", text_font=Game.fonts["AmericanCaptain"],
+            scale=0.15, command=self.showHelp,
+            pad=(0.3, 0.3),
+            pos=(0, 0, -0.45)
+        )
+
+        helpText = "WASD/Arrow Keys to Drive | Hold Z to drift \n1 & 2 to change camera | R to Restart"
+        OnscreenText(
+            text=helpText, pos=(0, -0.8), scale=0.1,
+            bg=(255,255,255,0.7), wordwrap=15,
+            font=Game.fonts["AmericanCaptain"],
+            align=TextNode.ACenter, mayChange=False
+        )
+
+    def destroyInstance(self):
         self.destroy()
 
+    def startGame(self):
+        self.destroyInstance()
         racingGame = RacingGame()
-class RacingGame(ShowBase):
+
+    def showHelp(self):
+        print("""
+Instructions: 
+
+WASD/Arrow Keys to Drive
+Hold Z to drift
+
+R to restart
+
+Set camera view with 1 or 2
+""")
+        return
+class RacingGame(Game):
     def __init__(self):
         ShowBase.__init__(self)
 
@@ -49,12 +105,10 @@ class RacingGame(ShowBase):
         # Generate texts
         self.texts = {}
         self.fonts = {}
-        
-        self.fonts["AmericanCaptain"] = loader.loadFont('AmericanCaptain.ttf')
 
         self.texts["lap"] = OnscreenText(
             text=f'Lap 0/{self.totalLaps}', pos=(-1.25, 0.8), scale=0.15,
-            bg=(255, 255, 255, 0.7), font=self.fonts["AmericanCaptain"],
+            bg=(255, 255, 255, 0.7), font=Game.fonts["AmericanCaptain"],
             align=TextNode.ALeft, mayChange=True
         )
 
@@ -171,7 +225,7 @@ class RacingGame(ShowBase):
         self.texts["gameOver"] = OnscreenText(
             text=winMsg, pos=(0, 0.8), scale=0.15,
             bg=(255, 255, 255, 0.7), wordwrap=20, 
-            font=self.fonts["AmericanCaptain"],
+            font=Game.fonts["AmericanCaptain"],
             align=TextNode.ACenter, mayChange=False
         )
 
@@ -399,7 +453,7 @@ class RacingGame(ShowBase):
             sound.setPlayRate(playRate)
 
     def restartGame(self):
-        self.destroy()
+        self.destroyInstance()
         Game()
 
 game = Game()
