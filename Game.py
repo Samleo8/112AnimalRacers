@@ -46,12 +46,12 @@ class Game(ShowBase):
 
         if state in [ "startscreen", "start" ]:
             StartScreen()
-        elif state in [ "main", "racing", "racinggame" ]:
+        elif state in [ "game", "racing", "racinggame", "main" ]:
             RacingGame()
         elif state in [ "racetrackselection", "racetrack" ]:
             RacetrackSelection()
         elif state in ["racecarselection", "racecar" ]:
-            RacetrackSelection()
+            RacecarSelection()
         else:
             print(f"ERROR: State {state} not found")
             sys.exit()
@@ -116,7 +116,9 @@ class RacetrackSelection(Game):
     def __init__(self):
         ShowBase.__init__(self)
 
-        print("hi")
+        print("racetrack")
+
+        self.nextState("racecar")
 
         return
 
@@ -124,7 +126,9 @@ class RacecarSelection(Game):
     def __init__(self):
         ShowBase.__init__(self)
 
-        print("hi")
+        print("racecar")
+
+        self.nextState("game")
 
         return
 
@@ -266,6 +270,13 @@ class RacingGame(Game):
             bg=(255, 255, 255, 0.7), wordwrap=20, 
             font=Game.fonts["AmericanCaptain"],
             align=TextNode.ACenter, mayChange=False
+        )
+
+        startGameButton = DirectButton(
+            text="Restart Game", text_font=Game.fonts["AmericanCaptain"],
+            scale=0.15, command=self.restartGame,
+            pad=(0.3, 0.3),
+            pos=(0, 0, -0.75)
         )
 
         # Make camera move and have the audio stop after
@@ -492,8 +503,7 @@ class RacingGame(Game):
             sound.setPlayRate(playRate)
 
     def restartGame(self):
-        self.destroyInstance()
-        Game()
+        self.nextState("start")
 
 game = Game()
 game.run()
