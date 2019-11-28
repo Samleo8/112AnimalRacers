@@ -37,8 +37,47 @@ class Game(ShowBase):
         
         Game.fonts["AmericanCaptain"] = loader.loadFont('AmericanCaptain.ttf')
 
+        self.nextState("StartScreen")
+
+    def nextState(self, state):
+        self.destroyInstance()
+
+        state = state.lower().replace(" ", "")
+
+        if state in [ "startscreen", "start" ]:
+            StartScreen()
+        elif state in [ "main", "racing", "racinggame" ]:
+            RacingGame()
+        elif state in [ "racetrackselection", "racetrack" ]:
+            RacetrackSelection()
+        elif state in ["racecarselection", "racecar" ]:
+            RacetrackSelection()
+        else:
+            print(f"ERROR: State {state} not found")
+            sys.exit()
+
+    def destroyInstance(self):
+        self.destroy()
+
+    def showHelp(self):
+        print("""
+Instructions: 
+
+WASD/Arrow Keys to Drive
+Hold Z to drift
+
+R to restart
+
+Set camera view with 1 or 2
+""")
+        return
+
+class StartScreen(Game):
+    def __init__(self):
+        ShowBase.__init__(self)
+
         concreteBg = OnscreenImage(
-            image="models/tex/concrete.png",
+            image="img/startscreen.png",
             scale=(1.5, 1.5, 1)
         )
 
@@ -70,25 +109,25 @@ class Game(ShowBase):
             align=TextNode.ACenter, mayChange=False
         )
 
-    def destroyInstance(self):
-        self.destroy()
-
     def startGame(self):
-        self.destroyInstance()
-        racingGame = RacingGame()
+        self.nextState("RacetrackSelection")
 
-    def showHelp(self):
-        print("""
-Instructions: 
+class RacetrackSelection(Game):
+    def __init__(self):
+        ShowBase.__init__(self)
 
-WASD/Arrow Keys to Drive
-Hold Z to drift
+        print("hi")
 
-R to restart
-
-Set camera view with 1 or 2
-""")
         return
+
+class RacecarSelection(Game):
+    def __init__(self):
+        ShowBase.__init__(self)
+
+        print("hi")
+
+        return
+
 class RacingGame(Game):
     def __init__(self):
         ShowBase.__init__(self)
