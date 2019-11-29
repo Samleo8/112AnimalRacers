@@ -177,12 +177,14 @@ class Racetrack(Obj3D):
             sideLine1 = (p1a, dir1)
             sideLine2 = (p2a, dir2)
             pos = intersectionOfLines(sideLine1, sideLine2)
+
             leftTrackPoints.append((pos, angles))
 
             # Right track
-            sideLine1 = (p1b, dir1)
-            sideLine2 = (p2b, dir2)
+            sideLine1 = (p1b, multiplyVectorByScalar(dir1, -1))
+            sideLine2 = (p2b, multiplyVectorByScalar(dir2, -1))
             pos = intersectionOfLines(sideLine1, sideLine2)
+
             rightTrackPoints.append((pos, angles))
         
         # Now actually generate the tracks!
@@ -251,12 +253,10 @@ class Racetrack(Obj3D):
 
         # TODO: Fix the z angle component
         try:
-            phi = -radToDeg(math.atan(c/b))
+            r = math.sqrt(a**2 + b**2)
+            phi = -radToDeg(math.atan(c/r))
         except:
-            try:
-                phi = -radToDeg(math.atan(c/a))
-            except:
-                phi = 0
+            phi = 0
 
         return pos1, pos2, (thetha, phi)
 
