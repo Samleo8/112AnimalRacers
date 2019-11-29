@@ -73,8 +73,8 @@ class Racetrack(Obj3D):
             x1, y1, z1 = rightPos
 
             colBox = CollisionCapsule(
-                (x0, y0, 0),
-                (x1, y1, 0),
+                (x0, y0, z0),
+                (x1, y1, z1),
                 checkPointRad
             )
 
@@ -246,6 +246,8 @@ class Racetrack(Obj3D):
         pos1 = x - b, y + a, z
         pos2 = x + b, y - a, z
 
+        print(pos1, pos2)
+
         try:
             thetha = -radToDeg(math.atan(a/b))
         except:
@@ -254,7 +256,7 @@ class Racetrack(Obj3D):
         # TODO: Fix the z angle component
         try:
             r = math.sqrt(a**2 + b**2)
-            phi = -radToDeg(math.atan(c/r))
+            phi = radToDeg(math.atan(c/r))
         except:
             phi = 0
 
