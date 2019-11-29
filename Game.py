@@ -177,12 +177,55 @@ class RacecarSelection(Game):
     def __init__(self):
         ShowBase.__init__(self)
 
-        print("Selected track:", Game.selectedTrack)
+        concreteBg = OnscreenImage(
+            image="img/startscreen.png",
+            scale=(1.5, 1.5, 1)
+        )
 
+        title = OnscreenText(
+            text='Select your Racecar!', pos=(0, 0.6), scale=0.18,
+            font=Game.fonts["AmericanCaptain"], bg=(255, 255, 255, 1),
+            align=TextNode.ACenter, mayChange=False
+        )
+
+        nextButton = DirectButton(
+            text="Next", text_font=Game.fonts["AmericanCaptain"],
+            scale=0.10, command=self.startGame,
+            pad=(0.3, 0.3),
+            pos=(0, 0, -0.85)
+        )
+
+        # Get List of tracks
+        self.cars = findCarsOrPassengers("models", "car_")
+
+        initialItem = 0
+        self.selectCar(self.cars[initialItem])
+
+        menu = DirectOptionMenu(
+            scale=0.15,
+            items=self.tracks, initialitem=initialItem,
+            highlightColor=(10, 10, 10, 1),
+            pad=(10, 10),
+            pos=(-0.5, 0, 0.2),
+            command=self.selectCar
+        )
+
+    def selectCar(self, car):
+        Game.selectedCar = car
+
+        # TODO: Display car here too
+
+    def findCarsOrPassengers(self, path, prefix=""):
+        items = []
+
+        for f in os.listdir(path):
+            if f.startswith(prefix):
+                items.append(f)
+
+        return items
+
+    def startGame(self):
         self.nextState("game")
-
-        return
-
 class RacingGame(Game):
     def __init__(self):
         ShowBase.__init__(self)
