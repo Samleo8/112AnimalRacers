@@ -4,7 +4,7 @@ class Racecar(Obj3D):
     nRacecars = 0 # this will serve as the unique ID for collision node
 
     def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
-        super().__init__(model, renderParent, pos, hpr)
+        super().__init__("car_" + model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
         # Audio
@@ -319,7 +319,7 @@ class Racecar(Obj3D):
 
 class Passenger(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
-        super().__init__(model, renderParent, pos, hpr)
+        super().__init__("passenger_" + model, renderParent, pos, hpr)
         self.gameObj = gameObj
     
 import random

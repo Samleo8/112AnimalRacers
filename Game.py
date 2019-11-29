@@ -32,7 +32,9 @@ from Terrain import *
 
 class Game(ShowBase):
     fonts = {}
-    selectedTrack = None
+    selectedTrack = "test"
+    selectedCar = "groundroamer"
+    selectedPassenger = "penguin"
 
     def __init__(self):
         ShowBase.__init__(self)
@@ -148,6 +150,7 @@ class RacetrackSelection(Game):
             highlightColor=(10, 10, 10, 1), 
             pad=(10, 10),
             pos=(-0.5, 0, 0.2),
+            popupMenu_pos=(-0.5, 0, 0.2),
             command=self.selectTrack
         )
 
@@ -183,7 +186,7 @@ class RacecarSelection(Game):
         )
 
         title = OnscreenText(
-            text='Select your Racecar!', pos=(0, 0.6), scale=0.18,
+            text='Select your Racecar and Passenger!', pos=(0, 0.7), scale=0.18,
             font=Game.fonts["AmericanCaptain"], bg=(255, 255, 255, 1),
             align=TextNode.ACenter, mayChange=False
         )
@@ -195,32 +198,67 @@ class RacecarSelection(Game):
             pos=(0, 0, -0.85)
         )
 
-        # Get List of tracks
-        self.cars = findCarsOrPassengers("models", "car_")
+        # Get List of cars
+        self.cars = self.findCarsOrPassengers("models", "car_")
 
-        initialItem = 0
-        self.selectCar(self.cars[initialItem])
+        initialItem = self.cars.index("groundroamer")
+
+        text = OnscreenText(
+            text='Racecar:', pos=(-0.55, 0.4), scale=0.1,
+            font=Game.fonts["AmericanCaptain"], bg=(255, 255, 255, 1),
+            align=TextNode.ARight, mayChange=False
+        )
 
         menu = DirectOptionMenu(
             scale=0.15,
-            items=self.tracks, initialitem=initialItem,
+            items=self.cars, initialitem=initialItem,
+            highlightColor=(10, 10, 10, 1),
+            pad=(10, 10),
+            pos=(-0.5, 0, 0.4),
+            command=self.selectCar
+        )
+
+        # Get List of passengers
+        self.passengers = self.findCarsOrPassengers("models", "passenger_")
+
+        initialItem = self.passengers.index("penguin")
+    
+        text = OnscreenText(
+            text='Passenger:', pos=(-0.55, 0.2), scale=0.1,
+            font=Game.fonts["AmericanCaptain"], bg=(255, 255, 255, 1),
+            align=TextNode.ARight, mayChange=False
+        )
+        menu = DirectOptionMenu(
+            scale=0.15,
+            items=self.passengers, initialitem=initialItem,
             highlightColor=(10, 10, 10, 1),
             pad=(10, 10),
             pos=(-0.5, 0, 0.2),
-            command=self.selectCar
+            command=self.selectPassenger
         )
+
+        # If drawing is needed, passenger needs to be selected first
+        self.selectPassenger(self.passengers[initialItem])
+        self.selectCar(self.cars[initialItem])
 
     def selectCar(self, car):
         Game.selectedCar = car
 
         # TODO: Display car here too
 
+    def selectPassenger(self, passenger):
+        Game.selectedPassenger = passenger
+
+        # TODO: Display passenger
+
     def findCarsOrPassengers(self, path, prefix=""):
         items = []
 
         for f in os.listdir(path):
             if f.startswith(prefix):
-                items.append(f)
+                items.append(
+                    f.replace(prefix, "", 1).replace(".egg", "", 1)
+                )
 
         return items
 
@@ -456,7 +494,7 @@ class RacingGame(Game):
         # Only the positions are updated here because we want to space them out
         # But car facing and checkpoint handling are handled inside the init function
         pos = self.racetrack.points[0]
-        self.player = Racecar(self, "groundroamer", "penguin", self.render, pos=pos)
+        self.player = Racecar(self, Game.selectedCar, Game.selectedPassenger, self.render, pos=pos)
         car1 = StupidCar(self, "groundroamer", "bunny", self.render)
         car2 = NotSoStupidCar(self, "racecar", "chicken", self.render)
 
