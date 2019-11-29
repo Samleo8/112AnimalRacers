@@ -21,6 +21,7 @@ from direct.showbase import Audio3DManager
 # GUI
 from direct.gui.OnscreenText import OnscreenText
 from direct.gui.OnscreenImage import OnscreenImage
+from panda3d.core import TransparencyAttrib
 from direct.gui.DirectGui import *
 
 # Import External Classes
@@ -31,6 +32,7 @@ from Terrain import *
 
 class Game(ShowBase):
     fonts = {}
+    selectedTrack = None
 
     def __init__(self):
         ShowBase.__init__(self)
@@ -123,11 +125,11 @@ class RacetrackSelection(Game):
 
         title = OnscreenText(
             text='Select your Racetrack!', pos=(0, 0.6), scale=0.18,
-            font=Game.fonts["AmericanCaptain"],
+            font=Game.fonts["AmericanCaptain"], bg=(255, 255, 255, 1),
             align=TextNode.ACenter, mayChange=False
         )
 
-        startGameButton = DirectButton(
+        nextButton = DirectButton(
             text="Next", text_font=Game.fonts["AmericanCaptain"],
             scale=0.10, command=self.selectCar,
             pad=(0.3, 0.3),
@@ -137,6 +139,20 @@ class RacetrackSelection(Game):
         # Get List of tracks
         self.tracks = self.findTracks("racetracks")
 
+        initialItem = 0
+        self.selectTrack(self.tracks[initialItem])
+
+        menu = DirectOptionMenu(
+            scale=0.15,
+            items=self.tracks, initialitem=initialItem,
+            highlightColor=(10, 10, 10, 1), 
+            pad=(10, 10),
+            pos=(-0.5, 0, 0.2),
+            command=self.selectTrack
+        )
+
+    def selectTrack(self, track):
+        Game.selectedTrack = track 
 
     def selectCar(self):
         self.nextState("racecar")
@@ -144,7 +160,7 @@ class RacetrackSelection(Game):
     def findTracks(self, path):
         if os.path.isfile(path):
             if path.endswith(".track"):
-                return [ path ]
+                return [path.replace("racetracks/", "", 1) ]
             else:
                 return []
         elif os.path.isdir(path):
@@ -161,7 +177,7 @@ class RacecarSelection(Game):
     def __init__(self):
         ShowBase.__init__(self)
 
-        print("racecar")
+        print("Selected track:", Game.selectedTrack)
 
         self.nextState("game")
 
@@ -390,7 +406,9 @@ class RacingGame(Game):
 
     def loadModels(self):
         self.cars = []
-        self.racetrack = Racetrack(self, "hexagon")
+        Racecar.nRacecars = 0
+
+        self.racetrack = Racetrack(self, Game.selectedTrack)
 
         # Only the positions are updated here because we want to space them out
         # But car facing and checkpoint handling are handled inside the init function

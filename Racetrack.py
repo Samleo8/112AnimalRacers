@@ -95,8 +95,12 @@ class Racetrack(Obj3D):
     def parseTrackFile(fileName):
         points = []
 
-        f = open(f"racetracks/{fileName}.track", "r")
-        
+        try:
+            f = open(f"racetracks/{fileName}", "r")
+        except:
+            print(f"Racetrack {fileName} not found, defaulting to test.track")
+            f = open(f"racetracks/test.track", "r")
+
         lineNo = 0
         for line in f:
             lineNo += 1
