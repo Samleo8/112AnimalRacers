@@ -30,7 +30,7 @@ class Wall(Obj3D):
 Class holds all walls and floors
 '''
 class Racetrack(Obj3D):
-    def __init__(self, gameObj, trackName="test"):
+    def __init__(self, gameObj, trackName="test.track"):
         self.gameObj = gameObj
         self.wallType = "concrete_crate"
 
