@@ -116,11 +116,46 @@ class RacetrackSelection(Game):
     def __init__(self):
         ShowBase.__init__(self)
 
-        print("racetrack")
+        concreteBg = OnscreenImage(
+            image="img/startscreen.png",
+            scale=(1.5, 1.5, 1)
+        )
 
+        title = OnscreenText(
+            text='Select your Racetrack!', pos=(0, 0.6), scale=0.18,
+            font=Game.fonts["AmericanCaptain"],
+            align=TextNode.ACenter, mayChange=False
+        )
+
+        startGameButton = DirectButton(
+            text="Next", text_font=Game.fonts["AmericanCaptain"],
+            scale=0.10, command=self.selectCar,
+            pad=(0.3, 0.3),
+            pos=(0, 0, -0.85)
+        )
+
+        # Get List of tracks
+        self.tracks = self.findTracks("racetracks")
+
+
+    def selectCar(self):
         self.nextState("racecar")
 
-        return
+    def findTracks(self, path):
+        if os.path.isfile(path):
+            if path.endswith(".track"):
+                return [ path ]
+            else:
+                return []
+        elif os.path.isdir(path):
+            tracks = []
+
+            for f in os.listdir(path):
+                tracks += self.findTracks(path + "/" + f)
+            
+            return tracks
+        else:
+            return []
 
 class RacecarSelection(Game):
     def __init__(self):
