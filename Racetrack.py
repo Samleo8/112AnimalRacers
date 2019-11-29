@@ -259,3 +259,7 @@ class Racetrack(Obj3D):
                 phi = 0
 
         return pos1, pos2, (thetha, phi)
+
+    def drawMinimap(self):
+        #https: // www.panda3d.org/reference/python/classpanda3d_1_1core_1_1LineSegs.html
+        return
