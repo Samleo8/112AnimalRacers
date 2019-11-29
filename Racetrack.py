@@ -1,5 +1,6 @@
 from Obj3D import *
 from Racecar import *
+from Terrain import *
 
 import re
 
@@ -227,6 +228,11 @@ class Racetrack(Obj3D):
             )
             wall = Wall(self.gameObj, self.wallType, pos=pos)
             wall.rotate(dh=thetha, dp=phi)
+
+            # Generate floor from point to point as well
+            ground = Ground(self.gameObj, "ground", pos=pos)
+            ground.rotate(dh=thetha, dp=phi)
+
 
     # Given a start pos, calculate positions of side track points with defined spacing from the center position
     # and with the correct facing (yaw) 

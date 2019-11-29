@@ -5,14 +5,15 @@ class Ground(Obj3D):
         super().__init__(model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
-        self.scaleAll(1)
+        if model == "ground":
+            self.setScale(scaleX=0.2, scaleY=0.1)
+
         self.move(dz=self.dimZ/2)
 
         args = {
             "padding": (0, 0, 0)
         }
 
-        # TODO: Integrate https://discourse.panda3d.org/t/panda3d-collisions-made-simple/7441/12
         self.initSurroundingCollisionObj("floor", args=args, show=False)
 
         colNode = self.getCollisionNode("floor")
@@ -23,6 +24,7 @@ class Terrain():
         self.gameObj = gameObj
 
         # Load infinitely extending floor
+        '''
         planeSolid = CollisionPlane(
             Plane(Vec3(0, 0, 1), Point3(0, 0, 0))
         )
@@ -30,13 +32,14 @@ class Terrain():
         floorPlane = Obj3D.createIsolatedCollisionObj(
             "floor", planeSolid, intoBitmask=self.gameObj.colBitMask["floor"]
         )
+        '''
 
         # Load ground
-        self.ground = Ground(self.gameObj, "ground")
+        #self.ground = Ground(self.gameObj, "ground")
         #self.ground.setScale(scaleX=1.5, scaleY=1.5)
 
-        self.scene = Ground(self.gameObj, "cornfield")
-        self.scene.move(dz=0)
+        # self.scene = Ground(self.gameObj, "cornfield")
+        # self.scene.move(dz=0)
 
         # Sky
         #self.sky = Obj3D("FarmSky")
