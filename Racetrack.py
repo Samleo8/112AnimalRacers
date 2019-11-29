@@ -252,8 +252,6 @@ class Racetrack(Obj3D):
         pos1 = x - b, y + a, z
         pos2 = x + b, y - a, z
 
-        print(pos1, pos2)
-
         try:
             thetha = -radToDeg(math.atan(a/b))
         except:
