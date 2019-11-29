@@ -201,7 +201,7 @@ class RacecarSelection(Game):
         # Get List of cars
         self.cars = self.findCarsOrPassengers("models", "car_")
 
-        initialItem = self.cars.index("groundroamer")
+        initialCar = self.cars.index("groundroamer")
 
         text = OnscreenText(
             text='Racecar:', pos=(-0.55, 0.4), scale=0.1,
@@ -211,7 +211,7 @@ class RacecarSelection(Game):
 
         menu = DirectOptionMenu(
             scale=0.15,
-            items=self.cars, initialitem=initialItem,
+            items=self.cars, initialitem=initialCar,
             highlightColor=(10, 10, 10, 1),
             pad=(10, 10),
             pos=(-0.5, 0, 0.4),
@@ -221,7 +221,7 @@ class RacecarSelection(Game):
         # Get List of passengers
         self.passengers = self.findCarsOrPassengers("models", "passenger_")
 
-        initialItem = self.passengers.index("penguin")
+        initialPassenger = self.passengers.index("penguin")
     
         text = OnscreenText(
             text='Passenger:', pos=(-0.55, 0.2), scale=0.1,
@@ -230,7 +230,7 @@ class RacecarSelection(Game):
         )
         menu = DirectOptionMenu(
             scale=0.15,
-            items=self.passengers, initialitem=initialItem,
+            items=self.passengers, initialitem=initialPassenger,
             highlightColor=(10, 10, 10, 1),
             pad=(10, 10),
             pos=(-0.5, 0, 0.2),
@@ -238,8 +238,8 @@ class RacecarSelection(Game):
         )
 
         # If drawing is needed, passenger needs to be selected first
-        self.selectPassenger(self.passengers[initialItem])
-        self.selectCar(self.cars[initialItem])
+        self.selectPassenger(self.passengers[initialPassenger])
+        self.selectCar(self.cars[initialCar])
 
     def selectCar(self, car):
         Game.selectedCar = car
