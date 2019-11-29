@@ -11,7 +11,7 @@ class Ground(Obj3D):
         self.move(dz=self.dimZ/2)
 
         args = {
-            "padding": (0, 0, 0)
+            "padding": (0, 0, 0.001)
         }
 
         self.initSurroundingCollisionObj("floor", args=args, show=False)
