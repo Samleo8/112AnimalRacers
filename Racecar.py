@@ -32,9 +32,9 @@ class Racecar(Obj3D):
 
         # Powerups
         self.activePowerup = None
+        self.powerupSprite = None
         self.powerupActiveTime = None
-        self.powerupCollected = False
-
+        
         # Reset speeds and acceleration
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
@@ -182,11 +182,11 @@ class Racecar(Obj3D):
 
         print(f"Car {self.id} has collected a {powerupType} powerup!")
 
-        self.activePowerup = powerupType
-        self.powerupCollected = True
+        # Deactivate first (removes away the sprites)
+        self.deactivatePowerup()
 
-        if powerupType == "speed":
-            self.incAcceleration(self.accInc * 12)
+        # Now activate
+        self.activatePowerup(powerupType)
 
         return
 
@@ -194,17 +194,38 @@ class Racecar(Obj3D):
         # Check if new powerup was updated
         if self.activePowerup != None:
             # New powerup
-            if self.powerupCollected:
-                self.powerupCollected = False
+            if self.powerupActiveTime == None:
                 self.powerupActiveTime = taskTime
                 print(f"Car {self.id}: Activated {self.activePowerup} powerup")
             # Powerup needs to be deactivated
             elif taskTime - self.powerupActiveTime >= Powerup.lastTime:
-                print(f"Car {self.id}: {self.activePowerup} powerup deactivated")
-                self.powerupActiveTime = None
-                self.activePowerup = None
+                self.deactivatePowerup()
 
         return
+
+    def activatePowerup(self, powerupType=None):
+        if powerupType == None:
+            powerupType = Powerup.pickRandom()
+
+        self.activePowerup = powerupType
+        self.powerupSprite = DisabledPowerup(
+            self.gameObj, powerupType,
+            renderParent=self.model,
+            pos=self.offset
+        )
+        self.powerupSprite.move(dz=self.dimZ/2 + self.passenger.dimZ/2)
+
+        if powerupType == "speed":
+            self.incAcceleration(self.accInc * 12)
+
+    def deactivatePowerup(self):
+        print(f"Car {self.id}: {self.activePowerup} powerup deactivated")
+        self.powerupActiveTime = None
+        self.activePowerup = None
+        
+        if self.powerupSprite != None:
+            self.powerupSprite.destroy()
+            #self.powerupSprite = None
 
     # CHECKPOINTS
     def onPassCheckpoint(self, entry):
