@@ -1,7 +1,6 @@
-# CMU 15-112 Term Project: Lego Racers
+# CMU 15-112 Term Project: Animal Racers
 
-Semi-recreation of my childhood favourite, Lego Racers, for my CMU 15-112 Term Project!
-Includes intelligent enemies, powerups and obstacles!
+Creation of a simple racing game for my CMU 15-112 Term Project
 
 ## Running and Installation
 First clone the git repository.

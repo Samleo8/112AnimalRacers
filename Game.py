@@ -87,7 +87,7 @@ class StartScreen(Game):
         )
 
         title = OnscreenText(
-            text='Lego Racers: Remake++', pos=(0, 0.25), scale=0.25,
+            text='Animal Racers', pos=(0, 0.25), scale=0.25,
             font=Game.fonts["AmericanCaptain"],
             align=TextNode.ACenter, mayChange=False
         )
