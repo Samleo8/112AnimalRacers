@@ -95,7 +95,7 @@ class Obj3D(object):
         # Set model
         # Also check if we can load this model type
         self.modelName = model
-        modelTypes = ["gltf", "glb", "egg"] # in order of priority
+        modelTypes = ["bam", "egg", "gltf", "glb"]  # in order of priority
         modelFile = f"models/{model}"
 
         for modelType in modelTypes:

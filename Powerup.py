@@ -3,8 +3,8 @@ from Obj3D import *
 class Powerup(Obj3D):
     nPowerups = 0
     types = {
-        "speed": "bottle",
-        "slow": "keg"
+        "speed": "keg",
+        "shield": "bottle"
     }
     lastTime = 5 # seconds because task.time returns seconds
 
@@ -24,6 +24,8 @@ class Powerup(Obj3D):
         if "keg" == model:
             self.scaleAll(2)
         elif "bottle" == model:
+            self.scaleAll(6)
+        elif "shield" == model:
             self.scaleAll(6)
 
         self.repositionToCenter()

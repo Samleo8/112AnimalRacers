@@ -233,6 +233,10 @@ class Racecar(Obj3D):
             print(f"Car {self.id}: Need to pass checkpoint {(checkpointID+N-1)%N} first")
 
     def onCollideWall(self, entry):
+        # Shield powerup negates all effects
+        if self.activePowerup == "shield":
+            return
+
         self.isCollidingWall = True
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
