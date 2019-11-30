@@ -30,6 +30,12 @@ class Racecar(Obj3D):
         self.currLap = 0
         self.passedCheckpoints = []
 
+        # Powerups
+        self.activePowerup = None
+        self.powerupActiveTime = None
+        self.powerupCollected = False
+
+        # Reset speeds and acceleration
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
 
@@ -55,11 +61,6 @@ class Racecar(Obj3D):
         # Init position on racetrack iff racetrack exists
         if hasattr(self.gameObj, "racetrack"):
             self.initOnRacetrack()
-
-        # Powerups
-        self.activePowerup = None
-        self.powerupActiveTime = None
-        self.powerupCollected = False
 
         self.initCollisions()
 
@@ -185,7 +186,7 @@ class Racecar(Obj3D):
         self.powerupCollected = True
 
         if powerupType == "speed":
-            self.incAcceleration(self.incAcceleration * 5)
+            self.incAcceleration(self.accInc * 12)
 
         return
 
@@ -258,7 +259,7 @@ class Racecar(Obj3D):
     # Set/get/change velocities and accelerations
     def setSpeed(self, spd=None, rotSpd=None):
         if isNumber(spd):
-            if self.activePowerup == "speed"
+            if self.activePowerup == "speed":
                 self.speed = spd
             else:
                 self.speed = min(max(spd, self.maxSpeedBackwards), self.maxSpeed) 
@@ -294,14 +295,19 @@ class Racecar(Obj3D):
     # Update movement
     def updateMovement(self):
         # Friction
-        useSpeedBasedFriction = self.acceleration > 1.5 * self.friction
+        useSpeedBasedFriction = (self.speed == 0) or (self.acceleration > 1.5 * self.friction)
         if useSpeedBasedFriction:
-            self.incAcceleration(-self.friction * self.speed)
+            friction = -self.friction * self.speed
         else:
             if self.speed > 0:
-                self.incAcceleration(-self.friction)
+                friction = -self.friction
             elif self.speed < 0:
-                self.incAcceleration(self.friction)
+                friction = self.friction
+
+        if self.activePowerup == "speed":
+            friction *= 0.75
+
+        self.incAcceleration(friction)
 
         
         # Update the car's speed based on its acceleration
