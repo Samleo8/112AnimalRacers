@@ -107,7 +107,7 @@ class StartScreen(Game):
         )
 
         # Instructions
-        helpText = """
+        helpText = """\
 WASD/Arrow Keys to Drive | Hold Space to drift
 1, 2 to change camera | Hold C to look behind
 Hold V to look around | R to Restart
@@ -427,6 +427,7 @@ class RacingGame(Game):
             return Task.cont
 
         for car in self.cars:
+            car.updatePowerup(task.time)
             car.updateMovement()
 
         return Task.cont

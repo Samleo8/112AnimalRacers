@@ -56,6 +56,10 @@ class Racecar(Obj3D):
         if hasattr(self.gameObj, "racetrack"):
             self.initOnRacetrack()
 
+        # Powerups
+        self.activePowerup = None
+        self.powerupActiveTime = None
+
         self.initCollisions()
 
         self.initAudio()
@@ -170,18 +174,30 @@ class Racecar(Obj3D):
 
         return
 
+    # POWERUPS
     def onCollectPowerup(self, entry):
         powerupType = entry.getIntoNodePath().getPythonTag("powerupType")
 
         print(f"Car {self.id} has collected a {powerupType} powerup!")
 
-        if powerupType == "speed":
-            pass
-        elif powerupType == "slow":
-            pass
+        self.activePowerup = powerupType
 
         return
 
+    def updatePowerups(taskTime):
+        # Check if new powerup was updated
+        if self.activePowerup != None:
+            # New powerup
+            if self.powerupActiveTime == None:
+                self.powerupActiveTime = taskTime
+            # Currently on powerup, but powerup needs to be deactivated
+            elif taskTime - self.powerupActiveTime >= Powerup.lastTime:
+                self.powerupActiveTime = None
+                self.activePowerup = None
+
+        return
+
+    # CHECKPOINTS
     def onPassCheckpoint(self, entry):
         # Get passed checkpoint ID
         checkpointID = entry.getIntoNodePath().getPythonTag("checkpointID")
