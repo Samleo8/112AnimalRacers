@@ -31,6 +31,11 @@ class Powerup(Obj3D):
         self.repositionToCenter()
         self.move(dz=self.dimZ/2)
 
+# Active powerup with collisions
+class ActivePowerup(Powerup):
+    def __init__(self, gameObj, powerupType=None, renderParent=None, pos=None, hpr=None):
+        super().__init__(gameObj, powerupType, renderParent, pos, hpr)
+
         # Floating a little off the ground, and to the right and left a little
         dx = self.dimX * random.uniform(-5.0, 5.0)
         self.move(dx=dx, dz=self.dimZ/2)
@@ -49,3 +54,10 @@ class Powerup(Obj3D):
 
     def initAudio(self):
         return
+
+# Disabled powerup that's put on the top of the car
+# Cannot have collisions otherwise issue for car
+class DisabledPowerup(Powerup):
+    def __init__(self, gameObj, powerupType=None, renderParent=None, pos=None, hpr=None):
+        super().__init__(model, renderParent, pos, hpr)
+

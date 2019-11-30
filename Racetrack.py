@@ -106,7 +106,7 @@ class Racetrack(Obj3D):
 
             pos = tuple(point1 + dirVec * r)
 
-            powerup = Powerup(self.gameObj, pos=pos)
+            powerup = ActivePowerup(self.gameObj, pos=pos)
 
             self.powerups.append(powerup)
 

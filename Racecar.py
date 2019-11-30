@@ -309,7 +309,6 @@ class Racecar(Obj3D):
 
         self.incAcceleration(friction)
 
-        
         # Update the car's speed based on its acceleration
         prevSpeed = self.speed
         prevRotSpeed = self.rotationSpeed
