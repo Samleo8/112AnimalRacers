@@ -382,13 +382,6 @@ class Obj3D(object):
         self.dimZ = z2 - z1
 
         # Calcuate offset from center
-        # TODO: Make sure that offset is correct
-        '''
-        self.offsetX = (x2 + x1 - self.x)/2
-        self.offsetY = (y2 + y1 - self.y)/2
-        self.offsetZ = (z2 + z1 - self.z)/2
-
-        '''
         self.offsetX = (x2 + x1)/2 - self.x
         self.offsetY = (y2 + y1)/2 - self.y
         self.offsetZ = (z2 + z1)/2 - self.z

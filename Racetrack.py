@@ -281,7 +281,7 @@ class Racetrack(Obj3D):
         except:
             thetha = 0 
 
-        # TODO: Fix the z angle component
+        # Fix the z angle component
         try:
             r = math.sqrt(a**2 + b**2)
             phi = radToDeg(math.atan(c/r))

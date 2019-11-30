@@ -95,7 +95,6 @@ class Racecar(Obj3D):
         self.colPusher.addOutPattern('%fn-out-%in')
         
         # Problem is the racecar will attempt to scale the wall
-        # TODO: Possible improvement: http://www.panda3d.org/manual/?title=Rapidly-Moving_Objects
         self.colPusher.setHorizontal(True)
 
         base.cTrav.addCollider(colNode, self.colPusher)
@@ -197,7 +196,6 @@ class Racecar(Obj3D):
             self.passedCheckpoints[0] += 1 
 
             # Check win condition
-            # TODO: Gameover function
             totalLaps = self.gameObj.totalLaps
 
             # Player, so update on screen text
@@ -303,7 +301,6 @@ class Racecar(Obj3D):
         self.rotate(dh=self.rotationSpeed)
 
     # External Controls
-    # TODO: Try https://www.panda3d.org/manual/?title=Bullet_Vehicles
     def doDrive(self, direction="forwards"):
         accInc = self.accInc
         if direction in [ "backward", "backwards", "back", "reverse" ]:
