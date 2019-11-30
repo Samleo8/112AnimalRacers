@@ -1,6 +1,7 @@
 from Obj3D import *
 from Racecar import *
 from Terrain import *
+from Powerup import *
 
 class Wall(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
@@ -56,7 +57,8 @@ class Racetrack(Obj3D):
         self.checkpoints = []
         self.generateCheckpoints()
 
-        # TODO: Generate powerups
+        # Generate powerups
+        self.powerups = []
         self.generatePowerups()
     
     # Generate checkpoints
@@ -92,11 +94,17 @@ class Racetrack(Obj3D):
     def generatePowerups(self):
         N = len(self.points)
         for i in range(N):
-            point = LVector3f(self.points[i])
+            point1 = LVector3f(self.points[i])
             point2 = LVector3f(self.points[(i+1) % N])
 
-            dirVec = point2 - point
-            r = random.random()
+            dirVec = point2 - point1
+            r = random.uniform(0.1, 0.9)
+
+            pos = tuple(point1 + dirVec * r)
+
+            powerup = Powerup(self.gameObj, pos=pos)
+
+            self.powerups.append(powerup)
 
         return
 

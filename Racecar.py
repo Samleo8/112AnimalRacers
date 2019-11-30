@@ -137,8 +137,10 @@ class Racecar(Obj3D):
         self.colCheckpointEvent.addOutPattern('%fn-out-%in')
 
         # Initialise simple sphere just to check for checkpoint and powerup passing
-        colSphere = CollisionSphere(0, 0, 0, 1)
+        colSphere = CollisionSphere(
+            self.relOffsetX, self.relOffsetY, self.relOffsetZ, self.dimZ/2)
         fromBitmask = self.gameObj.colBitMask["checkpoint"] | self.gameObj.colBitMask["powerup"]
+
         self.colCheckpointNode = Obj3D.createIsolatedCollisionObj(
             self.getColNodeName("checkpoint"), colSphere, parentNode=self.model,
             fromBitmask=fromBitmask, intoBitmask=self.gameObj.colBitMask["off"],
@@ -171,7 +173,15 @@ class Racecar(Obj3D):
         return
 
     def onCollectPowerup(self, entry):
-        print(entry)
+        powerupType = entry.getIntoNodePath().getPythonTag("powerupType")
+
+        print(powerupType)
+
+        if powerupType == "speed":
+            pass
+        elif powerupType == "slow":
+            pass
+
         return
 
     def onPassCheckpoint(self, entry):
