@@ -209,7 +209,7 @@ class Racecar(Obj3D):
         
         # Make sure that previous checkpoint was passed before update
         if self.passedCheckpoints[checkpointID-1] > self.passedCheckpoints[checkpointID]:
-            print(f"Car {self.id} successfully passed checkpoint {checkpointID}")
+            print(f"Car {self.id}: Passed checkpoint {checkpointID}")
             self.passedCheckpoints[checkpointID] += 1
         # New lap
         elif checkpointID == 0 and self.passedCheckpoints[0] == self.passedCheckpoints[-1]:
@@ -227,10 +227,10 @@ class Racecar(Obj3D):
             if self.currLap >= totalLaps:
                 self.gameObj.gameOver(self)
             else:
-                print(f"Car {self.id} starting new lap {self.currLap} of {totalLaps}!")
+                print(f"Car {self.id}: Starting new lap {self.currLap} of {totalLaps}!")
         else:
             N = len(self.passedCheckpoints)
-            print(f"Car {self.id} needs to pass checkpoint {(checkpointID+N-1)%N} first")
+            print(f"Car {self.id}: Need to pass checkpoint {(checkpointID+N-1)%N} first")
 
     def onCollideWall(self, entry):
         self.isCollidingWall = True
