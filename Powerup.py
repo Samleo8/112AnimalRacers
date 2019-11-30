@@ -6,7 +6,7 @@ class Powerup(Obj3D):
         "speed": "bottle",
         "slow": "keg"
     }
-    lastTime = 1000 # milliseconds
+    lastTime = 5 # seconds because task.time returns seconds
 
     def __init__(self, gameObj, powerupType=None, renderParent=None, pos=None, hpr=None):
         # Set powerup type

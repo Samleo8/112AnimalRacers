@@ -59,6 +59,7 @@ class Racecar(Obj3D):
         # Powerups
         self.activePowerup = None
         self.powerupActiveTime = None
+        self.powerupCollected = False
 
         self.initCollisions()
 
@@ -181,6 +182,7 @@ class Racecar(Obj3D):
         print(f"Car {self.id} has collected a {powerupType} powerup!")
 
         self.activePowerup = powerupType
+        self.powerupCollected = True
 
         return
 
@@ -188,14 +190,16 @@ class Racecar(Obj3D):
         # Check if new powerup was updated
         if self.activePowerup != None:
             # New powerup
-            if self.powerupActiveTime == None:
+            if self.powerupCollected:
+                self.powerupCollected = False
                 self.powerupActiveTime = taskTime
-            # Currently on powerup, but powerup needs to be deactivated
+                print(f"Car {self.id}: Activated {self.activePowerup} powerup")
+            # Powerup needs to be deactivated
             elif taskTime - self.powerupActiveTime >= Powerup.lastTime:
+                print(f"Car {self.id}: {self.activePowerup} powerup deactivated")
                 self.powerupActiveTime = None
                 self.activePowerup = None
-                print("Powerup Deactivated")
-
+            
         return
 
     # CHECKPOINTS
