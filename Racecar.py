@@ -184,6 +184,9 @@ class Racecar(Obj3D):
         self.activePowerup = powerupType
         self.powerupCollected = True
 
+        if powerupType == "speed":
+            self.incAcceleration(self.incAcceleration * 5)
+
         return
 
     def updatePowerup(self, taskTime):
@@ -199,7 +202,7 @@ class Racecar(Obj3D):
                 print(f"Car {self.id}: {self.activePowerup} powerup deactivated")
                 self.powerupActiveTime = None
                 self.activePowerup = None
-            
+
         return
 
     # CHECKPOINTS
@@ -255,7 +258,10 @@ class Racecar(Obj3D):
     # Set/get/change velocities and accelerations
     def setSpeed(self, spd=None, rotSpd=None):
         if isNumber(spd):
-            self.speed = min(max(spd, self.maxSpeedBackwards), self.maxSpeed) 
+            if self.activePowerup == "speed"
+                self.speed = spd
+            else:
+                self.speed = min(max(spd, self.maxSpeedBackwards), self.maxSpeed) 
 
         if isNumber(rotSpd):
             self.rotationSpeed = min(rotSpd, self.maxRotationSpeed)
