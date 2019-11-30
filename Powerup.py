@@ -3,18 +3,21 @@ from Obj3D import *
 class Powerup(Obj3D):
     nPowerups = 0
     types = {
-        "speed": "keg",
-        "shield": "bottle"
+        "shield": "bottle",
+        "speed": "keg"
     }
     lastTime = 5 # seconds because task.time returns seconds
 
-    def __init__(self, gameObj, powerupType=None, renderParent=None, pos=None, hpr=None):
-        # Set powerup type
-        if powerupType == None:
-            types = list(Powerup.types.keys())
-            powerupType = random.choice(types)
+    @staticmethod
+    def pickRandom(weights=None):
+        if isinstance(weights, list):
+            return random.choices(list(Powerup.types.keys()), weights)
+        else:
+            return random.choice(list(Powerup.types.keys()))
 
-        self.powerupType = powerupType
+    def __init__(self, gameObj, powerupType=None, renderParent=None, pos=None, hpr=None):
+        self.powerupType = Powerup.pickRandom() \
+            if powerupType == None or powerupType == "random" else powerupType
         model = Powerup.types.get(self.powerupType, "speed")
 
         # Render
@@ -58,6 +61,17 @@ class ActivePowerup(Powerup):
 # Disabled powerup that's put on the top of the car
 # Cannot have collisions otherwise issue for car
 class DisabledPowerup(Powerup):
-    def __init__(self, gameObj, powerupType=None, renderParent=None, pos=None, hpr=None):
-        super().__init__(model, renderParent, pos, hpr)
+    def __init__(self, gameObj, powerupType, renderParent=None, pos=None, hpr=None):
+        super().__init__(gameObj, powerupType, renderParent, pos, hpr)
+
+        model = self.modelName
+        if "keg" == model:
+            self.scaleAll(0.6)
+        elif "bottle" == model:
+            self.scaleAll(1.5)
+        elif "shield" == model:
+            self.scaleAll(0.9)
+
+        self.move(dz=2)
+
 
