@@ -136,12 +136,13 @@ class Racecar(Obj3D):
         self.colCheckpointEvent = CollisionHandlerEvent()
         self.colCheckpointEvent.addOutPattern('%fn-out-%in')
 
-        # Initialise simple sphere just to check for checkpoint passing
+        # Initialise simple sphere just to check for checkpoint and powerup passing
         colSphere = CollisionSphere(0, 0, 0, 1)
+        fromBitmask = self.gameObj.colBitMask["checkpoint"] | self.gameObj.colBitMask["powerup"]
         self.colCheckpointNode = Obj3D.createIsolatedCollisionObj(
             self.getColNodeName("checkpoint"), colSphere, parentNode=self.model,
-            fromBitmask=self.gameObj.colBitMask["checkpoint"], intoBitmask=self.gameObj.colBitMask["off"],
-            show=True
+            fromBitmask=fromBitmask, intoBitmask=self.gameObj.colBitMask["off"],
+            show=False
         )
 
         # Collision Events
@@ -151,6 +152,7 @@ class Racecar(Obj3D):
         base.cTrav.addCollider(self.colCheckpointNode, self.colCheckpointEvent)
 
         self.gameObj.accept(f"{colNodeName}-out-checkpoint", self.onPassCheckpoint)
+        self.gameObj.accept(f"{colNodeName}-out-powerup", self.onCollectPowerup)
     
     def initOnRacetrack(self):
         # Assumes that racetrack has already been generated
@@ -166,6 +168,10 @@ class Racecar(Obj3D):
         self.passedCheckpoints = [0 for i in range(len(trackPoints))]
         self.passedCheckpoints[0] = 1 # the first checkpoint is always passed
 
+        return
+
+    def onCollectPowerup(self, entry):
+        print(entry)
         return
 
     def onPassCheckpoint(self, entry):
@@ -197,7 +203,6 @@ class Racecar(Obj3D):
         else:
             N = len(self.passedCheckpoints)
             print(f"Car {self.id} needs to pass checkpoint {(checkpointID+N-1)%N} first")
-
 
     def onCollideWall(self, entry):
         self.isCollidingWall = True
@@ -321,8 +326,6 @@ class Passenger(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
         super().__init__("passenger_" + model, renderParent, pos, hpr)
         self.gameObj = gameObj
-    
-import random
 
 class StupidCar(Racecar):
     def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):

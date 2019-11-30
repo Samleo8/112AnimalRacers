@@ -29,6 +29,7 @@ from Obj3D import *
 from Racecar import *
 from Racetrack import *
 from Terrain import *
+from Powerup import *
 
 class Game(ShowBase):
     fonts = {}
@@ -488,6 +489,7 @@ class RacingGame(Game):
     def loadModels(self):
         self.cars = []
         Racecar.nRacecars = 0
+        Powerup.nPowerups = 0
 
         self.racetrack = Racetrack(self, Game.selectedTrack)
 
@@ -621,7 +623,8 @@ class RacingGame(Game):
             "off": BitMask32.allOff(),
             "wall": BitMask32.bit(0x01),
             "floor": BitMask32.bit(0x02),
-            "checkpoint": BitMask32.bit(0x04)
+            "checkpoint": BitMask32.bit(0x04),
+            "powerup": BitMask32.bit(0x08)
         }
 
     def togglePause(self):

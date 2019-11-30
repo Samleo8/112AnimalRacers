@@ -18,6 +18,8 @@ from direct.showbase import Audio3DManager
 # Other libraries
 import os
 import math
+import random
+import re
 
 # Angle Conversions
 def degToRad(deg):

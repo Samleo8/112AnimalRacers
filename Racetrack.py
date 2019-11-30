@@ -2,8 +2,6 @@ from Obj3D import *
 from Racecar import *
 from Terrain import *
 
-import re
-
 class Wall(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
         super().__init__(model, renderParent, pos, hpr)
@@ -57,6 +55,9 @@ class Racetrack(Obj3D):
         # Generate checkpoints
         self.checkpoints = []
         self.generateCheckpoints()
+
+        # TODO: Generate powerups
+        self.generatePowerups()
     
     # Generate checkpoints
     # Basically collision boxes from left to right side point
@@ -81,10 +82,21 @@ class Racetrack(Obj3D):
 
             colNode = Obj3D.createIsolatedCollisionObj(
                 "checkpoint", colBox, intoBitmask=self.gameObj.colBitMask["checkpoint"],
-                show=True
+                show=False
             )
 
             colNode.setPythonTag("checkpointID", i)
+
+        return
+
+    def generatePowerups(self):
+        N = len(self.points)
+        for i in range(N):
+            point = LVector3f(self.points[i])
+            point2 = LVector3f(self.points[(i+1) % N])
+
+            dirVec = point2 - point
+            r = random.random()
 
         return
 
