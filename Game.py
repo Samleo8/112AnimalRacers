@@ -106,10 +106,10 @@ class StartScreen(Game):
             pos=(0, 0, -0.45)
         )
 
-        helpText = "WASD/Arrow Keys to Drive | Hold Z to drift \n1 & 2 to change camera | R to Restart"
+        helpText = "WASD/Arrow Keys to Drive | Hold Space to drift \n1, 2 to change camera | Hold C/N to look behind\nHold V/B to look around | R to Restart"
         OnscreenText(
-            text=helpText, pos=(0, -0.8), scale=0.1,
-            bg=(255,255,255,0.7), wordwrap=15,
+            text=helpText, pos=(0, -0.7), scale=0.1,
+            bg=(255,255,255,0.7), wordwrap=18,
             font=Game.fonts["AmericanCaptain"],
             align=TextNode.ACenter, mayChange=False
         )
@@ -513,9 +513,9 @@ class RacingGame(Game):
             "backward": [ "arrow_down", "s" ],
             "turnLeft": [ "arrow_left", "a" ],
             "turnRight": [ "arrow_right", "d" ],
-            "camConfigRotate": ["enter"],
-            "camConfigBehind": ["space"],
-            "drifting": [ "z" ]
+            "camConfigRotate": [ "v" ],
+            "camConfigBehind": [ "c" ],
+            "drifting": [ "space" ]
         }
 
         for fn in functionToKeys:
