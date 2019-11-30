@@ -1,5 +1,5 @@
 from Obj3D import *
-
+from Powerup import *
 class Racecar(Obj3D):
     nRacecars = 0 # this will serve as the unique ID for collision node
 
@@ -184,7 +184,7 @@ class Racecar(Obj3D):
 
         return
 
-    def updatePowerups(taskTime):
+    def updatePowerup(self, taskTime):
         # Check if new powerup was updated
         if self.activePowerup != None:
             # New powerup
@@ -194,6 +194,7 @@ class Racecar(Obj3D):
             elif taskTime - self.powerupActiveTime >= Powerup.lastTime:
                 self.powerupActiveTime = None
                 self.activePowerup = None
+                print("Powerup Deactivated")
 
         return
 
