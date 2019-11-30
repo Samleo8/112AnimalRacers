@@ -58,6 +58,7 @@ class Racetrack(Obj3D):
         self.generateCheckpoints()
 
         # Generate powerups
+        self.powerupSpawnChance = 0.5
         self.powerups = []
         self.generatePowerups()
     
@@ -94,6 +95,9 @@ class Racetrack(Obj3D):
     def generatePowerups(self):
         N = len(self.points)
         for i in range(N):
+            if random.random() > self.powerupSpawnChance:
+                continue
+
             point1 = LVector3f(self.points[i])
             point2 = LVector3f(self.points[(i+1) % N])
 

@@ -6,6 +6,7 @@ class Powerup(Obj3D):
         "speed": "bottle",
         "slow": "keg"
     }
+    lastTime = 1000 # milliseconds
 
     def __init__(self, gameObj, powerupType=None, renderParent=None, pos=None, hpr=None):
         # Set powerup type
@@ -36,7 +37,7 @@ class Powerup(Obj3D):
         self.initAudio()
 
     def initCollisions(self):
-        # Initialise bounding box for wall
+        # Initialise bounding box for powerup
         self.initSurroundingCollisionObj("powerup", "sphere")
 
         colNode = self.getCollisionNode("powerup")

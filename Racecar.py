@@ -7,8 +7,6 @@ class Racecar(Obj3D):
         super().__init__("car_" + model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
-        # Audio
-
         self.id = Racecar.nRacecars
         Racecar.nRacecars += 1
 
@@ -36,7 +34,8 @@ class Racecar(Obj3D):
         self.setAcceleration(0, 0)
 
         # NOTE: When you scale, whatever coordinates used also scales
-        self.scaleAll(1)
+        if model == "racecar":
+            self.scaleAll(2)
 
         # general way of making sure vehicle is always on the ground, regardless of that vehicle's center
         self.repositionToCenter()
@@ -113,7 +112,7 @@ class Racecar(Obj3D):
         Floor Handling
         '''
         self.colLifter = CollisionHandlerFloor()
-        self.colLifter.setMaxVelocity(10)
+        self.colLifter.setMaxVelocity(20)
 
         # Create the ray pointing from the bottom
         floorRayNode = self.addCollisionNode("floorRay")
@@ -165,7 +164,7 @@ class Racecar(Obj3D):
         self.rotate(dh=yawFacing)
 
         # Init Passed Checkpoints array
-        self.currLap =0
+        self.currLap = 0
 
         self.passedCheckpoints = [0 for i in range(len(trackPoints))]
         self.passedCheckpoints[0] = 1 # the first checkpoint is always passed
@@ -175,7 +174,7 @@ class Racecar(Obj3D):
     def onCollectPowerup(self, entry):
         powerupType = entry.getIntoNodePath().getPythonTag("powerupType")
 
-        print(powerupType)
+        print(f"Car {self.id} has collected a {powerupType} powerup!")
 
         if powerupType == "speed":
             pass
