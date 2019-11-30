@@ -106,7 +106,12 @@ class StartScreen(Game):
             pos=(0, 0, -0.45)
         )
 
-        helpText = "WASD/Arrow Keys to Drive | Hold Space to drift \n1, 2 to change camera | Hold C/N to look behind\nHold V/B to look around | R to Restart"
+        # Instructions
+        helpText = """
+WASD/Arrow Keys to Drive | Hold Space to drift
+1, 2 to change camera | Hold C to look behind
+Hold V to look around | R to Restart
+"""
         OnscreenText(
             text=helpText, pos=(0, -0.7), scale=0.1,
             bg=(255,255,255,0.7), wordwrap=18,
@@ -539,7 +544,7 @@ class RacingGame(Game):
             (self.setCameraView, ["3"], ["firstPerson"]),
             (self.restartGame, ["r"], None),
             (self.oobe, ["="], None),
-            (self.togglePause, ["p", "Esc"], None)
+            (self.togglePause, ["p", "escape"], None)
         ]
 
         for fn, keys, args in keyReleaseMap:
