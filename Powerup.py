@@ -3,7 +3,7 @@ from Obj3D import *
 class Powerup(Obj3D):
     nPowerups = 0
     types = {
-        "shield": "bottle",
+        "shield": "shield",
         "speed": "keg"
     }
     lastTime = 5 # seconds because task.time returns seconds
@@ -29,7 +29,7 @@ class Powerup(Obj3D):
         elif "bottle" == model:
             self.scaleAll(6)
         elif "shield" == model:
-            self.scaleAll(6)
+            self.scaleAll(1.5)
 
         self.repositionToCenter()
         self.move(dz=self.dimZ/2)
@@ -70,7 +70,7 @@ class DisabledPowerup(Powerup):
         elif "bottle" == model:
             self.scaleAll(1.5)
         elif "shield" == model:
-            self.scaleAll(0.9)
+            self.scaleAll(0.4)
 
         self.move(dz=2)
 
