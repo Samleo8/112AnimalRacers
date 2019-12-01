@@ -503,7 +503,7 @@ class RacingGame(Game):
         # But car facing and checkpoint handling are handled inside the init function
         pos = self.racetrack.points[0]
         self.player = Racecar(self, Game.selectedCar, Game.selectedPassenger, self.render, pos=pos)
-        car1 = StupidCar(self, "groundroamer", "bunny", self.render)
+        car1 = SmartCar(self, "groundroamer", "bunny", self.render)
         car2 = NotSoStupidCar(self, "racecar", "chicken", self.render)
 
         self.cars.append(self.player)

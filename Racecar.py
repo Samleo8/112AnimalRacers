@@ -231,7 +231,7 @@ class Racecar(Obj3D):
     def onPassCheckpoint(self, entry):
         # Get passed checkpoint ID
         checkpointID = entry.getIntoNodePath().getPythonTag("checkpointID")
-        
+
         # Make sure that previous checkpoint was passed before update
         if self.passedCheckpoints[checkpointID-1] > self.passedCheckpoints[checkpointID]:
             print(f"Car {self.id}: Passed checkpoint {checkpointID}")
@@ -436,3 +436,39 @@ class NotSoStupidCar(StupidCar):
             self.doDrive("forwards")
 
         return
+
+class SmartCar(Racecar):
+    def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
+        super().__init__(gameObj, model, passenger, renderParent, pos, hpr)
+
+        # self.maxSpeed = 10
+        # self.friction = 0.01
+        # self.accInc = self.friction + 0.005
+        self.currentCheckpoint = 0
+
+        self.allowStaticTurning = True
+
+    
+    def onPassCheckpoint(self, entry):
+        super().onPassCheckpoint(entry)
+
+        # Update current checkpoint
+        self.currentCheckpoint = entry.getIntoNodePath().getPythonTag("checkpointID")
+        return
+
+    # Basically, the idea is to keep adjusting itself to the next checkpoint
+    # This is done through the knowledge of the track's center point
+    def artificialStupidity(self):
+        trackPoints = self.gameObj.points
+        N = len(trackPoints)
+
+        currPoint = trackPoints[self.currentCheckpoint]
+        nextPoint = trackPoints[(self.currentCheckpoint+1) % N]
+
+        print(currPoint)
+
+        return
+
+    def updateMovement(self):
+        self.artificialStupidity()
+        super().updateMovement()
