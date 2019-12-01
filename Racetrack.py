@@ -54,6 +54,7 @@ class Racetrack(Obj3D):
         self.generateRacetrackFromFile(trackName)
 
         # Generate checkpoints
+        self.showCheckpoints = True
         self.checkpoints = []
         self.generateCheckpoints()
 
@@ -85,7 +86,7 @@ class Racetrack(Obj3D):
 
             colNode = Obj3D.createIsolatedCollisionObj(
                 "checkpoint", colBox, intoBitmask=self.gameObj.colBitMask["checkpoint"],
-                show=False
+                show=self.showCheckpoints
             )
 
             colNode.setPythonTag("checkpointID", i)

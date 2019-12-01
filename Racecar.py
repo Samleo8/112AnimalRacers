@@ -141,20 +141,21 @@ class Racecar(Obj3D):
         self.colCheckpointEvent.addOutPattern('%fn-out-%in')
 
         # Initialise simple sphere just to check for checkpoint and powerup passing
-        #colSphere = CollisionSphere(self.relOffsetX, self.relOffsetY, self.relOffsetZ, self.dimZ/2)
         fromBitmask = self.gameObj.colBitMask["checkpoint"] | self.gameObj.colBitMask["powerup"]
 
-        '''
-        self.colCheckpointNode = self.initSurroundingCollisionObj(self.getColNodeName("checkpoint"), "capsule", show=True)
-        self.colCheckpointNode.node().setFromCollideMask(fromBitmask)
-        self.colCheckpointNode.node().setIntoCollideMask(self.gameObj.colBitMask["off"])
-        '''
+        colSphere = CollisionSphere(self.relOffsetX, self.relOffsetY, self.relOffsetZ, self.dimZ/2)
 
         self.colCheckpointNode = Obj3D.createIsolatedCollisionObj(
             self.getColNodeName("checkpoint"), colSphere, parentNode=self.model,
             fromBitmask=fromBitmask, intoBitmask=self.gameObj.colBitMask["off"],
             show=False
         )
+        
+        '''
+        self.colCheckpointNode = self.initSurroundingCollisionObj(self.getColNodeName("checkpoint"), "capsule", show=True)
+        self.colCheckpointNode.node().setFromCollideMask(fromBitmask)
+        self.colCheckpointNode.node().setIntoCollideMask(self.gameObj.colBitMask["off"])
+        '''
 
         # Collision Events
         # Make this dependent on the player ID to allow for individual event triggering
@@ -470,13 +471,20 @@ class SmartCar(Racecar):
         x, y, _ = self.getPos()
         px, py, _ = gotoPoint
 
-        angle = -rad2Deg(math.atan2(px-x, py-y))
+        # Because it's in the euler coordinate system
+        # swap [y|x] with [-x|y]
+        angle = rad2Deg(math.atan2(x-px, py-y))
 
         yawFacing, _, _ = self.getHpr()
         _, _angles = self.gameObj.racetrack.leftTrackPoints[self.currentCheckpoint]
         offsetAngle, _ = _angles
-        
-        delta = yawFacing - offsetAngle
+
+        moveTowardsCenterOfCheckpoint = self.isCollidingWall  
+        if moveTowardsCenterOfCheckpoint: 
+            delta = yawFacing - angle
+            print(yawFacing, angle)
+        else:
+            delta = yawFacing - offsetAngle
 
         self.doDrive("forward")
 
