@@ -459,13 +459,24 @@ class SmartCar(Racecar):
     # Basically, the idea is to keep adjusting itself to the next checkpoint
     # This is done through the knowledge of the track's center point
     def artificialStupidity(self):
-        trackPoints = self.gameObj.points
+        trackPoints = self.gameObj.raceTrack.points
         N = len(trackPoints)
 
-        currPoint = trackPoints[self.currentCheckpoint]
         nextPoint = trackPoints[(self.currentCheckpoint+1) % N]
 
-        print(currPoint)
+        self.doDrive("forward")
+
+        # Calculate angle from current position (x, y) to next point
+        x, y, _ = self.getPos()
+        px, py, _ = nextPoint
+
+        angle = math.atan((py - y)/(px - x))
+        yawFacing, _, _ = self.getHpr()
+        
+        if yawFacing < angle:
+            self.doTurn("right")
+        else:
+            self.doTurn("left")
 
         return
 
