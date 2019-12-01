@@ -13,6 +13,8 @@ Then, run the game with `python Game.py`. Note that only Python 3 is supported.
 ### 3D Models
 [Jeep Model](https://free3d.com/3d-model/1987-camel-trophy-range-rover-x3d-25052.html) by *bigcrazycarboy*
 
+[Lightning Bolt](https://opengameart.org/content/bolt) by *Savino*
+
 All other models from the [Alice Gallery](http://alice.org/pandagallery/index.html)
 
 ### Audio
