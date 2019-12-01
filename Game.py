@@ -521,7 +521,7 @@ class RacingGame(Game):
             "turnRight": [ "arrow_right", "d" ],
             "camConfigRotate": [ "v" ],
             "camConfigBehind": [ "c" ],
-            "drifting": [ "space" ]
+            "drifting": [ "space", "z" ]
         }
 
         for fn in functionToKeys:
