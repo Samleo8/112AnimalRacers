@@ -25,6 +25,23 @@ class Wall(Obj3D):
         colNode = self.getCollisionNode("wall")
         colNode.node().setIntoCollideMask(self.gameObj.colBitMask["wall"])
 
+# Creates a bunch of walls stacked on top of each other
+class HighWall():
+    def __init__(self, racetrack, nWalls=1, wallType=None, pos=(0,0,0), angles=(0,0)):
+        self.racetrack = racetrack
+        self.wallType = self.racetrack.wallType if wallType == None else wallType
+
+        self.nWalls = nWalls
+        self.walls = []
+
+        theta, phi = angles
+
+        for i in range(self.nWalls):
+            wall = Wall(self.racetrack.gameObj, self.wallType, pos=pos)
+            dz = wall.dimZ * i
+
+            wall.move(dz=dz)
+            wall.rotate(dh=theta, dp=phi)
 
 '''
 Class holds all walls and floors
@@ -47,7 +64,7 @@ class Racetrack(Obj3D):
         Racecar.nRacecars -= 1
 
         # Set wall spacing
-        self.defaultWallSpacing = max(self.wallDim) + tempCarDim[0] * 5
+        self.defaultWallSpacing = max(self.wallDim) + tempCarDim[0] * 6
 
         # Generate racetrack
         self.points = []
@@ -235,7 +252,7 @@ class Racetrack(Obj3D):
 
     def genWallsFromPointToPoint(self, startPoint, endPoint, angles=None):
         if angles == None: angles = (0, 0)
-        thetha, phi = angles
+        theta, phi = angles
 
         directionVector = sub2Tuples(endPoint, startPoint)
         distance = getVectorMagnitude(directionVector)
@@ -251,17 +268,16 @@ class Racetrack(Obj3D):
                 startPoint, 
                 multiplyVectorByScalar(directionVector, i * wallSize/distance)
             )
-            wall = Wall(self.gameObj, self.wallType, pos=pos)
-            wall.rotate(dh=thetha, dp=phi)
+            wall = HighWall(self, nWalls=2, wallType=self.wallType, pos=pos, angles=angles)
 
             # Generate floor from point to point as well
             ground = Ground(self.gameObj, "ground", pos=pos)
-            ground.rotate(dh=thetha, dp=phi)
+            ground.rotate(dh=theta, dp=phi)
 
 
     # Given a start pos, calculate positions of side track points with defined spacing from the center position
     # and with the correct facing (yaw) 
-    # Returns pos1, pos2, (thetha, phi) 
+    # Returns pos1, pos2, (theta, phi) 
     def calculateSideTracks(self, line, spacing=None):
         startPos, directionVector = line
 
@@ -280,9 +296,9 @@ class Racetrack(Obj3D):
         # Because it's in the euler coordinate system
         # swap [y|x] with [-x|y] (!)
         try:
-            thetha = radToDeg(math.atan2(-a, b))
+            theta = radToDeg(math.atan2(-a, b))
         except:
-            thetha = 0 
+            theta = 0 
 
         # Fix the z angle component
         try:
@@ -291,7 +307,7 @@ class Racetrack(Obj3D):
         except:
             phi = 0
 
-        return pos1, pos2, (thetha, phi)
+        return pos1, pos2, (theta, phi)
 
     def drawMinimap(self):
         #https: // www.panda3d.org/reference/python/classpanda3d_1_1core_1_1LineSegs.html
