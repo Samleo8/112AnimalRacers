@@ -241,6 +241,7 @@ class RacecarSelection(Game):
             font=Game.fonts["AmericanCaptain"], bg=(255, 255, 255, 1),
             align=TextNode.ARight, mayChange=False
         )
+        
         menu = DirectOptionMenu(
             scale=0.15,
             items=self.passengers, initialitem=initialPassenger,
@@ -251,6 +252,9 @@ class RacecarSelection(Game):
         )
 
         # If drawing is needed, passenger needs to be selected first
+        self.displayedPassenger = None
+        self.displayedCar = None
+
         self.selectPassenger(self.passengers[initialPassenger])
         self.selectCar(self.cars[initialCar])
 
