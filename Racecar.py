@@ -479,12 +479,17 @@ class SmartCar(Racecar):
         _, _angles = self.gameObj.racetrack.leftTrackPoints[self.currentCheckpoint]
         offsetAngle, _ = _angles
 
-        moveTowardsCenterOfCheckpoint = self.isCollidingWall  
+        moveTowardsCenterOfCheckpoint = True #self.isCollidingWall  
         if moveTowardsCenterOfCheckpoint: 
             delta = yawFacing - angle
-            print(yawFacing, angle)
         else:
             delta = yawFacing - offsetAngle
+
+        # NOTE: Relative left and right directions are swapped
+        if delta > 180:
+            delta -= 360
+        elif delta < -180:
+            delta += 360
 
         self.doDrive("forward")
 
