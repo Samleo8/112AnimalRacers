@@ -119,8 +119,12 @@ Hold V to look around | R to Restart
             align=TextNode.ACenter, mayChange=False
         )
 
+        # Skip everything and start racing
+        self.accept("space-up", self.nextState, extraArgs=["game"])
+
     def startGame(self):
         self.nextState("RacetrackSelection")
+
 
 class RacetrackSelection(Game):
     def __init__(self):
