@@ -144,17 +144,17 @@ class Racecar(Obj3D):
         #colSphere = CollisionSphere(self.relOffsetX, self.relOffsetY, self.relOffsetZ, self.dimZ/2)
         fromBitmask = self.gameObj.colBitMask["checkpoint"] | self.gameObj.colBitMask["powerup"]
 
+        '''
         self.colCheckpointNode = self.initSurroundingCollisionObj(self.getColNodeName("checkpoint"), "capsule", show=True)
         self.colCheckpointNode.node().setFromCollideMask(fromBitmask)
         self.colCheckpointNode.node().setIntoCollideMask(self.gameObj.colBitMask["off"])
-
         '''
+
         self.colCheckpointNode = Obj3D.createIsolatedCollisionObj(
             self.getColNodeName("checkpoint"), colSphere, parentNode=self.model,
             fromBitmask=fromBitmask, intoBitmask=self.gameObj.colBitMask["off"],
             show=False
         )
-        '''
 
         # Collision Events
         # Make this dependent on the player ID to allow for individual event triggering
