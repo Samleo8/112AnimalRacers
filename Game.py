@@ -119,8 +119,8 @@ Hold V to look around | R to Restart
             align=TextNode.ACenter, mayChange=False
         )
 
-        # Skip everything and start racing
-        self.accept("space-up", self.nextState, extraArgs=["game"])
+        # Next frame without clicking
+        self.accept("space-up", self.startGame)
 
     def startGame(self):
         self.nextState("RacetrackSelection")
@@ -163,6 +163,9 @@ class RacetrackSelection(Game):
             popupMenu_pos=(-0.5, 0, 0.2),
             command=self.selectTrack
         )
+
+        # Next frame without clicking
+        self.accept("space-up", self.selectCar)
 
     def selectTrack(self, track):
         Game.selectedTrack = track 
@@ -250,6 +253,9 @@ class RacecarSelection(Game):
         # If drawing is needed, passenger needs to be selected first
         self.selectPassenger(self.passengers[initialPassenger])
         self.selectCar(self.cars[initialCar])
+
+        # Next frame without clicking
+        self.accept("space-up", self.startGame)
 
     def selectCar(self, car):
         Game.selectedCar = car
@@ -511,11 +517,11 @@ class RacingGame(Game):
         pos = self.racetrack.points[0]
         self.player = Racecar(self, Game.selectedCar, Game.selectedPassenger, self.render, pos=pos)
         car1 = SmartCar(self, "groundroamer", "bunny", self.render)
-        car2 = NotSoStupidCar(self, "racecar", "chicken", self.render)
+        #car2 = NotSoStupidCar(self, "racecar", "chicken", self.render)
 
         self.cars.append(self.player)
         self.cars.append(car1)
-        self.cars.append(car2)
+        #self.cars.append(car2)
 
     # Key Events
     def createKeyControls(self):

@@ -404,7 +404,7 @@ class StupidCar(Racecar):
     def artificialStupidity(self):
         r = random.random()
         if r < 0.2:
-            self.doDrive("backwards")
+                self.doDrive("backwards")
         else:
             self.doDrive("forward")
         
@@ -441,11 +441,7 @@ class SmartCar(Racecar):
     def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
         super().__init__(gameObj, model, passenger, renderParent, pos, hpr)
 
-        # self.maxSpeed = 10
-        # self.friction = 0.01
-        # self.accInc = self.friction + 0.005
         self.currentCheckpoint = 0
-
         self.allowStaticTurning = True
 
     
@@ -454,32 +450,41 @@ class SmartCar(Racecar):
 
         # Update current checkpoint
         self.currentCheckpoint = entry.getIntoNodePath().getPythonTag("checkpointID")
+
         return
 
     # Basically, the idea is to keep adjusting itself to the next checkpoint
     # This is done through the knowledge of the track's center point
     def artificialStupidity(self):
-        trackPoints = self.gameObj.raceTrack.points
-        N = len(trackPoints)
-
-        nextPoint = trackPoints[(self.currentCheckpoint+1) % N]
-
-        self.doDrive("forward")
+        # Get midpoint of next checkpoint
+        trackPoints = self.gameObj.racetrack.points
+        i = (self.currentCheckpoint+1) % len(trackPoints)
+        gotoPoint = trackPoints[i]
 
         # Calculate angle from current position (x, y) to next point
         x, y, _ = self.getPos()
-        px, py, _ = nextPoint
+        px, py, _ = gotoPoint
 
-        angle = math.atan((py - y)/(px - x))
+        angle = -rad2Deg(math.atan2(px-x, py-y))
+
         yawFacing, _, _ = self.getHpr()
+        _, _angles = self.gameObj.racetrack.leftTrackPoints[self.currentCheckpoint]
+        offsetAngle, _ = _angles
         
-        if yawFacing < angle:
-            self.doTurn("right")
-        else:
-            self.doTurn("left")
+        print(offsetAngle)
 
+        self.setHpr(h=45, p=0, r=0)
+
+        #self.doDrive("forward")
         return
-
+        if abs(delta) < 0.01:
+            return
+        elif delta < 0:
+            self.doTurn("left")
+        elif delta > 0:
+            self.doTurn("right")
+        return
+        
     def updateMovement(self):
         self.artificialStupidity()
         super().updateMovement()

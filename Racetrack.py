@@ -276,8 +276,9 @@ class Racetrack(Obj3D):
         pos1 = x - b, y + a, z
         pos2 = x + b, y - a, z
 
+        # TODO: Fix angle issues
         try:
-            thetha = -radToDeg(math.atan(a/b))
+            thetha = radToDeg(math.atan2(b, a))
         except:
             thetha = 0 
 
