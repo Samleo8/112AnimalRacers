@@ -91,11 +91,13 @@ class Obj3D(object):
     worldRenderer = None
     audio3d = None
 
+    modelTypes = ["bam", "egg", "gltf", "glb"]  # in order of priority
+
     def __init__(self, model, renderParent=None, pos=None, hpr=None):
         # Set model
         # Also check if we can load this model type
         self.modelName = model
-        modelTypes = ["bam", "egg", "gltf", "glb"]  # in order of priority
+        modelTypes = Obj3D.modelTypes
         modelFile = f"models/{model}"
 
         for modelType in modelTypes:

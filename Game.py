@@ -272,9 +272,10 @@ class RacecarSelection(Game):
 
         for f in os.listdir(path):
             if f.startswith(prefix):
-                items.append(
-                    f.replace(prefix, "", 1).replace(".egg", "", 1)
-                )
+                f = f.replace(prefix, "", 1)
+                for ext in Obj3D.modelTypes:
+                    f = f.replace(f".{ext}", "", 1)
+                items.append(f)
 
         return items
 
