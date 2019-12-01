@@ -430,6 +430,9 @@ class RacingGame(Game):
             car.updatePowerup(task.time)
             car.updateMovement()
 
+        for powerup in self.racetrack.powerups:
+            powerup.spin()
+
         return Task.cont
 
     # Load Audio
