@@ -278,7 +278,7 @@ class Racetrack(Obj3D):
         pos2 = x + b, y - a, z
 
         # Because it's in the euler coordinate system
-        # swap [y|x] with [-x|y] 
+        # swap [y|x] with [-x|y] (!)
         try:
             thetha = radToDeg(math.atan2(-a, b))
         except:
