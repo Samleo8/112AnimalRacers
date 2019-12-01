@@ -11,7 +11,9 @@ Then, run the game with `python Game.py`. Note that only Python 3 is supported.
 
 ## Credits
 ### 3D Models
-[Alice Gallery](http://alice.org/pandagallery/index.html)
+[Jeep Model](https://free3d.com/3d-model/1987-camel-trophy-range-rover-x3d-25052.html) by *bigcrazycarboy*
+
+All other models from the [Alice Gallery](http://alice.org/pandagallery/index.html)
 
 ### Audio
 Main music adapted from [Purple Passion](https://www.youtube.com/watch?v=ERbmI4_x1Xc) by *Diana Boncheva*
