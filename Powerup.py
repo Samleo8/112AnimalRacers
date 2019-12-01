@@ -34,6 +34,9 @@ class Powerup(Obj3D):
         self.repositionToCenter()
         self.move(dz=self.dimZ/2)
 
+    def spin(self, amt=5):
+        self.rotate(dh=amt)
+
 # Active powerup with collisions
 class ActivePowerup(Powerup):
     def __init__(self, gameObj, powerupType=None, renderParent=None, pos=None, hpr=None):
