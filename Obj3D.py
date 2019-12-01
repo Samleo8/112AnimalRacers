@@ -385,8 +385,7 @@ class Obj3D(object):
         self.offsetX = (x2 + x1)/2 - self.x
         self.offsetY = (y2 + y1)/2 - self.y
         self.offsetZ = (z2 + z1)/2 - self.z
-        # '''
-
+        
         self.offset = (self.offsetX, self.offsetY, self.offsetZ)
         self.dim = (self.dimX, self.dimY, self.dimZ)
     
