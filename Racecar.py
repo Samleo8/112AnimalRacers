@@ -141,15 +141,20 @@ class Racecar(Obj3D):
         self.colCheckpointEvent.addOutPattern('%fn-out-%in')
 
         # Initialise simple sphere just to check for checkpoint and powerup passing
-        colSphere = CollisionSphere(
-            self.relOffsetX, self.relOffsetY, self.relOffsetZ, self.dimZ/2)
+        #colSphere = CollisionSphere(self.relOffsetX, self.relOffsetY, self.relOffsetZ, self.dimZ/2)
         fromBitmask = self.gameObj.colBitMask["checkpoint"] | self.gameObj.colBitMask["powerup"]
 
+        self.colCheckpointNode = self.initSurroundingCollisionObj(self.getColNodeName("checkpoint"), "capsule", show=True)
+        self.colCheckpointNode.node().setFromCollideMask(fromBitmask)
+        self.colCheckpointNode.node().setIntoCollideMask(self.gameObj.colBitMask["off"])
+
+        '''
         self.colCheckpointNode = Obj3D.createIsolatedCollisionObj(
             self.getColNodeName("checkpoint"), colSphere, parentNode=self.model,
             fromBitmask=fromBitmask, intoBitmask=self.gameObj.colBitMask["off"],
             show=False
         )
+        '''
 
         # Collision Events
         # Make this dependent on the player ID to allow for individual event triggering
@@ -471,19 +476,16 @@ class SmartCar(Racecar):
         _, _angles = self.gameObj.racetrack.leftTrackPoints[self.currentCheckpoint]
         offsetAngle, _ = _angles
         
-        print(offsetAngle)
+        delta = yawFacing - offsetAngle
 
-        self.setHpr(h=45, p=0, r=0)
+        self.doDrive("forward")
 
-        #self.doDrive("forward")
-        return
         if abs(delta) < 0.01:
-            return
+            self.doDrive("forward")
         elif delta < 0:
             self.doTurn("left")
         elif delta > 0:
             self.doTurn("right")
-        return
         
     def updateMovement(self):
         self.artificialStupidity()

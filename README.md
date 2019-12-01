@@ -16,6 +16,8 @@ Then, run the game with `python Game.py`. Note that only Python 3 is supported.
 ### Audio
 Main music adapted from [Purple Passion](https://www.youtube.com/watch?v=ERbmI4_x1Xc) by *Diana Boncheva*
 
+Main music “Mayhem” by Eric Matyas @ [www.soundimage.org](https://soundimage.org/sports/)
+
 ### Fonts
 [American Captain](https://www.fontspace.com/the-fontry/american-captain) by *The Fontry*
 
