@@ -241,7 +241,7 @@ class RacecarSelection(Game):
             font=Game.fonts["AmericanCaptain"], bg=(255, 255, 255, 1),
             align=TextNode.ARight, mayChange=False
         )
-        
+
         menu = DirectOptionMenu(
             scale=0.15,
             items=self.passengers, initialitem=initialPassenger,
@@ -522,11 +522,11 @@ class RacingGame(Game):
         pos = self.racetrack.points[0]
         self.player = Racecar(self, Game.selectedCar, Game.selectedPassenger, self.render, pos=pos)
         car1 = SmartCar(self, "groundroamer", "bunny", self.render)
-        #car2 = NotSoStupidCar(self, "racecar", "chicken", self.render)
+        car2 = NotSoStupidCar(self, "racecar", "chicken", self.render)
 
         self.cars.append(self.player)
         self.cars.append(car1)
-        #self.cars.append(car2)
+        self.cars.append(car2)
 
     # Key Events
     def createKeyControls(self):
