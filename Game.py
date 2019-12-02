@@ -637,7 +637,7 @@ class RacingGame(Game):
         pos = self.racetrack.points[0]
         self.player = Racecar(self, Game.selectedCar, Game.selectedPassenger, self.render, pos=pos)
         car1 = SmartCar(self, "groundroamer", "bunny", self.render)
-        car2 = NotSoStupidCar(self, "racecar", "chicken", self.render)
+        car2 = SmartGreedyCar(self, "jeep", "chicken", self.render)
 
         self.cars.append(self.player)
         self.cars.append(car1)

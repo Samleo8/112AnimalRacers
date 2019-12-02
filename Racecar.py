@@ -479,24 +479,14 @@ class SmartCar(Racecar):
         yawFacing, _p, _r = self.getHpr()
         _, _angles = self.gameObj.racetrack.leftTrackPoints[self.currentCheckpoint]
         offsetAngle, _ = _angles
-        
+
         moveTowardsCenterOfCheckpoint = True  
         if moveTowardsCenterOfCheckpoint: 
             delta = yawFacing - angle
         else:
             delta = yawFacing - offsetAngle
 
-        # NOTE: Relative left and right directions are swapped
         delta = normaliseEuler(delta)
-
-        print(yawFacing, offsetAngle, delta)
-
-        '''
-        if delta > 180:
-            delta -= 360
-        elif delta < -180:
-            delta += 360
-        '''
 
         self.doDrive("forward")
 
@@ -518,13 +508,17 @@ class SmartGreedyCar(SmartCar):
         trackPoints = self.gameObj.racetrack.points
         i = (self.currentCheckpoint+1) % len(trackPoints)
         
-        powerupPoints = self.gameObj.racetrack.powerups
+        powerups = self.gameObj.racetrack.powerups
 
         # TODO: Check which is closer to car
         trackPoint = trackPoints[i]
-        powerupPoint = powerupPoints[i-1]
         
-        gotoPoint = trackPoint
+        if powerups[i-1] == None or self.activePowerup != None:
+            gotoPoint = trackPoint
+        else:
+            powerupPoint = powerups[i-1].getPos()
+            
+            gotoPoint = powerupPoint
 
         # Calculate angle from current position (x, y) to next point
         x, y, _ = self.getPos()
@@ -535,20 +529,18 @@ class SmartGreedyCar(SmartCar):
         angle = rad2Deg(math.atan2(x-px, py-y))
 
         yawFacing, _, _ = self.getHpr()
-        _, _angles = self.gameObj.racetrack.leftTrackPoints[self.currentCheckpoint]
-        offsetAngle, _ = _angles
+        
+        delta = yawFacing - angle
+        delta = normaliseEuler(delta)
 
-        moveTowardsCenterOfCheckpoint = True
-        if moveTowardsCenterOfCheckpoint:
-            delta = yawFacing - angle
-        else:
-            delta = yawFacing - offsetAngle
+        self.doDrive("forward")
 
-        # NOTE: Relative left and right directions are swapped
-        if delta > 180:
-            delta -= 360
-        elif delta < -180:
-            delta += 360
+        if abs(delta) < 0.01:
+            self.doDrive("forward")
+        elif delta < 0:
+            self.doTurn("left")
+        elif delta > 0:
+            self.doTurn("right")
 
         self.doDrive("forward")
 
