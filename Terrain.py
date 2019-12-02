@@ -44,6 +44,8 @@ class Terrain():
     def __init__(self, gameObj):
         self.gameObj = gameObj
 
+        racetrack = self.gameObj.racetrack
+
         # Load infinitely extending floor
         '''
         planeSolid = CollisionPlane(
@@ -59,8 +61,10 @@ class Terrain():
         #self.ground = Ground(self.gameObj, "ground")
         #self.ground.setScale(scaleX=1.5, scaleY=1.5)
 
-        self.scene = Ground(self.gameObj, "cornfield")
-        self.scene.move(dz=0)
+        self.startLine = Ground(self.gameObj, "cornfield")
+        self.startLine.move(dz=0)
+        self.startLine.rotate(
+            dh=racetrack.leftTrackPoints[0][1][0], dp=racetrack.leftTrackPoints[0][1][1])
 
         # Sky
         #self.sky = Obj3D("FarmSky")

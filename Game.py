@@ -452,16 +452,17 @@ class RacingGame(Game):
         # Load collision handlers
         self.collisionSetup(showCollisions=False)
 
-        # Load lights and the fancy background
-        self.loadBackground()
-        self.loadLights()
-
         # Load Music
         # NOTE: Do before models so that cars can have audio3d object preinitialised
         self.loadAudio()
 
         # Load the various models
         self.loadModels()
+
+        # Load lights and the fancy background
+        # NOTE: Racetrack needs to be generated first to properly generate the terrain
+        self.loadBackground()
+        self.loadLights()
 
         # Key movement
         self.isKeyDown = {}
@@ -787,10 +788,11 @@ class RacingGame(Game):
         # Reference: https://www.panda3d.org/manual/?title=Bitmask_Example
         self.colBitMask = {
             "off": BitMask32.allOff(),
-            "wall": BitMask32.bit(0x01),
-            "floor": BitMask32.bit(0x02),
-            "checkpoint": BitMask32.bit(0x04),
-            "powerup": BitMask32.bit(0x08)
+            "wall": BitMask32.bit(0),
+            "floor": BitMask32.bit(1),
+            "checkpoint": BitMask32.bit(2),
+            "powerup": BitMask32.bit(3),
+            "offworld": BitMask32.bit(4)
         }
 
     def togglePause(self):

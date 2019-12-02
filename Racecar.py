@@ -392,6 +392,18 @@ class Racecar(Obj3D):
         self.move(dx=dx, dy=dy)
         self.rotate(dh=self.rotationSpeed)
 
+        # Reset
+        if self.checkBelowGround():
+            self.initOnRacetrack()
+            return
+
+    # Check below ground
+    def checkBelowGround(self):
+        _, _, z = self.getPos()
+        groundLevel = self.gameObj.racetrack.trackBounds["z"][0] - self.dimZ * 2
+
+        return z < groundLevel
+
     # External Controls
     def doDrive(self, direction="forwards"):
         accInc = self.accInc
