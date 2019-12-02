@@ -449,7 +449,8 @@ class SmartCar(Racecar):
         self.currentCheckpoint = 0
         self.allowStaticTurning = True
 
-    
+        self.maxRotationSpeed = 10
+
     def onPassCheckpoint(self, entry):
         super().onPassCheckpoint(entry)
 
