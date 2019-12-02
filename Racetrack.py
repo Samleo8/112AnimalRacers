@@ -68,7 +68,15 @@ class Racetrack(Obj3D):
 
         # Generate racetrack
         self.points = []
+
+            # Min and max of all the bounds, including the left and right sides
+        self.trackBounds = {
+            "x": [None, None],
+            "y": [None, None],
+            "z": [None, None]
+        }
         self.generateRacetrackFromFile(trackName)
+        self.getRacetrackBounds()
 
         # Generate checkpoints
         self.showCheckpoints = False
@@ -250,6 +258,37 @@ class Racetrack(Obj3D):
         self.rightTrackPoints = rightTrackPoints
 
         return
+
+    def getRacetrackBounds(self):
+        p0, _ = self.leftTrackPoints[0]
+        x0, y0, z0 = p0
+
+        self.trackBounds["x"] = (x0, x0)
+        self.trackBounds["y"] = (y0, y0)
+        self.trackBounds["Z"] = (z0, z0)
+
+        for i in range(len(self.leftTrackPoints)):
+            p0, _ = self.leftTrackPoints[i]
+            p1, _ = self.rightTrackPoints[i]
+
+            x0, y0, z0 = p0
+            x1, y1, z1 = p1
+
+            self.trackBounds["x"] = (
+                min(x0, x1, self.trackBounds["x"][0]), 
+                max(x0, x1, self.trackBounds["x"][1])
+            )
+            self.trackBounds["y"] = (
+                min(y0, y1, self.trackBounds["y"][0]),
+                max(y0, y1, self.trackBounds["y"][1])
+            )
+            self.trackBounds["z"] = (
+                min(z0, z1, self.trackBounds["z"][0]),
+                max(z0, z1, self.trackBounds["z"][1])
+            )
+            print(self.trackBounds)
+            
+            return self.trackBounds
 
     def genWallsFromPointToPoint(self, startPoint, endPoint, angles=None):
         if angles == None: angles = (0, 0)
