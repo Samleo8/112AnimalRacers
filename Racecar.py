@@ -449,6 +449,7 @@ class SmartCar(Racecar):
         self.currentCheckpoint = 0
         self.allowStaticTurning = True
 
+        self.maxSpeed = 8
         self.maxRotationSpeed = 10
 
     def onPassCheckpoint(self, entry):
@@ -475,10 +476,10 @@ class SmartCar(Racecar):
         # swap [y|x] with [-x|y]
         angle = rad2Deg(math.atan2(x-px, py-y))
 
-        yawFacing, _, _ = self.getHpr()
+        yawFacing, _p, _r = self.getHpr()
         _, _angles = self.gameObj.racetrack.leftTrackPoints[self.currentCheckpoint]
         offsetAngle, _ = _angles
-
+        
         moveTowardsCenterOfCheckpoint = True  
         if moveTowardsCenterOfCheckpoint: 
             delta = yawFacing - angle
@@ -486,10 +487,16 @@ class SmartCar(Racecar):
             delta = yawFacing - offsetAngle
 
         # NOTE: Relative left and right directions are swapped
+        delta = normaliseEuler(delta)
+
+        print(yawFacing, offsetAngle, delta)
+
+        '''
         if delta > 180:
             delta -= 360
         elif delta < -180:
             delta += 360
+        '''
 
         self.doDrive("forward")
 

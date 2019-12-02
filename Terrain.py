@@ -11,13 +11,34 @@ class Ground(Obj3D):
         self.move(dz=self.dimZ/2)
 
         args = {
-            "padding": (0, 0, 0.001)
+            "padding": (0, 0, 0.01)
         }
 
         self.initSurroundingCollisionObj("floor", args=args, show=False)
 
         colNode = self.getCollisionNode("floor")
         colNode.node().setIntoCollideMask(self.gameObj.colBitMask["floor"])
+        colNode.node().setFromCollideMask(self.gameObj.colBitMask["off"])
+
+        # Make bottom extra big
+        padZ = 10
+        '''
+        colBox = CollisionBox(
+            # center is padZ below the floor
+            (self.relOffsetX, self.relOffsetY, self.relOffsetZ - padZ),
+            # dx, dy, dz
+            self.relDimX/2, self.relDimY/2, self.relDimZ/2 + padZ
+        )
+        colPlane = CollisionPlane(
+            Plane(Vec3(0, 0, 1), Point3(self.relativeOffset))
+        )
+
+        colNode = self.createIsolatedCollisionObj(
+            "floor", colPlane, 
+            fromBitmask=self.gameObj.colBitMask["off"], intoBitmask=self.gameObj.colBitMask["floor"],
+            show = True
+        )
+        '''
 
 class Terrain():
     def __init__(self, gameObj):

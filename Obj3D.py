@@ -86,6 +86,14 @@ def intersectionOfLines(line1, line2):
 
     return tuple(intersectionPoint)
 
+def normaliseEuler(n):
+    if n > 180:
+        n -= 360
+    elif n < -180:
+        n += 360
+
+    return n
+
 class Obj3D(object):
     # Set worldRenderer in app loadModels
     worldRenderer = None
@@ -312,6 +320,7 @@ class Obj3D(object):
             self.repositionToCenter()
 
     def setHpr(self, h, p, r):
+        h = normaliseEuler(h)
         self.hpr = (h, p, r)
         self.model.setHpr(h, p, r)
 

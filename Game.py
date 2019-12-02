@@ -60,7 +60,7 @@ and beat all the other cars to win!
 
         self.helpDialog = HelpDialog()
 
-        self.nextState("instructions")
+        self.nextState("start")
 
     def nextState(self, state):
         self.destroyInstance()
@@ -73,9 +73,9 @@ and beat all the other cars to win!
             StartScreen()
         elif state in [ "game", "racing", "racinggame", "main" ]:
             RacingGame()
-        elif state in [ "racetrackselection", "racetrack" ]:
+        elif state in [ "racetrackselection", "racetrack", "track" ]:
             RacetrackSelection()
-        elif state in ["racecarselection", "racecar" ]:
+        elif state in ["racecarselection", "racecar", "car" ]:
             RacecarSelection()
         elif state in [ "instructions", "help" ]:
             InstructionsScreen()
