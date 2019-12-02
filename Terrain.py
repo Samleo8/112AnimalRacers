@@ -38,8 +38,8 @@ class Terrain():
         #self.ground = Ground(self.gameObj, "ground")
         #self.ground.setScale(scaleX=1.5, scaleY=1.5)
 
-        # self.scene = Ground(self.gameObj, "cornfield")
-        # self.scene.move(dz=0)
+        self.scene = Ground(self.gameObj, "cornfield")
+        self.scene.move(dz=0)
 
         # Sky
         #self.sky = Obj3D("FarmSky")
