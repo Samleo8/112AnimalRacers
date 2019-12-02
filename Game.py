@@ -69,11 +69,14 @@ class Game(ShowBase):
 Instructions: 
 
 WASD/Arrow Keys to Drive
-Hold Z to drift
 
-R to restart
+Hold Space to drift
 
-Set camera view with 1 or 2
+1, 2 to change camera
+Hold C to look behind
+Hold V to look around
+
+R to Restart Game at anytime
 """)
         return
 
@@ -87,7 +90,7 @@ class StartScreen(Game):
         )
 
         title = OnscreenText(
-            text='Animal Racers', pos=(0, 0.25), scale=0.25,
+            text='Animal Racers', pos=(0, 0.3), scale=0.32,
             font=Game.fonts["AmericanCaptain"],
             align=TextNode.ACenter, mayChange=False
         )
@@ -96,15 +99,24 @@ class StartScreen(Game):
             text="Start  Game", text_font=Game.fonts["AmericanCaptain"],
             scale=0.15, command=self.startGame,
             pad=(0.3, 0.3),
-            pos=(0, 0, -0.15)
+            pos=(0, 0, -0.2)
         )
 
+        spaceShortcut = OnscreenText(
+            text='[Space]', pos=(0, -0.35), scale=0.08,
+            font=Game.fonts["AmericanCaptain"],
+            align=TextNode.ACenter, mayChange=False,
+            bg=(182, 182, 182, 0.5)
+        )
+
+        '''
         helpButton = DirectButton(
             text="Help", text_font=Game.fonts["AmericanCaptain"],
             scale=0.15, command=self.showHelp,
             pad=(0.3, 0.3),
             pos=(0, 0, -0.45)
         )
+        '''
 
         # Instructions
         helpText = """\
@@ -136,7 +148,7 @@ class RacetrackSelection(Game):
         )
 
         title = OnscreenText(
-            text='Select your Racetrack!', pos=(0, 0.6), scale=0.18,
+            text='Select your Racetrack!', pos=(0, 0.65), scale=0.18,
             font=Game.fonts["AmericanCaptain"], bg=(255, 255, 255, 1),
             align=TextNode.ACenter, mayChange=False
         )
@@ -145,8 +157,16 @@ class RacetrackSelection(Game):
             text="Next", text_font=Game.fonts["AmericanCaptain"],
             scale=0.10, command=self.selectCar,
             pad=(0.3, 0.3),
-            pos=(0, 0, -0.85)
+            pos=(0, 0, -0.8)
         )
+
+        spaceShortcut = OnscreenText(
+            text='[Space]', pos=(0, -0.93), scale=0.07,
+            font=Game.fonts["AmericanCaptain"],
+            align=TextNode.ACenter, mayChange=False,
+            bg=(182, 182, 182, 0.5),
+        )
+
 
         # Get List of tracks
         self.tracks = self.findTracks("racetracks")
@@ -159,7 +179,7 @@ class RacetrackSelection(Game):
             items=self.tracks, initialitem=initialItem,
             highlightColor=(10, 10, 10, 1), 
             pad=(10, 10),
-            pos=(-0.5, 0, 0.2),
+            pos=(-0.5, 0, 0.35),
             popupMenu_pos=(-0.5, 0, 0.2),
             command=self.selectTrack
         )
@@ -206,9 +226,16 @@ class RacecarSelection(Game):
 
         nextButton = DirectButton(
             text="Next", text_font=Game.fonts["AmericanCaptain"],
-            scale=0.10, command=self.startGame,
+            scale=0.10, command=self.selectCar,
             pad=(0.3, 0.3),
-            pos=(0, 0, -0.85)
+            pos=(0, 0, -0.8)
+        )
+
+        spaceShortcut = OnscreenText(
+            text='[Space]', pos=(0, -0.93), scale=0.07,
+            font=Game.fonts["AmericanCaptain"],
+            align=TextNode.ACenter, mayChange=False,
+            bg=(182, 182, 182, 0.5),
         )
 
         # Get List of cars
@@ -446,7 +473,8 @@ class RacingGame(Game):
             car.updateMovement()
 
         for powerup in self.racetrack.powerups:
-            powerup.spin()
+            if powerup != None:
+                powerup.spin()
 
         return Task.cont
 
