@@ -297,7 +297,7 @@ class RacecarSelection(Game):
 
         nextButton = DirectButton(
             text="Next", text_font=Game.fonts["AmericanCaptain"],
-            scale=0.10, command=self.selectCar,
+            scale=0.10, command=self.startGame,
             pad=(0.3, 0.3),
             pos=(0, 0, -0.8)
         )
@@ -363,15 +363,23 @@ class RacecarSelection(Game):
 
     # Define a procedure to move the camera.
     def carShowcase(self, task):
-        angleDegrees = task.time * 6.0
-        angleRadians = angleDegrees * (math.pi / 180.0)
-        self.camera.setPos(20 * math.sin(angleRadians), -
-                           20.0 * math.cos(angleRadians), 3)
-        self.camera.setHpr(angleDegrees, 0, 0)
+        rotateTime = 3.0
+        angle = task.time * rotateTime
+
+        rad = 80
+        camHeight = 10
+
+        self.camera.setPos(
+            rad * math.sin(angle), -rad * math.cos(angle), camHeight
+        )
+        self.camera.setHpr(radToDeg(angle), 0, 0)
         return Task.cont
 
     def selectCar(self, car):
         Game.selectedCar = car
+
+        if self.displayedCar != None:
+            self.displayedCar.destroy()
 
         pos = (0, 0, 0)
         self.displayedCar = DisplayCar(
@@ -381,14 +389,10 @@ class RacecarSelection(Game):
         self.camera.setPos(10, 10, 10)
         self.camera.lookAt(pos)
 
-        print(self.displayedCar)
-
     def selectPassenger(self, passenger):
         Game.selectedPassenger = passenger
 
         self.selectCar(Game.selectedCar)
-
-        # TODO: Display passenger
 
     def findCarsOrPassengers(self, path, prefix=""):
         items = []
