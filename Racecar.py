@@ -7,6 +7,8 @@ class Racecar(Obj3D):
         super().__init__("car_" + model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
+        self.initCarAndPassengerModels(model, passenger)
+
         self.id = Racecar.nRacecars
         Racecar.nRacecars += 1
 
@@ -39,16 +41,25 @@ class Racecar(Obj3D):
         self.setSpeed(0, 0)
         self.setAcceleration(0, 0)
 
+        # Init position on racetrack iff racetrack exists
+        if hasattr(self.gameObj, "racetrack"):
+            self.initOnRacetrack()
+
+        self.initCollisions()
+
+        self.initAudio()
+
+    def initCarAndPassengerModels(self, carName=None, passengerName=None):
         # NOTE: When you scale, whatever coordinates used also scales
-        if model == "racecar":
+        if carName == "racecar":
             self.scaleAll(2)
 
         # general way of making sure vehicle is always on the ground, regardless of that vehicle's center
         self.repositionToCenter()
-        self.move(dz=self.dimZ/2) 
-        
+        self.move(dz=self.dimZ/2)
+
         # Add passenger
-        self.personName = "penguin" if passenger == None else passenger
+        self.personName = "penguin" if passengerName == None else passengerName
         self.passenger = Passenger(
             self.gameObj,
             self.personName, self.model
@@ -58,17 +69,9 @@ class Racecar(Obj3D):
         self.passenger.scaleAll(2.5)
 
         self.passenger.move(dx=self.relOffsetX,
-                            dy=self.relOffsetY, 
+                            dy=self.relOffsetY,
                             dz=self.relOffsetZ
                             )
-
-        # Init position on racetrack iff racetrack exists
-        if hasattr(self.gameObj, "racetrack"):
-            self.initOnRacetrack()
-
-        self.initCollisions()
-
-        self.initAudio()
 
     # Init 3D audio
     def initAudio(self):
@@ -422,30 +425,12 @@ class Passenger(Obj3D):
         super().__init__("passenger_" + model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
-class DisplayCar(Obj3D):
+class DisplayCar(Racecar):
     def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
-        super().__init__("car_" + model, renderParent, pos, hpr)
+        super(Racecar, self).__init__("car_" + model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
-        # NOTE: When you scale, whatever coordinates used also scales
-        if model == "racecar":
-            self.scaleAll(2)
-
-        # general way of making sure vehicle is always on the ground, regardless of that vehicle's center
-        self.repositionToCenter()
-        self.move(dz=self.dimZ/2)
-
-        # Add passenger
-        self.personName = "penguin" if passenger == None else passenger
-        self.passenger = Passenger(
-            self.gameObj,
-            self.personName, self.model
-        )
-
-        # Passenger's positions need to be adjusted to the actual center of the object
-        self.passenger.scaleAll(2.5)
-        self.passenger.move(dx=self.relOffsetX,
-                            dy=self.relOffsetY, dz=self.relOffsetZ)
+        self.initCarAndPassengerModels(model, passenger)
 
 class StupidCar(Racecar):
     def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
