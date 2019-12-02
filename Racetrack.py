@@ -114,6 +114,7 @@ class Racetrack(Obj3D):
         N = len(self.points)
         for i in range(N):
             if random.random() > self.powerupSpawnChance:
+                self.powerups.append(None)
                 continue
 
             point1 = LVector3f(self.points[i])

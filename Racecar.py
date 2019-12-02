@@ -502,3 +502,51 @@ class SmartCar(Racecar):
     def updateMovement(self):
         self.artificialStupidity()
         super().updateMovement()
+
+# The smarter car will go for powerups
+class SmartGreedyCar(SmartCar):
+    def artificialStupidity(self):
+        # Get midpoint of next checkpoint
+        trackPoints = self.gameObj.racetrack.points
+        i = (self.currentCheckpoint+1) % len(trackPoints)
+        
+        powerupPoints = self.gameObj.racetrack.powerups
+
+        # TODO: Check which is closer to car
+        trackPoint = trackPoints[i]
+        powerupPoint = powerupPoints[i-1]
+        
+        gotoPoint = trackPoint
+
+        # Calculate angle from current position (x, y) to next point
+        x, y, _ = self.getPos()
+        px, py, _ = gotoPoint
+
+        # Because it's in the euler coordinate system
+        # swap [y|x] with [-x|y]
+        angle = rad2Deg(math.atan2(x-px, py-y))
+
+        yawFacing, _, _ = self.getHpr()
+        _, _angles = self.gameObj.racetrack.leftTrackPoints[self.currentCheckpoint]
+        offsetAngle, _ = _angles
+
+        moveTowardsCenterOfCheckpoint = True
+        if moveTowardsCenterOfCheckpoint:
+            delta = yawFacing - angle
+        else:
+            delta = yawFacing - offsetAngle
+
+        # NOTE: Relative left and right directions are swapped
+        if delta > 180:
+            delta -= 360
+        elif delta < -180:
+            delta += 360
+
+        self.doDrive("forward")
+
+        if abs(delta) < 0.01:
+            self.doDrive("forward")
+        elif delta < 0:
+            self.doTurn("left")
+        elif delta > 0:
+            self.doTurn("right")
