@@ -662,8 +662,7 @@ class RacingGame(Game):
 
         # Only the positions are updated here because we want to space them out
         # But car facing and checkpoint handling are handled inside the init function
-        pos = self.racetrack.points[0]
-        self.player = Racecar(self, Game.selectedCar, Game.selectedPassenger, self.render, pos=pos)
+        self.player = Racecar(self, Game.selectedCar, Game.selectedPassenger, self.render)
         car1 = SmartCar(self, "groundroamer", "bunny", self.render)
         car2 = SmartGreedyCar(self, "jeep", "chicken", self.render)
 

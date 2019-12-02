@@ -174,8 +174,12 @@ class Racecar(Obj3D):
     
     def initOnRacetrack(self):
         # Assumes that racetrack has already been generated
-        trackPoints = self.gameObj.racetrack.leftTrackPoints
+        x, y, z = self.gameObj.racetrack.leftTrackPoints
+
         yawFacing = trackPoints[0][1][0]
+
+        # Position setting
+        self.setPos(x,y,z)
 
         # Rotate to face the closest checkpoint
         self.rotate(dh=yawFacing)
