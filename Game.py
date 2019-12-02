@@ -30,7 +30,6 @@ from Racecar import *
 from Racetrack import *
 from Terrain import *
 from Powerup import *
-from Dialogs import *
 class Game(ShowBase):
     fonts = {}
     selectedTrack = "test"
