@@ -30,7 +30,7 @@ from Racecar import *
 from Racetrack import *
 from Terrain import *
 from Powerup import *
-
+from Dialogs import *
 class Game(ShowBase):
     fonts = {}
     selectedTrack = "test"
@@ -50,6 +50,7 @@ and beat all the other cars to win!
 [Hold C] Look behind
 [Hold V] Look around
 
+[P] Pause and show help
 [R] Restart Game
 """
 
@@ -57,6 +58,8 @@ and beat all the other cars to win!
         ShowBase.__init__(self)
         
         Game.fonts["AmericanCaptain"] = loader.loadFont('AmericanCaptain.ttf')
+
+        self.helpDialog = HelpDialog()
 
         self.nextState("instructions")
 
@@ -84,41 +87,69 @@ and beat all the other cars to win!
     def destroyInstance(self):
         self.destroy()
 
-    @staticmethod
-    def showHelp():
-        print("Instructions:\n"+Game.instructionsText)
+class HelpDialog():
+    def __init__(self):
+        self.components = []
+        self.hidden = False
 
-        concreteBg = OnscreenImage(
+        self.bg = OnscreenImage(
             image="img/startscreen.png",
             scale=(1.5, 1.5, 1)
         )
+        self.components.append(self.bg)
 
-        title = OnscreenText(
-            text='Instructions', pos=(0, 0.7), scale=0.18,
+        self.title = OnscreenText(
+            text='Instructions', pos=(0, 0.7), scale=0.15,
             font=Game.fonts["AmericanCaptain"], bg=(255, 255, 255, 1),
             align=TextNode.ACenter, mayChange=False
         )
+        self.components.append(self.title)
 
-        instructions = OnscreenText(
-            text=Game.instructionsText, pos=(0, 0.4), scale=0.1,
+        self.instructions = OnscreenText(
+            text=Game.instructionsText, pos=(0, 0.52), scale=0.08,
             font=Game.fonts["AmericanCaptain"], bg=(182, 182, 182, 0.5),
             align=TextNode.ACenter, mayChange=False,
             wordwrap=22
         )
-        
-        nextButton = DirectButton(
-            text="Next", text_font=Game.fonts["AmericanCaptain"],
-            scale=0.10, command=self.selectCar,
-            pad=(0.3, 0.3),
-            pos=(0, 0, -0.8)
-        )
+        self.components.append(self.instructions)
 
-        spaceShortcut = OnscreenText(
-            text='[Space]', pos=(0, -0.93), scale=0.07,
+        self.nextButton = DirectButton(
+            text="Next", text_font=Game.fonts["AmericanCaptain"],
+            scale=0.10, command=self.hide,
+            pad=(0.3, 0.3),
+            pos=(0, 0, -0.8),
+            text_mayChange=True
+        )
+        self.components.append(self.nextButton)
+
+        self.buttonHelperText = OnscreenText(
+            text='[H]', pos=(0, -0.93), scale=0.07,
             font=Game.fonts["AmericanCaptain"],
-            align=TextNode.ACenter, mayChange=False,
+            align=TextNode.ACenter, mayChange=True,
             bg=(182, 182, 182, 0.5),
         )
+        self.components.append(self.buttonHelperText)
+
+    def show(self):
+        self.hidden = False
+        for component in self.components:
+            component.show()
+
+    def hide(self):
+        self.hidden = True
+        for component in self.components:
+            component.hide()
+
+    def toggleVisible(self):
+        if self.hidden:
+            self.show()
+        else:
+            self.hide()
+
+    def destroy(self):
+        self.destroyed = True
+        for component in self.components:
+            component.destroy()
 
 class StartScreen(Game):
     def __init__(self):
@@ -356,7 +387,16 @@ class InstructionsScreen(Game):
     def __init__(self):
         ShowBase.__init__(self)
 
-        Game.showHelp()
+        self.helpDialog = HelpDialog()
+        self.helpDialog.nextButton["command"] = self.startGame
+        self.helpDialog.buttonHelperText.setText("[Space]")
+
+        # Next frame without clicking
+        self.accept("space-up", self.startGame)
+
+    def startGame(self):
+        self.nextState("game")
+
 class RacingGame(Game):
     def __init__(self):
         ShowBase.__init__(self)
@@ -366,13 +406,16 @@ class RacingGame(Game):
         self.isGameOver = False
         self.gameOverTime = 0 # for camera rotation
 
+        self.helpDialog = HelpDialog()
+        self.helpDialog.hide()
+        self.helpDialog.nextButton["command"] = self.togglePause
+
         self.totalLaps = 3
 
         Obj3D.worldRenderer = self.render
 
         # Generate texts
         self.texts = {}
-        self.fonts = {}
 
         self.texts["lap"] = OnscreenText(
             text=f'Lap 0/{self.totalLaps}', pos=(-1.25, 0.8), scale=0.15,
@@ -727,6 +770,8 @@ class RacingGame(Game):
     def togglePause(self):
         self.paused ^= True
         self.pauseAudio()
+
+        self.helpDialog.toggleVisible()
 
     def pauseAudio(self):
         # We need to pause music too
