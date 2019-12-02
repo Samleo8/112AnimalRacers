@@ -318,6 +318,29 @@ class Racecar(Obj3D):
     def incAcceleration(self, da=0, dalpha=0):
         self.setAcceleration(self.acceleration + da, self.rotationAcceleration + dalpha)
 
+    # Calculations relative to points
+    # NOTE: Euler system used
+    def angleToPoint(self, point):
+        # Calculate angle from current position (x, y) to next point
+        x, y, _ = self.getPos()
+        px, py, _ = point
+
+        # Because it's in the euler coordinate system
+        # swap [y|x] with [-x|y]
+        return rad2Deg(math.atan2(x-px, py-y))
+
+    def distanceToPoint(self, point, xyOnly=False):
+        # Calculate distance from current position (x, y) to next point
+        x, y, z = self.getPos()
+        px, py, pz = point
+
+        squared = (px - x) ** 2 + (py - y) ** 2
+
+        if not xyOnly:
+            squared += (pz - z) ** 2
+
+        return math.sqrt(squared)
+
     # Update movement
     def updateMovement(self):
         # Friction
@@ -470,25 +493,13 @@ class SmartCar(Racecar):
 
         self.moveTowardsPoint(gotoPoint)
 
-    def moveTowardsPoint(self, gotoPoint):
-        # Calculate angle from current position (x, y) to next point
-        x, y, _ = self.getPos()
-        px, py, _ = gotoPoint
+    def moveTowardsPoint(self, point):
+        angle = self.angleToPoint(point)
 
-        # Because it's in the euler coordinate system
-        # swap [y|x] with [-x|y]
-        angle = rad2Deg(math.atan2(x-px, py-y))
-
-        yawFacing, _p, _r = self.getHpr()
-        _, _angles = self.gameObj.racetrack.leftTrackPoints[self.currentCheckpoint]
-        offsetAngle, _ = _angles
-
-        moveTowardsCenterOfCheckpoint = True  
-        if moveTowardsCenterOfCheckpoint: 
-            delta = yawFacing - angle
-        else:
-            delta = yawFacing - offsetAngle
-
+        yawFacing, _, _ = self.getHpr()
+ 
+        # NOTE: Yaw facing should already be normalised in setHpr function
+        delta = yawFacing - angle
         delta = normaliseEuler(delta)
 
         self.doDrive("forward")
@@ -511,17 +522,19 @@ class SmartGreedyCar(SmartCar):
         trackPoints = self.gameObj.racetrack.points
         i = (self.currentCheckpoint+1) % len(trackPoints)
         
-        powerups = self.gameObj.racetrack.powerups
-
-        # TODO: Check which is closer to car
+        powerup = self.gameObj.racetrack.powerups[i-1]
         trackPoint = trackPoints[i]
         
-        if powerups[i-1] == None or self.activePowerup != None:
+        if powerup == None or self.activePowerup != None:
             gotoPoint = trackPoint
         else:
-            powerupPoint = powerups[i-1].getPos()
+            powerupPoint = powerup.getPos()
             
-            gotoPoint = powerupPoint
+            # Now check if the powerup point is behind or in front of the car
+            if abs(self.angleToPoint(powerupPoint)) < 90:
+                gotoPoint = powerupPoint
+            else: 
+                gotoPoint = trackPoint
 
         self.moveTowardsPoint(gotoPoint)
         
