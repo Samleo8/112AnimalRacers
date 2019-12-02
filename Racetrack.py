@@ -71,7 +71,7 @@ class Racetrack(Obj3D):
         self.generateRacetrackFromFile(trackName)
 
         # Generate checkpoints
-        self.showCheckpoints = True
+        self.showCheckpoints = False
         self.checkpoints = []
         self.generateCheckpoints()
 

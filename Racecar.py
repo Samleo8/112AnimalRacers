@@ -117,13 +117,12 @@ class Racecar(Obj3D):
         Floor Handling
         '''
         self.colLifter = CollisionHandlerFloor()
-        self.colLifter.setMaxVelocity(20)
+        self.colLifter.setMaxVelocity(10)
 
         # Create the ray pointing from the bottom
         floorRayNode = self.addCollisionNode("floorRay")
         floorRayNode.node().addSolid(CollisionRay(
-            #self.offsetX, self.offsetY, self.passenger.offsetZ+self.passenger.dimZ, 
-            0, 0, 2,
+            self.offsetX, self.offsetY, self.passenger.offsetZ + self.passenger.dimZ, 
             0, 0, -1
         ))
         floorRayNode.node().setFromCollideMask(self.gameObj.colBitMask["floor"])
@@ -479,7 +478,7 @@ class SmartCar(Racecar):
         _, _angles = self.gameObj.racetrack.leftTrackPoints[self.currentCheckpoint]
         offsetAngle, _ = _angles
 
-        moveTowardsCenterOfCheckpoint = True #self.isCollidingWall  
+        moveTowardsCenterOfCheckpoint = True  
         if moveTowardsCenterOfCheckpoint: 
             delta = yawFacing - angle
         else:
