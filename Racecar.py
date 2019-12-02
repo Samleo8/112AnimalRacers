@@ -51,8 +51,8 @@ class Racecar(Obj3D):
 
     def initCarAndPassengerModels(self, carName=None, passengerName=None):
         # NOTE: When you scale, whatever coordinates used also scales
-        if carName == "racecar":
-            self.scaleAll(2)
+        # if carName == "racecar":
+        #     self.scaleAll(2)
 
         # general way of making sure vehicle is always on the ground, regardless of that vehicle's center
         self.repositionToCenter()
