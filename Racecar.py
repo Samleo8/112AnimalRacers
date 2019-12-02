@@ -56,7 +56,11 @@ class Racecar(Obj3D):
 
         # Passenger's positions need to be adjusted to the actual center of the object
         self.passenger.scaleAll(2.5)
-        self.passenger.move(dx=self.offsetX, dy=self.offsetY, dz=self.offsetZ)
+
+        self.passenger.move(dx=self.relOffsetX,
+                            dy=self.relOffsetY, 
+                            dz=self.relOffsetZ
+                            )
 
         # Init position on racetrack iff racetrack exists
         if hasattr(self.gameObj, "racetrack"):
