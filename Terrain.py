@@ -6,7 +6,7 @@ class Ground(Obj3D):
         self.gameObj = gameObj
 
         if model == "ground":
-            self.setScale(scaleX=0.1, scaleY=0.08)
+            self.setScale(scaleX=0.1, scaleY=0.02)
 
         self.move(dz=self.dimZ/2)
 
