@@ -468,6 +468,9 @@ class SmartCar(Racecar):
         i = (self.currentCheckpoint+1) % len(trackPoints)
         gotoPoint = trackPoints[i]
 
+        self.moveTowardsPoint(gotoPoint)
+
+    def moveTowardsPoint(self, gotoPoint):
         # Calculate angle from current position (x, y) to next point
         x, y, _ = self.getPos()
         px, py, _ = gotoPoint
@@ -520,33 +523,5 @@ class SmartGreedyCar(SmartCar):
             
             gotoPoint = powerupPoint
 
-        # Calculate angle from current position (x, y) to next point
-        x, y, _ = self.getPos()
-        px, py, _ = gotoPoint
-
-        # Because it's in the euler coordinate system
-        # swap [y|x] with [-x|y]
-        angle = rad2Deg(math.atan2(x-px, py-y))
-
-        yawFacing, _, _ = self.getHpr()
+        self.moveTowardsPoint(gotoPoint)
         
-        delta = yawFacing - angle
-        delta = normaliseEuler(delta)
-
-        self.doDrive("forward")
-
-        if abs(delta) < 0.01:
-            self.doDrive("forward")
-        elif delta < 0:
-            self.doTurn("left")
-        elif delta > 0:
-            self.doTurn("right")
-
-        self.doDrive("forward")
-
-        if abs(delta) < 0.01:
-            self.doDrive("forward")
-        elif delta < 0:
-            self.doTurn("left")
-        elif delta > 0:
-            self.doTurn("right")
