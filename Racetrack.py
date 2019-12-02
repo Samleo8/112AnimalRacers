@@ -265,7 +265,7 @@ class Racetrack(Obj3D):
 
         self.trackBounds["x"] = (x0, x0)
         self.trackBounds["y"] = (y0, y0)
-        self.trackBounds["Z"] = (z0, z0)
+        self.trackBounds["z"] = (z0, z0)
 
         for i in range(len(self.leftTrackPoints)):
             p0, _ = self.leftTrackPoints[i]
@@ -286,9 +286,8 @@ class Racetrack(Obj3D):
                 min(z0, z1, self.trackBounds["z"][0]),
                 max(z0, z1, self.trackBounds["z"][1])
             )
-            print(self.trackBounds)
-            
-            return self.trackBounds
+
+        return self.trackBounds
 
     def genWallsFromPointToPoint(self, startPoint, endPoint, angles=None):
         if angles == None: angles = (0, 0)
