@@ -282,10 +282,12 @@ class RacecarSelection(Game):
     def __init__(self):
         ShowBase.__init__(self)
 
+        '''
         concreteBg = OnscreenImage(
             image="img/startscreen.png",
             scale=(1.5, 1.5, 1)
         )
+        '''
 
         title = OnscreenText(
             text='Select your Racecar and Passenger!', pos=(0, 0.7), scale=0.18,
@@ -348,7 +350,6 @@ class RacecarSelection(Game):
         )
 
         # If drawing is needed, passenger needs to be selected first
-        self.displayedPassenger = None
         self.displayedCar = None
 
         self.selectPassenger(self.passengers[initialPassenger])
@@ -357,13 +358,35 @@ class RacecarSelection(Game):
         # Next frame without clicking
         self.accept("space-up", self.startGame)
 
+        # Add task to spin camera
+        self.taskMgr.add(self.carShowcase, "CarShowcase")
+
+    # Define a procedure to move the camera.
+    def carShowcase(self, task):
+        angleDegrees = task.time * 6.0
+        angleRadians = angleDegrees * (math.pi / 180.0)
+        self.camera.setPos(20 * math.sin(angleRadians), -
+                           20.0 * math.cos(angleRadians), 3)
+        self.camera.setHpr(angleDegrees, 0, 0)
+        return Task.cont
+
     def selectCar(self, car):
         Game.selectedCar = car
 
-        # TODO: Display car here too
+        pos = (0, 0, 0)
+        self.displayedCar = DisplayCar(
+            self, Game.selectedCar, Game.selectedPassenger, self.render, pos=pos
+        )
+
+        self.camera.setPos(10, 10, 10)
+        self.camera.lookAt(pos)
+
+        print(self.displayedCar)
 
     def selectPassenger(self, passenger):
         Game.selectedPassenger = passenger
+
+        self.selectCar(Game.selectedCar)
 
         # TODO: Display passenger
 

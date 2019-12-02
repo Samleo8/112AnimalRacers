@@ -418,6 +418,30 @@ class Passenger(Obj3D):
         super().__init__("passenger_" + model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
+class DisplayCar(Obj3D):
+    def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
+        super().__init__("car_" + model, renderParent, pos, hpr)
+        self.gameObj = gameObj
+
+        # NOTE: When you scale, whatever coordinates used also scales
+        if model == "racecar":
+            self.scaleAll(2)
+
+        # general way of making sure vehicle is always on the ground, regardless of that vehicle's center
+        self.repositionToCenter()
+        self.move(dz=self.dimZ/2)
+
+        # Add passenger
+        self.personName = "penguin" if passenger == None else passenger
+        self.passenger = Passenger(
+            self.gameObj,
+            self.personName, self.model
+        )
+
+        # Passenger's positions need to be adjusted to the actual center of the object
+        self.passenger.scaleAll(2.5)
+        self.passenger.move(dx=self.offsetX, dy=self.offsetY, dz=self.offsetZ)
+
 class StupidCar(Racecar):
     def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
         super().__init__(gameObj, model, passenger, renderParent, pos, hpr)
