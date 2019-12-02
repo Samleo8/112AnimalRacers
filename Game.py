@@ -37,17 +37,35 @@ class Game(ShowBase):
     selectedCar = "groundroamer"
     selectedPassenger = "penguin"
 
+    currentState = None
+
+    instructionsText = """\
+Collect the speed-boost and shield powerups, 
+and beat all the other cars to win! 
+
+[WASD/Arrow Keys] Drive
+[Hold Space] Drift
+
+[1, 2] Change camera view
+[Hold C] Look behind
+[Hold V] Look around
+
+[R] Restart Game
+"""
+
     def __init__(self):
         ShowBase.__init__(self)
         
         Game.fonts["AmericanCaptain"] = loader.loadFont('AmericanCaptain.ttf')
 
-        self.nextState("StartScreen")
+        self.nextState("instructions")
 
     def nextState(self, state):
         self.destroyInstance()
 
         state = state.lower().replace(" ", "")
+
+        Game.currentState = state
 
         if state in [ "startscreen", "start" ]:
             StartScreen()
@@ -57,6 +75,8 @@ class Game(ShowBase):
             RacetrackSelection()
         elif state in ["racecarselection", "racecar" ]:
             RacecarSelection()
+        elif state in [ "instructions", "help" ]:
+            InstructionsScreen()
         else:
             print(f"ERROR: State {state} not found")
             sys.exit()
@@ -64,21 +84,41 @@ class Game(ShowBase):
     def destroyInstance(self):
         self.destroy()
 
-    def showHelp(self):
-        print("""
-Instructions: 
+    @staticmethod
+    def showHelp():
+        print("Instructions:\n"+Game.instructionsText)
 
-WASD/Arrow Keys to Drive
+        concreteBg = OnscreenImage(
+            image="img/startscreen.png",
+            scale=(1.5, 1.5, 1)
+        )
 
-Hold Space to drift
+        title = OnscreenText(
+            text='Instructions', pos=(0, 0.7), scale=0.18,
+            font=Game.fonts["AmericanCaptain"], bg=(255, 255, 255, 1),
+            align=TextNode.ACenter, mayChange=False
+        )
 
-1, 2 to change camera
-Hold C to look behind
-Hold V to look around
+        instructions = OnscreenText(
+            text=Game.instructionsText, pos=(0, 0.4), scale=0.1,
+            font=Game.fonts["AmericanCaptain"], bg=(182, 182, 182, 0.5),
+            align=TextNode.ACenter, mayChange=False,
+            wordwrap=22
+        )
+        
+        nextButton = DirectButton(
+            text="Next", text_font=Game.fonts["AmericanCaptain"],
+            scale=0.10, command=self.selectCar,
+            pad=(0.3, 0.3),
+            pos=(0, 0, -0.8)
+        )
 
-R to Restart Game at anytime
-""")
-        return
+        spaceShortcut = OnscreenText(
+            text='[Space]', pos=(0, -0.93), scale=0.07,
+            font=Game.fonts["AmericanCaptain"],
+            align=TextNode.ACenter, mayChange=False,
+            bg=(182, 182, 182, 0.5),
+        )
 
 class StartScreen(Game):
     def __init__(self):
@@ -136,7 +176,6 @@ Hold V to look around | R to Restart
 
     def startGame(self):
         self.nextState("RacetrackSelection")
-
 
 class RacetrackSelection(Game):
     def __init__(self):
@@ -311,7 +350,13 @@ class RacecarSelection(Game):
         return items
 
     def startGame(self):
-        self.nextState("game")
+        self.nextState("instructions")
+
+class InstructionsScreen(Game):
+    def __init__(self):
+        ShowBase.__init__(self)
+
+        Game.showHelp()
 class RacingGame(Game):
     def __init__(self):
         ShowBase.__init__(self)
