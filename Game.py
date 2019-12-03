@@ -436,9 +436,6 @@ class RacecarSelection(Game):
 
         return items
 
-    def startGame(self):
-        self.nextState("levelselect")
-
 class LevelSelection(Game):
     pass
 
@@ -459,6 +456,8 @@ class InstructionsScreen(Game):
 class RacingGame(Game):
     def __init__(self):
         ShowBase.__init__(self)
+
+        print(self.level)
 
         # Get other stuff ready
         self.paused = False
