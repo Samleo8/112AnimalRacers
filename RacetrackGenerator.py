@@ -2,14 +2,12 @@ import math
 import random
 
 class RacetrackGenerator():
-    def __init__(self, fileName=None, center=None, minRad=300, maxRad=500, steps=10):
+    def __init__(self, fileName=None, center=None, minRad=200, maxRad=400, steps=10):
         center = (0, 0) if center == None else center
         
         self.generatePoints(center, minRad, maxRad, steps)
 
         RacetrackGenerator.writePointsToFile(self.points, fileName=fileName)
-
-        return
 
     def generatePoints(self, center, minRad, maxRad, steps):
         self.points = []

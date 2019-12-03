@@ -30,6 +30,9 @@ from Racecar import *
 from Racetrack import *
 from Terrain import *
 from Powerup import *
+
+from RacetrackGenerator import *
+
 class Game(ShowBase):
     fonts = {}
     selectedTrack = "random.track"
@@ -244,7 +247,7 @@ class RacetrackSelection(Game):
 
         self.selectTrack(self.tracks[initialItem])
 
-        menu = DirectOptionMenu(
+        self.menu = DirectOptionMenu(
             scale=0.15,
             items=self.tracks, initialitem=initialItem,
             highlightColor=(10, 10, 10, 1), 
@@ -254,8 +257,31 @@ class RacetrackSelection(Game):
             command=self.selectTrack
         )
 
+        randomiseButton = DirectButton(
+            text="New Random Track", text_font=Game.fonts["AmericanCaptain"],
+            scale=0.10, command=self.randomiseTrack,
+            pad=(0.3, 0.3),
+            pos=(-0.9, 0, 0.35)
+        )
+
+        self.randomText = OnscreenText(
+            text='', pos=(-0.9, 0.20), scale=0.07,
+            font=Game.fonts["AmericanCaptain"],
+            align=TextNode.ACenter, mayChange=True,
+            bg=(182, 182, 182, 0.5),
+        )
+
         # Next frame without clicking
         self.accept("space-up", self.selectCar)
+
+    def randomiseTrack(self):
+        RacetrackGenerator()
+
+        self.randomText.setText("Random track created!")
+
+        self.menu.set(index=self.tracks.index("random.track"))
+
+        self.selectTrack("random.track")
 
     def selectTrack(self, track):
         Game.selectedTrack = track 
