@@ -42,8 +42,9 @@ class Game(ShowBase):
     currentState = None
 
     instructionsText = """\
-Collect the speed-boost and shield powerups, 
-and beat all the other cars to win! 
+Collect the powerups, and beat all the other cars to win! 
+- Shield: You don't slow down when you hit the walls.
+- Speed: Speed boost!
 
 [WASD/Arrow Keys] Drive
 [Hold Space] Drift
@@ -62,6 +63,8 @@ and beat all the other cars to win!
         Game.fonts["AmericanCaptain"] = loader.loadFont('AmericanCaptain.ttf')
 
         self.helpDialog = HelpDialog()
+
+        self.level = "easy"
 
         self.nextState("start")
 
@@ -434,7 +437,10 @@ class RacecarSelection(Game):
         return items
 
     def startGame(self):
-        self.nextState("instructions")
+        self.nextState("levelselect")
+
+class LevelSelection(Game):
+    pass
 
 class InstructionsScreen(Game):
     def __init__(self):
