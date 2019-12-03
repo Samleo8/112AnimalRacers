@@ -47,5 +47,3 @@ class RacetrackGenerator():
         f.close()
 
         print(f"Points successfully written to racetracks/{fileName}.track")
-
-RacetrackGenerator()
