@@ -18,13 +18,13 @@ class RacetrackGenerator():
         # Clockwise is working but anticlockwise isn't
         for i in range(steps):
             dist = random.uniform(minRad, maxRad)
-            height = random.randint(0, 11)
+            height = random.randint(0, 11) * 2
 
             angle = dAngle * i * -1
 
             x = dist * math.cos(angle)
             y = dist * math.sin(angle)
-            z = height if random.random() < 0 else 0
+            z = height if random.random() < 0.25 else 0
 
             self.points.append( (x, y, z) )
 

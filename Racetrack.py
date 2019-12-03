@@ -79,7 +79,7 @@ class Racetrack(Obj3D):
         self.getRacetrackBounds()
 
         # Generate checkpoints
-        self.showCheckpoints = True
+        self.showCheckpoints = False
         self.checkpoints = []
         self.generateCheckpoints()
 

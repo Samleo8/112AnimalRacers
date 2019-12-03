@@ -29,7 +29,7 @@ class Racecar(Obj3D):
 
         self.isCollidingWall = False
 
-        self.currLap = 0
+        self.currLap = 1
         self.passedCheckpoints = []
 
         # Powerups
@@ -144,6 +144,9 @@ class Racecar(Obj3D):
         '''
         # Init Event
         self.colCheckpointEvent = CollisionHandlerEvent()
+
+        self.colCheckpointEvent.addInPattern('%fn-in-%in')
+        self.colCheckpointEvent.addAgainPattern('%fn-again-%in')
         self.colCheckpointEvent.addOutPattern('%fn-out-%in')
 
         # Initialise simple sphere just to check for checkpoint and powerup passing
@@ -169,7 +172,7 @@ class Racecar(Obj3D):
 
         base.cTrav.addCollider(self.colCheckpointNode, self.colCheckpointEvent)
 
-        self.gameObj.accept(f"{colNodeName}-out-checkpoint", self.onPassCheckpoint)
+        self.gameObj.accept(f"{colNodeName}-in-checkpoint", self.onPassCheckpoint)
         self.gameObj.accept(f"{colNodeName}-out-powerup", self.onCollectPowerup)
     
     def initOnRacetrack(self, order=None):
@@ -225,7 +228,7 @@ class Racecar(Obj3D):
             # New powerup
             if self.powerupActiveTime == None:
                 self.powerupActiveTime = taskTime
-                print(f"Car {self.id}: Activated {self.activePowerup} powerup")
+                # print(f"Car {self.id}: Activated {self.activePowerup} powerup")
             # Powerup needs to be deactivated
             elif taskTime - self.powerupActiveTime >= Powerup.lastTime:
                 self.deactivatePowerup()
@@ -248,7 +251,7 @@ class Racecar(Obj3D):
             self.incAcceleration(self.accInc * 12)
 
     def deactivatePowerup(self):
-        print(f"Car {self.id}: {self.activePowerup} powerup deactivated")
+        # print(f"Car {self.id}: {self.activePowerup} powerup deactivated")
         self.powerupActiveTime = None
         self.activePowerup = None
         
@@ -411,6 +414,7 @@ class Racecar(Obj3D):
 
         # Reset
         if self.checkBelowGround():
+            print(f"Oops, car {self.id} fell below ground")
             self.initOnRacetrack(0)
             return
 
@@ -515,7 +519,7 @@ class SmartCar(Racecar):
         self.currentCheckpoint = 0
         self.allowStaticTurning = True
 
-        self.maxSpeed = 8
+        self.maxSpeed *= 1.5
         self.defaultRotationSpeed *= 1.8
         self.maxRotationSpeed = 10
 
@@ -523,7 +527,14 @@ class SmartCar(Racecar):
         super().onPassCheckpoint(entry)
 
         # Update current checkpoint
-        self.currentCheckpoint = entry.getIntoNodePath().getPythonTag("checkpointID")
+        currCheckpoint = entry.getIntoNodePath().getPythonTag("checkpointID")
+
+        # Went back the wrong way, reset to old checkpoint
+        if self.currentCheckpoint == currCheckpoint:
+            self.currentCheckpoint = currCheckpoint - 1
+            print(f"Car {self.id} went the wrong way at {currCheckpoint}!")
+        else:
+            self.currentCheckpoint = currCheckpoint
 
         return
 
