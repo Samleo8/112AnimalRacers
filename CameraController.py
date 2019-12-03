@@ -6,17 +6,20 @@ from direct.showbase.ShowBase import ShowBase
 from direct.showbase.DirectObject import DirectObject
 
 class CameraController(DirectObject):
-    def	__init__(self, initZoom=5, anchorPos=None, zoomInLimit=1, zoomOutLimit=1000, moveSpeed=0.5):
+    def	__init__(self, initZoom=5, camPos=None, anchorPos=None, zoomInLimit=1, zoomOutLimit=1000, moveSpeed=0.5):
+        self.enabled = True
+
         base.disableMouse()
         
-        self.setupVars(initZoom, anchorPos, zoomInLimit, zoomOutLimit, moveSpeed)
+        self.setupVars(initZoom, camPos, anchorPos, zoomInLimit, zoomOutLimit, moveSpeed)
         self.setupCamera()
         self.setupInput()
         self.setupTasks()
         
-    def setupVars(self, initZoom, anchorPos, zoomInLimit, zoomOutLimit, moveSpeed):
+    def setupVars(self, initZoom, camPos, anchorPos, zoomInLimit, zoomOutLimit, moveSpeed):
         self.initZoom = initZoom            # Camera's initial distance from anchor
         self.anchorPos = anchorPos if anchorPos != None else (0, -self.initZoom, 0)
+        self.camPos = anchorPos if camPos == None else camPos
 
         self.zoomInLimit = zoomInLimit      # Camera's minimum distance from anchor
         self.zoomOutLimit = zoomOutLimit    # Camera's maximum distance from anchor
@@ -27,17 +30,19 @@ class CameraController(DirectObject):
 
     def setupCamera(self):
         self.camAnchor = render.attachNewNode("CameraAnchor")
+        self.camAnchor.setPos(self.anchorPos)
+        
         base.camera.reparentTo(self.camAnchor)
-        base.camera.setPos(self.anchorPos)
+        base.camera.setPos(self.camPos)
         base.camera.lookAt(self.camAnchor)
         
     def setupInput(self):
-        self.accept("mouse1", self.setMove, [True])
-        self.accept("mouse1-up", self.setMove, [False])
-        self.accept("mouse2", self.setZoom, [True])
-        self.accept("mouse2-up", self.setZoom, [False])
-        self.accept("mouse3", self.setOrbit, [True])
-        self.accept("mouse3-up", self.setOrbit, [False])
+        #self.accept("mouse1", self.setMove, [True])
+        #self.accept("mouse1-up", self.setMove, [False])
+        #self.accept("mouse2", self.setZoom, [True])
+        #self.accept("mouse2-up", self.setZoom, [False])
+        self.accept("mouse1", self.setOrbit, [True])
+        self.accept("mouse1-up", self.setOrbit, [False])
 
     def setupTasks(self):
         taskMgr.add(self.cameraOrbit, "Camera Orbit")
@@ -45,6 +50,8 @@ class CameraController(DirectObject):
         taskMgr.add(self.cameraMove, "Camera Move")
         
     def setOrbit(self, orbit):
+        if not self.enabled: return
+        
         if(orbit == True):
             props = base.win.getProperties()
             winX = props.getXSize()

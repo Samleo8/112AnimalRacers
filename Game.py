@@ -276,13 +276,6 @@ class RacetrackSelection(Game):
         self.minimap = Minimap(points)
         self.minimapNode = render.attachNewNode(self.minimap.node)
 
-        baseVec = LVector3f(0, 20, -1)
-        print(self.minimap.midPoint)
-        base.trackball.node().setPos(baseVec + self.minimap.midPoint)
-
-        self.camControl = CameraController(
-            anchorPos=baseVec + self.minimap.midPoint)
-
         self.selectTrack(self.tracks[initialItem])
 
         self.menu = DirectOptionMenu(
@@ -346,7 +339,18 @@ class RacetrackSelection(Game):
         self.minimap.reloadAndDraw(points)
         self.minimapNode = render.attachNewNode(self.minimap.node)
 
+        # Camera Control
+        baseVec = LVector3f(0, 20, -3)
+        print(self.minimap.midPoint)
+        base.trackball.node().setPos(baseVec + self.minimap.midPoint)
+
+        self.camControl = CameraController(
+            camPos=baseVec - self.minimap.midPoint,
+            anchorPos= self.minimap.midPoint
+        )
+
     def selectCar(self):
+        self.camControl.enabled = False
         self.nextState("racecar")
 
     def findTracks(self, path):
@@ -531,7 +535,7 @@ class RacingGame(Game):
         self.texts = {}
 
         self.texts["lap"] = OnscreenText(
-            text=f'Lap 0/{self.totalLaps}', pos=(-1.25, 0.8), scale=0.15,
+            text=f'Lap 1/{self.totalLaps}', pos=(-1.25, 0.8), scale=0.15,
             bg=(255, 255, 255, 0.7), font=Game.fonts["AmericanCaptain"],
             align=TextNode.ALeft, mayChange=True
         )

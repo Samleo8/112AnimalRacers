@@ -375,7 +375,7 @@ class Minimap():
             self.bounds["x"][1], self.bounds["y"][1], self.bounds["z"][1]
         )
 
-        self.midPoint = (minVec + maxVec) / 2 + minVec
+        self.midPoint = (minVec + maxVec) / 2 - minVec
         self.midPoint *= 1/self.size[0]
 
         # Need to normalise points to the minimap

@@ -29,7 +29,7 @@ class Racecar(Obj3D):
 
         self.isCollidingWall = False
 
-        self.currLap = 1
+        self.currLap = 0
         self.passedCheckpoints = []
 
         # Powerups
@@ -279,7 +279,7 @@ class Racecar(Obj3D):
             # Player, so update on screen text
             if self.id == 0:
                 self.gameObj.texts["lap"].setText(
-                    f'Lap {self.currLap}/{totalLaps}')
+                    f'Lap {self.currLap+1}/{totalLaps}')
 
             if self.currLap >= totalLaps:
                 self.gameObj.gameOver(self)
