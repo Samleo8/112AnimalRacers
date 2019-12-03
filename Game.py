@@ -717,7 +717,7 @@ class RacingGame(Game):
         # Basic levels
         # TODO: Maybe more cars (easy to add)?
         if Game.level == "easy":
-            car1 = NotSoStupidCar(self, "groundroamer", 'bunny', self.render)
+            car1 = NotSoStupidCar(self, "racecar", 'bunny', self.render)
             car2 = NotSoStupidCar(self, "jeep", "chicken", self.render)
         elif Game.level == "hard":
             car1 = SmartGreedyCar(self, "groundroamer", "bunny", self.render)

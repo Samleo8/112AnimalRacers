@@ -186,7 +186,7 @@ class Racecar(Obj3D):
         dirVec = LVector3f(trackPoints[1]) - startPos
         dirVec.normalize()
 
-        dist = self.dimY * order + 2
+        dist = (self.dimY + 2) * order
 
         pos = startPos + dirVec * dist 
 
@@ -523,6 +523,8 @@ class SmartCar(Racecar):
         self.defaultRotationSpeed *= 1.8
         self.maxRotationSpeed = 10
 
+        self.isBeingStupid = False
+
     def onPassCheckpoint(self, entry):
         super().onPassCheckpoint(entry)
 
@@ -530,11 +532,16 @@ class SmartCar(Racecar):
         currCheckpoint = entry.getIntoNodePath().getPythonTag("checkpointID")
 
         # Went back the wrong way, reset to old checkpoint
+        '''
         if self.currentCheckpoint == currCheckpoint:
             self.currentCheckpoint = currCheckpoint - 1
             print(f"Car {self.id} went the wrong way at {currCheckpoint}!")
         else:
             self.currentCheckpoint = currCheckpoint
+        '''
+
+        self.currentCheckpoint = currCheckpoint
+        self.isBeingStupid = False
 
         return
 
@@ -547,6 +554,17 @@ class SmartCar(Racecar):
         gotoPoint = trackPoints[i]
 
         self.moveTowardsPoint(gotoPoint)
+
+    # Is it trying to go forwards towards the checkpoint but constantly banging into a wall?
+    # If so, readjust
+    def checkStupidity(self, delta):
+        if abs(delta) < 0.1 and self.isCollidingWall:
+            self.doDrive("backwards")
+            # Do not want to keep going back checkpoints
+            if not self.isBeingStupid: 
+                self.currentCheckpoint -= 1
+            self.isBeingStupid = True
+        return
 
     def moveTowardsPoint(self, point):
         angle = self.angleToPoint(point)
@@ -565,6 +583,8 @@ class SmartCar(Racecar):
             self.doTurn("left")
         elif delta > 0:
             self.doTurn("right")
+
+        self.checkStupidity(delta)
         
     def updateMovement(self):
         self.artificialStupidity()
@@ -576,6 +596,8 @@ class SmartGreedyCar(SmartCar):
         # Get midpoint of next checkpoint
         trackPoints = self.gameObj.racetrack.points
         i = (self.currentCheckpoint+1) % len(trackPoints)
+
+        #print(f"Car {self.id} currently seeking checkpoint {self.currentCheckpoint}")
         
         powerup = self.gameObj.racetrack.powerups[i-1]
         trackPoint = trackPoints[i]
@@ -593,4 +615,3 @@ class SmartGreedyCar(SmartCar):
                 gotoPoint = trackPoint
 
         self.moveTowardsPoint(gotoPoint)
-        
