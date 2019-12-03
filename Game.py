@@ -38,6 +38,7 @@ class Game(ShowBase):
     selectedTrack = "random.track"
     selectedCar = "groundroamer"
     selectedPassenger = "penguin"
+    level = "normal"
 
     currentState = None
 
@@ -63,8 +64,6 @@ Collect the powerups, and beat all the other cars to win!
         Game.fonts["AmericanCaptain"] = loader.loadFont('AmericanCaptain.ttf')
 
         self.helpDialog = HelpDialog()
-
-        self.level = "easy"
 
         self.nextState("start")
 
@@ -436,8 +435,8 @@ class RacecarSelection(Game):
 
         return items
 
-class LevelSelection(Game):
-    pass
+    def startGame(self):
+        self.nextState("instructions")
 
 class InstructionsScreen(Game):
     def __init__(self):
@@ -456,8 +455,6 @@ class InstructionsScreen(Game):
 class RacingGame(Game):
     def __init__(self):
         ShowBase.__init__(self)
-
-        print(self.level)
 
         # Get other stuff ready
         self.paused = False
@@ -695,10 +692,20 @@ class RacingGame(Game):
         # Only the positions are updated here because we want to space them out
         # But car facing and checkpoint handling are handled inside the init function
         self.player = Racecar(self, Game.selectedCar, Game.selectedPassenger, self.render)
-        car1 = SmartCar(self, "groundroamer", "bunny", self.render)
-        car2 = SmartGreedyCar(self, "jeep", "chicken", self.render)
-
         self.cars.append(self.player)
+
+        # Basic levels
+        # TODO: Maybe more cars (easy to add)?
+        if Game.level == "easy":
+            car1 = NotSoStupidCar(self, "groundroamer", 'bunny', self.render)
+            car2 = NotSoStupidCar(self, "jeep", "chicken", self.render)
+        elif Game.level == "hard":
+            car1 = SmartGreedyCar(self, "groundroamer", "bunny", self.render)
+            car2 = SmartGreedyCar(self, "jeep", "chicken", self.render)
+        else: # normal level
+            car1 = SmartCar(self, "groundroamer", 'bunny', self.render)
+            car2 = SmartGreedyCar(self, "jeep", "chicken", self.render)
+
         self.cars.append(car1)
         self.cars.append(car2)
 
