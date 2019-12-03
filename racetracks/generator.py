@@ -17,8 +17,9 @@ class RacetrackGenerator():
 
         dAngle = (2 * math.pi) / (steps)
 
+        # Clockwise is working but anticlockwise isn't
         for i in range(steps):
-            dist = minRad # random.uniform(minRad, maxRad)
+            dist = random.uniform(minRad, maxRad)
             height = random.randint(0, 11)
 
             angle = dAngle * i * -1
