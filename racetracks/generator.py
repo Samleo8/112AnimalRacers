@@ -18,14 +18,14 @@ class RacetrackGenerator():
         dAngle = (2 * math.pi) / (steps)
 
         for i in range(steps):
-            dist = random.uniform(minRad, maxRad)
+            dist = minRad # random.uniform(minRad, maxRad)
             height = random.randint(0, 11)
 
-            angle = dAngle * i 
+            angle = dAngle * i * -1
 
             x = dist * math.cos(angle)
             y = dist * math.sin(angle)
-            z = height if random.random() < 0.25 else 0
+            z = height if random.random() < 0 else 0
 
             self.points.append( (x, y, z) )
 

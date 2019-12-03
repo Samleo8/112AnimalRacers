@@ -32,7 +32,7 @@ from Terrain import *
 from Powerup import *
 class Game(ShowBase):
     fonts = {}
-    selectedTrack = "test"
+    selectedTrack = "random.track"
     selectedCar = "groundroamer"
     selectedPassenger = "penguin"
 
@@ -240,7 +240,8 @@ class RacetrackSelection(Game):
         # Get List of tracks
         self.tracks = self.findTracks("racetracks")
 
-        initialItem = 0
+        initialItem = self.tracks.index(Game.selectedTrack)
+
         self.selectTrack(self.tracks[initialItem])
 
         menu = DirectOptionMenu(
@@ -312,7 +313,7 @@ class RacecarSelection(Game):
         # Get List of cars
         self.cars = self.findCarsOrPassengers("models", "car_")
 
-        initialCar = self.cars.index("groundroamer")
+        initialCar = self.cars.index(Game.selectedCar)
 
         text = OnscreenText(
             text='Racecar:', pos=(-0.55, 0.4), scale=0.1,
@@ -332,7 +333,7 @@ class RacecarSelection(Game):
         # Get List of passengers
         self.passengers = self.findCarsOrPassengers("models", "passenger_")
 
-        initialPassenger = self.passengers.index("penguin")
+        initialPassenger = self.passengers.index(Game.selectedPassenger)
     
         text = OnscreenText(
             text='Passenger:', pos=(-0.55, 0.2), scale=0.1,
