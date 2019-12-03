@@ -366,7 +366,12 @@ class Minimap():
 
     def loadPoints(self, points):
         # Need to normalise points to the minimap
+        for i in range(len(points)):
+            point = points[i]
+            points[i] = multiplyVectorByScalar(point, 1/100)
+
         self.points = points
+
         return
 
     def draw(self):
@@ -379,7 +384,7 @@ class Minimap():
         for point in self.points:
             x, y, z = point
             lines.drawTo(x, y, z)
-            
+
         lines.drawTo(self.points[0])
 
         self.lines = lines
@@ -389,4 +394,7 @@ class Minimap():
         self.lines.reset()
         return
 
-    
+    def reloadAndDraw(self, points):
+        self.loadPoints(points)
+        self.clear()
+        self.draw()

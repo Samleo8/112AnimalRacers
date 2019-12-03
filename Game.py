@@ -263,11 +263,15 @@ class RacetrackSelection(Game):
             bg=(182, 182, 182, 0.5),
         )
 
-
         # Get List of tracks
         self.tracks = self.findTracks("racetracks")
 
         initialItem = self.tracks.index(Game.selectedTrack)
+
+        # Minimap!
+        points = Racetrack.parseTrackFile(Game.selectedTrack)
+        self.minimap = Minimap(points)
+        render.attachNewNode(self.minimap.node)
 
         self.selectTrack(self.tracks[initialItem])
 
@@ -297,6 +301,23 @@ class RacetrackSelection(Game):
 
         # Next frame without clicking
         self.accept("space-up", self.selectCar)
+        
+        # Add task to spin camera
+        #self.taskMgr.add(self.trackShowcase, "TrackShowcase")
+
+    # Define a procedure to move the camera.
+    def trackShowcase(self, task):
+        rotateTime = 3.0
+        angle = task.time * rotateTime
+
+        rad = 100
+        camHeight = 100
+
+        self.camera.setPos(
+            rad * math.sin(angle), -rad * math.cos(angle), camHeight
+        )
+        self.camera.lookAt(0,0,0)
+        return Task.cont
 
     def randomiseTrack(self):
         RacetrackGenerator()
@@ -311,8 +332,7 @@ class RacetrackSelection(Game):
         Game.selectedTrack = track
 
         points = Racetrack.parseTrackFile(track)
-        minimap = Minimap(points)
-        render.attachNewNode(minimap.node)
+        self.minimap.reloadAndDraw(points)
 
     def selectCar(self):
         self.nextState("racecar")
