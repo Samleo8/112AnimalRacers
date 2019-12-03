@@ -3,6 +3,11 @@ blendercache*
 *.bphys
 *tutorial/*
 
+# Ignore demo videos
+*.mp4
+*.mov
+*.avi
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
