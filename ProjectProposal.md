@@ -1,6 +1,12 @@
 # Lego Racers: Remake++
 An attempt to remake my childhood favourite Lego Racers, with added features, including intelligent enemies, powerups and obstacles.
 
+## TP3 Update
+
+### Feedback
+Add a minimap !!
+Add gravity for hills (slowdown when going uphill)
+
 ## TP2 Update
 1. I was unexpectedly able to code out the enemy cars in time. 
 Hence, instead of the original single player mode, it's now a race against other (very stupid) AI cars.
