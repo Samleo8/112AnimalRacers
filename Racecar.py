@@ -183,7 +183,7 @@ class Racecar(Obj3D):
         dirVec = LVector3f(trackPoints[1]) - startPos
         dirVec.normalize()
 
-        dist = self.dimY * order
+        dist = self.dimY * order + 2
 
         pos = startPos + dirVec * dist 
 
