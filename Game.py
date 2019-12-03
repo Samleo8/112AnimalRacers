@@ -341,8 +341,7 @@ class RacetrackSelection(Game):
 
         # Camera Control
         baseVec = LVector3f(0, 20, -3)
-        print(self.minimap.midPoint)
-        base.trackball.node().setPos(baseVec + self.minimap.midPoint)
+        # base.trackball.node().setPos(baseVec + self.minimap.midPoint)
 
         self.camControl = CameraController(
             camPos=baseVec - self.minimap.midPoint,
