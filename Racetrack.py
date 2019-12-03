@@ -392,7 +392,6 @@ class Minimap():
 
     def clear(self):
         self.lines.reset()
-        return
 
     def reloadAndDraw(self, points):
         self.loadPoints(points)

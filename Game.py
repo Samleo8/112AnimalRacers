@@ -269,9 +269,11 @@ class RacetrackSelection(Game):
         initialItem = self.tracks.index(Game.selectedTrack)
 
         # Minimap!
+        base.trackball.node().setPos(0, 20, -1)
+        
         points = Racetrack.parseTrackFile(Game.selectedTrack)
         self.minimap = Minimap(points)
-        render.attachNewNode(self.minimap.node)
+        self.minimapNode = render.attachNewNode(self.minimap.node)
 
         self.selectTrack(self.tracks[initialItem])
 
@@ -332,7 +334,9 @@ class RacetrackSelection(Game):
         Game.selectedTrack = track
 
         points = Racetrack.parseTrackFile(track)
+        self.minimapNode.removeNode()
         self.minimap.reloadAndDraw(points)
+        self.minimapNode = render.attachNewNode(self.minimap.node)
 
     def selectCar(self):
         self.nextState("racecar")
