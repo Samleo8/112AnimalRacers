@@ -236,10 +236,12 @@ class RacetrackSelection(Game):
     def __init__(self):
         ShowBase.__init__(self)
 
+        '''
         concreteBg = OnscreenImage(
             image="img/startscreen.png",
             scale=(1.5, 1.5, 1)
         )
+        '''
 
         title = OnscreenText(
             text='Select your Racetrack!', pos=(0, 0.65), scale=0.18,
@@ -306,7 +308,11 @@ class RacetrackSelection(Game):
         self.selectTrack("random.track")
 
     def selectTrack(self, track):
-        Game.selectedTrack = track 
+        Game.selectedTrack = track
+
+        points = Racetrack.parseTrackFile(track)
+        minimap = Minimap(points)
+        render.attachNewNode(minimap.node)
 
     def selectCar(self):
         self.nextState("racecar")

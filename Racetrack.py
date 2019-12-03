@@ -348,9 +348,45 @@ class Racetrack(Obj3D):
 
         return pos1, pos2, (theta, phi)
 
-    def drawMinimap(self):
-        # TODO: https: // www.panda3d.org/reference/python/classpanda3d_1_1core_1_1LineSegs.html
 
-        pad = 10
+# TODO: https: // www.panda3d.org/reference/python/classpanda3d_1_1core_1_1LineSegs.html
+class Minimap():
+    def __init__(self, points, size=(100, 100), pos=(0,0), color=None, thickness=None):
+        self.size = size # (width, height)
+        self.pos = pos # (x, y), top left corner
+        self.pad = 10
+
+        self.lineThickness = 1 if thickness == None else thickness
+        self.lineColor = (10, 10, 10, 1) if color == None else color
+
+        self.loadPoints(points)
+        self.draw()
 
         return
+
+    def loadPoints(self, points):
+        # Need to normalise points to the minimap
+        self.points = points
+        return
+
+    def draw(self):
+        # Setup
+        lines = LineSegs("minimap")
+        lines.setThickness(self.lineThickness)
+        lines.setColor(self.lineColor)
+
+        lines.moveTo(self.points[0])
+        for point in self.points:
+            x, y, z = point
+            lines.drawTo(x, y, z)
+            
+        lines.drawTo(self.points[0])
+
+        self.lines = lines
+        self.node = self.lines.create()
+
+    def clear(self):
+        self.lines.reset()
+        return
+
+    
