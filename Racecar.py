@@ -584,9 +584,10 @@ class SmartGreedyCar(SmartCar):
             gotoPoint = trackPoint
         else:
             powerupPoint = powerup.getPos()
-            
+
+            angle = self.angleToPoint(powerupPoint) - self.getHpr()[0]
             # Now check if the powerup point is behind or in front of the car
-            if abs(self.angleToPoint(powerupPoint)) < 90:
+            if abs(angle) < 90:
                 gotoPoint = powerupPoint
             else: 
                 gotoPoint = trackPoint
