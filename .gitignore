@@ -7,6 +7,8 @@ blendercache*
 *.mp4
 *.mov
 *.avi
+*.webm
+*.kdenlive
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
