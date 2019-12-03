@@ -9,6 +9,9 @@ class Racecar(Obj3D):
 
         self.initCarAndPassengerModels(model, passenger)
 
+        if isinstance(self, DisplayCar):
+            return 
+        
         self.id = Racecar.nRacecars
         Racecar.nRacecars += 1
 
@@ -459,12 +462,15 @@ class Passenger(Obj3D):
         self.gameObj = gameObj
 
 class DisplayCar(Racecar):
+    '''
     def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
         super(Racecar, self).__init__("car_" + model, renderParent, pos, hpr)
         self.gameObj = gameObj
 
         self.initCarAndPassengerModels(model, passenger)
-
+    '''
+    pass
+        
 class StupidCar(Racecar):
     def __init__(self, gameObj, model, passenger=None, renderParent=None, pos=None, hpr=None):
         super().__init__(gameObj, model, passenger, renderParent, pos, hpr)
