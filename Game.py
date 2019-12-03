@@ -38,7 +38,7 @@ class Game(ShowBase):
     selectedTrack = "random.track"
     selectedCar = "groundroamer"
     selectedPassenger = "penguin"
-    level = "normal"
+    level = "medium"
 
     currentState = None
 
@@ -170,15 +170,32 @@ class StartScreen(Game):
             align=TextNode.ACenter, mayChange=False
         )
 
+        text = OnscreenText(
+            text='Difficulty:', pos=(-0.1, 0), scale=0.1,
+            font=Game.fonts["AmericanCaptain"], bg=(255, 255, 255, 0.1),
+            align=TextNode.ARight, mayChange=False
+        )
+
+        menu = DirectOptionMenu(
+            scale=0.12,
+            items=[ "Easy", "Medium", "Hard" ], initialitem=1,
+            highlightColor=(10, 10, 10, 1),
+            pad=(10, 10),
+            pos=(0, 0, 0),
+            popupMenu_pos=(-0.5, 0, 0),
+            command=self.changeLevel,
+            text_scale=0.8
+        )
+
         startGameButton = DirectButton(
             text="Start  Game", text_font=Game.fonts["AmericanCaptain"],
             scale=0.15, command=self.startGame,
             pad=(0.3, 0.3),
-            pos=(0, 0, -0.2)
+            pos=(0, 0, -0.32)
         )
 
         spaceShortcut = OnscreenText(
-            text='[Space]', pos=(0, -0.35), scale=0.08,
+            text='[Space]', pos=(0, -0.49), scale=0.08,
             font=Game.fonts["AmericanCaptain"],
             align=TextNode.ACenter, mayChange=False,
             bg=(182, 182, 182, 0.5)
@@ -211,6 +228,9 @@ Hold V to look around | R to Restart
 
     def startGame(self):
         self.nextState("RacetrackSelection")
+
+    def changeLevel(self, level):
+        Game.level = level.lower()
 
 class RacetrackSelection(Game):
     def __init__(self):
@@ -708,6 +728,8 @@ class RacingGame(Game):
 
         self.cars.append(car1)
         self.cars.append(car2)
+
+        print(f"Opponent cars generated with difficulty {Game.level}")
 
     # Key Events
     def createKeyControls(self):
