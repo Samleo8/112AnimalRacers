@@ -317,10 +317,10 @@ class Racetrack(Obj3D):
     # Given a start pos, calculate positions of side track points with defined spacing from the center position
     # and with the correct facing (yaw) 
     # Returns pos1, pos2, (theta, phi) 
-    def calculateSideTracks(self, line, spacing=None):
+    def calculateSideTracks(self, line, spacing=0):
         startPos, directionVector = line
 
-        spacing = self.defaultWallSpacing if spacing == None else spacing
+        spacing = self.defaultWallSpacing if (spacing == None or spacing <= 0) else spacing
 
         directionVector = normaliseVector(directionVector)
         if directionVector == (0, 0, 0): return
@@ -349,5 +349,8 @@ class Racetrack(Obj3D):
         return pos1, pos2, (theta, phi)
 
     def drawMinimap(self):
-        #https: // www.panda3d.org/reference/python/classpanda3d_1_1core_1_1LineSegs.html
+        # TODO: https: // www.panda3d.org/reference/python/classpanda3d_1_1core_1_1LineSegs.html
+
+        pad = 10
+
         return

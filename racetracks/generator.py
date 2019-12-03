@@ -29,6 +29,8 @@ class RacetrackGenerator():
 
             self.points.append( (x, y, z) )
 
+        print(f"Successfully generated {len(self.points)} points")
+
         return self.points
 
     @staticmethod
@@ -44,5 +46,7 @@ class RacetrackGenerator():
 
         f.write(content)
         f.close()
+
+        print(f"Points successfully written to racetracks/{fileName}.track")
 
 RacetrackGenerator()
