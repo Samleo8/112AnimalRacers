@@ -125,7 +125,7 @@ class HelpDialog():
         self.components.append(self.nextButton)
 
         self.buttonHelperText = OnscreenText(
-            text='[H]', pos=(0, -0.93), scale=0.07,
+            text='[P]', pos=(0, -0.93), scale=0.07,
             font=Game.fonts["AmericanCaptain"],
             align=TextNode.ACenter, mayChange=True,
             bg=(182, 182, 182, 0.5),

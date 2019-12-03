@@ -172,14 +172,26 @@ class Racecar(Obj3D):
         self.gameObj.accept(f"{colNodeName}-out-checkpoint", self.onPassCheckpoint)
         self.gameObj.accept(f"{colNodeName}-out-powerup", self.onCollectPowerup)
     
-    def initOnRacetrack(self):
-        # Assumes that racetrack has already been generated
-        trackPoints = self.gameObj.racetrack.leftTrackPoints
+    def initOnRacetrack(self, order=None):
+        if order == None: 
+            order = self.id
 
-        x, y, z = trackPoints[0][0]
+        # Assumes that racetrack has already been generated
+        trackPoints = self.gameObj.racetrack.points
+
+        startPos = LVector3f(trackPoints[0])
+        dirVec = LVector3f(trackPoints[1]) - startPos
+        dirVec.normalize()
+
+        dist = self.dimY * order
+
+        pos = startPos + dirVec * dist 
+
+        trackPoints = self.gameObj.racetrack.leftTrackPoints
         yawFacing = trackPoints[0][1][0]
 
         # Position setting
+        x, y, z = pos
         self.setPos(x, y, z)
 
         # Rotate to face the closest checkpoint
@@ -399,7 +411,7 @@ class Racecar(Obj3D):
 
         # Reset
         if self.checkBelowGround():
-            self.initOnRacetrack()
+            self.initOnRacetrack(0)
             return
 
     # Check below ground
@@ -504,6 +516,7 @@ class SmartCar(Racecar):
         self.allowStaticTurning = True
 
         self.maxSpeed = 8
+        self.defaultRotationSpeed *= 1.8
         self.maxRotationSpeed = 10
 
     def onPassCheckpoint(self, entry):
