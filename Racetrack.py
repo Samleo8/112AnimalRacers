@@ -258,7 +258,7 @@ class Racetrack(Obj3D):
         self.rightTrackPoints = rightTrackPoints
 
         return
-
+        
     def getRacetrackBounds(self):
         p0, _ = self.leftTrackPoints[0]
         x0, y0, z0 = p0
@@ -351,12 +351,12 @@ class Racetrack(Obj3D):
 
 # TODO: https: // www.panda3d.org/reference/python/classpanda3d_1_1core_1_1LineSegs.html
 class Minimap():
-    def __init__(self, points, size=(100, 100), pos=(0,0), color=None, thickness=None):
+    def __init__(self, points, size=(100, 100), pos=(0,0), color=None, thickness=2):
         self.size = size # (width, height)
         self.pos = pos # (x, y), top left corner
         self.pad = 10
 
-        self.lineThickness = 1 if thickness == None else thickness
+        self.lineThickness = thickness
         self.lineColor = (10, 10, 10, 1) if color == None else color
 
         self.loadPoints(points)
@@ -365,10 +365,23 @@ class Minimap():
         return
 
     def loadPoints(self, points):
+        self.bounds = Minimap.getBounds(points) 
+
+        minVec = LVector3f(
+            self.bounds["x"][0], self.bounds["y"][0], self.bounds["z"][0]
+        )
+
+        maxVec = LVector3f(
+            self.bounds["x"][1], self.bounds["y"][1], self.bounds["z"][1]
+        )
+
+        self.midPoint = (minVec + maxVec) / 2 + minVec
+        self.midPoint *= 1/self.size[0]
+
         # Need to normalise points to the minimap
         for i in range(len(points)):
-            point = points[i]
-            points[i] = multiplyVectorByScalar(point, 1/100)
+            point = LVector3f(points[i]) - minVec
+            points[i] = point * 1/self.size[0]
 
         self.points = points
 
@@ -397,3 +410,29 @@ class Minimap():
         self.loadPoints(points)
         self.clear()
         self.draw()
+
+    @staticmethod
+    def getBounds(points):
+        trackBounds = {}
+
+        x0, y0, z0 = points[0]
+
+        trackBounds["x"] = (x0, x0)
+        trackBounds["y"] = (y0, y0)
+        trackBounds["z"] = (z0, z0)
+
+        for x0, y0, z0 in points:
+            trackBounds["x"] = (
+                min(x0, trackBounds["x"][0]),
+                max(x0, trackBounds["x"][1])
+            )
+            trackBounds["y"] = (
+                min(y0, trackBounds["y"][0]),
+                max(y0, trackBounds["y"][1])
+            )
+            trackBounds["z"] = (
+                min(z0, trackBounds["z"][0]),
+                max(z0, trackBounds["z"][1])
+            )
+
+        return trackBounds

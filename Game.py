@@ -33,6 +33,9 @@ from Powerup import *
 
 from RacetrackGenerator import *
 
+# CameraController from https://discourse.panda3d.org/t/another-camera-controller-orbit-style/11545
+from CameraController import *
+
 class Game(ShowBase):
     fonts = {}
     selectedTrack = "random.track"
@@ -268,12 +271,17 @@ class RacetrackSelection(Game):
 
         initialItem = self.tracks.index(Game.selectedTrack)
 
-        # Minimap!
-        base.trackball.node().setPos(0, 20, -1)
-        
+        # Minimap!        
         points = Racetrack.parseTrackFile(Game.selectedTrack)
         self.minimap = Minimap(points)
         self.minimapNode = render.attachNewNode(self.minimap.node)
+
+        baseVec = LVector3f(0, 20, -1)
+        print(self.minimap.midPoint)
+        base.trackball.node().setPos(baseVec + self.minimap.midPoint)
+
+        self.camControl = CameraController(
+            anchorPos=baseVec + self.minimap.midPoint)
 
         self.selectTrack(self.tracks[initialItem])
 
