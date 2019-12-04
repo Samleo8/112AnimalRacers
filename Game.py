@@ -683,6 +683,7 @@ class RacingGame(Game):
         for car in self.cars:
             car.updatePowerup(task.time)
             car.updateMovement()
+            # TODO: car.updateMinimap()
 
         for powerup in self.racetrack.powerups:
             if powerup != None:
