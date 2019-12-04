@@ -1,15 +1,42 @@
 # CMU 15-112 Term Project: Animal Racers
 
-Creation of a simple racing game for my CMU 15-112 Term Project
+Creation of a 3D racing game for my CMU 15-112 Term Project!
+
+Collect the powerups, and beat all the other cars to win! 
 
 ## Running and Installation
-First clone the git repository.
+First clone the git repository: `git clone git@github.com:Samleo8/112AnimalRacers.git`
 
 Then install all requirements by running the command `pip install -r requirements.txt`. The crucial library used for this game is the [Panda3D Engine](https://www.panda3d.org).
 
-Then, run the game with `python Game.py`. Note that only Python 3 is supported.
+Then, from **within the main/root repository folder**, run the game with `python Game.py`. Note that only Python 3 is supported.
+
+## Game instructions
+Powerups:
+ - Shield: You don't slow down when you hit the walls.
+ - Speed: Speed boost!
+
+[WASD/Arrow Keys] Drive
+[Hold Space] Drift
+
+[1, 2] Change camera view
+[Hold C] Look behind
+[Hold V] Look around
+
+[P] Pause and show help
+[R] Restart Game
+
+### Special (Debugging) Commands
+ - [=] Activates "god mode": 
+    Changes the camera view to mouse-controlled. 
+    Left-click and drag to move; alt-drag to rotate; ctrl-drag to zoom
+ - [Backspace] Pause the game without showing the help screen. 
+    This allows for debugging when you want to pause the game and use "god mode" to see items on the screen
+- [Space] In the start screens, press space to skip to the next screen (this is hinted in the GUI)
+
 
 ## Credits
+
 ### 3D Models
 [Jeep Model](https://free3d.com/3d-model/1987-camel-trophy-range-rover-x3d-25052.html) by *bigcrazycarboy*
 

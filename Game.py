@@ -807,6 +807,7 @@ class RacingGame(Game):
             (self.setCameraView, ["3"], ["firstPerson"]),
             (self.restartGame, ["r"], None),
             (self.oobe, ["="], None),
+            (self.togglePause, ["backspace"], [False]),
             (self.togglePause, ["p", "escape"], None)
         ]
 
@@ -896,11 +897,14 @@ class RacingGame(Game):
             "offworld": BitMask32.bit(4)
         }
 
-    def togglePause(self):
+    def togglePause(self, showHelp=True):
         self.paused ^= True
         self.pauseAudio()
 
-        self.helpDialog.toggleVisible()
+        print(showHelp)
+
+        if showHelp:
+            self.helpDialog.toggleVisible()
 
     def pauseAudio(self):
         # We need to pause music too
