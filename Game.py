@@ -30,6 +30,7 @@ from Racecar import *
 from Racetrack import *
 from Terrain import *
 from Powerup import *
+from Minimap import *
 
 from RacetrackGenerator import *
 
@@ -274,7 +275,7 @@ class RacetrackSelection(Game):
         # Minimap!        
         points = Racetrack.parseTrackFile(Game.selectedTrack)
         self.minimap = Minimap(points)
-        self.minimapNode = render.attachNewNode(self.minimap.node)
+        self.minimap.render(self.render)
 
         self.selectTrack(self.tracks[initialItem])
 
@@ -342,9 +343,9 @@ class RacetrackSelection(Game):
         Game.selectedTrack = track
 
         points = Racetrack.parseTrackFile(track)
-        self.minimapNode.removeNode()
+
         self.minimap.reloadAndDraw(points)
-        self.minimapNode = render.attachNewNode(self.minimap.node)
+        self.minimap.render(self.render)
 
         # Camera Control
         baseVec = LVector3f(0, 20, -3)
@@ -795,15 +796,10 @@ class RacingGame(Game):
         # Note that x=0, z=0 is at the center of the screen
         # Everything is normalised to 1 
 
-        self.minimap = Minimap(points, renderIn2D=True, scaleFactor=scaleFactor)
-        self.minimapNode = render2d.attachNewNode(self.minimap.node)
-        self.minimapNode.setPos(-0.9, 0, -0.9)
-        self.minimapNode.setHpr(0, 90, 0)
-
-        print(points)
-        print(self.minimap.points)
-
-        return
+        self.minimap = Minimap(points, scaleFactor=scaleFactor)
+        renderNode = self.minimap.render(render2d)
+        renderNode.setPos(-0.9, 0, -0.9)
+        renderNode.setHpr(0, 90, 0)
 
     # Key Events
     def createKeyControls(self):
