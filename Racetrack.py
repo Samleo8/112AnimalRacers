@@ -348,13 +348,13 @@ class Racetrack(Obj3D):
 
         return pos1, pos2, (theta, phi)
 
-
-# TODO: https: // www.panda3d.org/reference/python/classpanda3d_1_1core_1_1LineSegs.html
 class Minimap():
-    def __init__(self, points, size=(100, 100), pos=(0,0), color=None, thickness=2):
+    def __init__(self, points, renderIn2D=True, size=(100, 100), pos=(0,0), color=None, thickness=2):
         self.size = size # (width, height)
         self.pos = pos # (x, y), top left corner
         self.pad = 10
+
+        self.renderIn2D = renderIn2D
 
         self.lineThickness = thickness
         self.lineColor = (10, 10, 10, 1) if color == None else color
@@ -375,14 +375,20 @@ class Minimap():
             self.bounds["x"][1], self.bounds["y"][1], self.bounds["z"][1]
         )
 
+        if self.renderIn2D:
+            scaleFactor = self.size
+        else:
+            scaleFactor = 1/self.size[0]
+
         self.midPoint = (minVec + maxVec) / 2 - minVec
         self.midPoint *= 1/self.size[0]
 
         # Need to normalise points to the minimap
         for i in range(len(points)):
             point = LVector3f(points[i]) - minVec
-            points[i] = point * 1/self.size[0]
 
+            points[i] = point * scaleFactor
+            
         self.points = points
 
         return

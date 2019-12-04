@@ -288,6 +288,13 @@ class RacetrackSelection(Game):
             command=self.selectTrack
         )
 
+        helperText = OnscreenText(
+            text='Click and drag anywhere to view the 3D track!', pos=(0, -0.6), scale=0.08,
+            font=Game.fonts["AmericanCaptain"],
+            align=TextNode.ACenter, mayChange=False,
+            bg=(182, 182, 182, 0.5),
+        )
+
         randomiseButton = DirectButton(
             text="New Random Track", text_font=Game.fonts["AmericanCaptain"],
             scale=0.10, command=self.randomiseTrack,
@@ -773,7 +780,22 @@ class RacingGame(Game):
 
         print(f"Opponent cars generated with difficulty {Game.level}")
 
-    def loadMinimap(self):
+    def loadMinimap(self): 
+        # Stupid aliasing; make sure it doesn't change the actual racetrack points
+        points = []
+        for pt in self.racetrack.points:
+            points.append(pt)
+
+        # Minimap
+        props = base.win.getProperties()
+        winX = props.getXSize()
+        winY = props.getYSize()
+
+        print(winX, winY)
+
+        self.minimap = Minimap(points)
+        self.minimapNode = render2d.attachNewNode(self.minimap.node)
+
         return
 
     # Key Events
