@@ -1,11 +1,19 @@
-# Lego Racers: Remake++
-An attempt to remake my childhood favourite Lego Racers, with added features, including intelligent enemies, powerups and obstacles.
+# Animal Racers
+A 3D racing game with some cool features, including random racetrack generation, powerups and intelligent enemy cars.
 
 ## TP3 Update
 
-### Feedback
-Add a minimap !!
-Add gravity for hills (slowdown when going uphill)
+### Feedback (from people who played the game in lecture)
+ 1. Add a minimap !!
+ 2. Add gravity for hills (slowdown when going uphill)
+ 3. Fix the camera views for some of the cars
+
+### Changes since TP2
+ - 3D racetrack preview
+ - Added powerups
+ - Actually intelligent cars
+ - Random racetrack generation
+ - Created a better GUI
 
 ## TP2 Update
 1. I was unexpectedly able to code out the enemy cars in time. 
