@@ -274,8 +274,7 @@ class RacetrackSelection(Game):
 
         # Minimap!        
         points = Racetrack.parseTrackFile(Game.selectedTrack)
-        self.minimap = Minimap(points)
-        self.minimap.render(self.render)
+        self.minimap = Minimap(points, renderer=self.render)
 
         self.selectTrack(self.tracks[initialItem])
 
@@ -345,7 +344,6 @@ class RacetrackSelection(Game):
         points = Racetrack.parseTrackFile(track)
 
         self.minimap.reloadAndDraw(points)
-        self.minimap.render(self.render)
 
         # Camera Control
         baseVec = LVector3f(0, 20, -3)
@@ -796,8 +794,8 @@ class RacingGame(Game):
         # Note that x=0, z=0 is at the center of the screen
         # Everything is normalised to 1 
 
-        self.minimap = Minimap(points, scaleFactor=scaleFactor)
-        renderNode = self.minimap.render(render2d)
+        self.minimap = Minimap(points, renderer=render2d, scaleFactor=scaleFactor)
+        renderNode = self.minimap.renderNode
         renderNode.setPos(-0.9, 0, -0.9)
         renderNode.setHpr(0, 90, 0)
 

@@ -4,12 +4,14 @@ from Racetrack import *
 # Note that all the positioning is to be handled 
 # in the render2d portion if we are to render the 2D version
 class Minimap():
-    def __init__(self, points, scaleFactor=100, color=None, thickness=2):
+    def __init__(self, points, renderer, scaleFactor=100, color=None, thickness=2):
         self.scaleFactor = scaleFactor
 
         self.lineThickness = thickness
         self.lineColor = (10, 10, 10, 1) if color == None else color
         self.startLineColor = (255, 127, 0, 1)
+
+        self.renderer = renderer
 
         self.loadPoints(points)
         self.draw()
@@ -59,7 +61,11 @@ class Minimap():
         lines.drawTo(self.points[0])
 
         self.lines = lines
-        self.node = self.lines.create()
+
+        node = lines.create()
+        self.renderNode = self.renderer.attachNewNode(node)
+
+        return self.renderNode
 
     def clear(self):
         self.lines.reset()
@@ -69,11 +75,7 @@ class Minimap():
 
         self.loadPoints(points)
         self.clear()
-        self.draw()
-
-    def render(self, renderer):
-        self.renderNode = renderer.attachNewNode(self.node)
-        return self.renderNode
+        return self.draw()
 
     def destroy(self):
         self.renderNode.removeNode()
