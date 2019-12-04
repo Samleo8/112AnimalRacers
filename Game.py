@@ -548,6 +548,7 @@ class RacingGame(Game):
 
         # Load the various models
         self.loadModels()
+        self.loadMinimap()
 
         # Load lights and the fancy background
         # NOTE: Racetrack needs to be generated first to properly generate the terrain
@@ -771,6 +772,9 @@ class RacingGame(Game):
         self.cars.append(car2)
 
         print(f"Opponent cars generated with difficulty {Game.level}")
+
+    def loadMinimap(self):
+        return
 
     # Key Events
     def createKeyControls(self):
