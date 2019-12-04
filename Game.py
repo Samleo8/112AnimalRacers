@@ -52,9 +52,9 @@ Collect the powerups, and beat all the other cars to win!
 - Speed: Speed boost!
 
 [WASD/Arrow Keys] Drive
-[Hold Space] Drift
+[Hold Space] Drift (while driving)
 
-[1, 2] Change camera view
+[1, 2, 3] Change camera view
 [Hold C] Look behind
 [Hold V] Look around
 
@@ -216,8 +216,8 @@ class StartScreen(Game):
 
         # Instructions
         helpText = """\
-WASD/Arrow Keys to Drive | Hold Space to drift
-1, 2 to change camera | Hold C to look behind
+WASD/Arrow Keys to Drive | Hold Space while driving to drift
+1, 2, 3 to change camera | Hold C to look behind
 Hold V to look around | R to Restart
 """
         OnscreenText(
@@ -613,21 +613,41 @@ class RacingGame(Game):
         if "_behind" in self.camConfig:
             theta = degToRad(h - 180)
 
-        xOffset = camDistance * math.sin(theta)
-        yOffset = -camDistance * math.cos(theta)
-
         # Top-down view
         if self.camConfig == "birdsEye":
             xOffset = 0
             yOffset = 0
             camHeight = camDistance * 3
+            camDistance = 0
 
             phi = -90
 
             self.camera.setHpr(radToDeg(theta), phi, 0)
+        elif self.camConfig == "firstPerson":
+            camDistance = self.player.passenger.offsetY + self.player.passenger.dimY
+            camDistance *= -1
+            
+            camHeight = self.player.passenger.offsetZ + self.player.dimZ/2
+
+            phi = -10
+
+            self.camera.setHpr(radToDeg(theta), phi, 0)
         # Camera has a slight tilt
         else:
-            camHeight = player.dimZ * 2
+            # Fix camera angle according to car model
+            carName = self.player.modelName.replace("car_", "", 1)
+
+            if carName == "jeep":
+                camHeight = player.dimZ * 1.3
+            elif carName == "racecar":
+                camHeight = player.dimZ * 1.7
+            else:
+                camHeight = player.dimZ * 1.7
+
+                #1.3 is very forward
+
+        xOffset = camDistance * math.sin(theta)
+        yOffset = -camDistance * math.cos(theta)
 
         self.camera.setPos(x + xOffset, y + yOffset, z + camHeight)
         
