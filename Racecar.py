@@ -608,7 +608,7 @@ class SmartGreedyCar(SmartCar):
         powerup = self.gameObj.racetrack.powerups[i-1]
         trackPoint = trackPoints[i]
         
-        if powerup == None or self.activePowerup != None:
+        if self.isBeingStupid or powerup == None or self.activePowerup != None:
             gotoPoint = trackPoint
         else:
             powerupPoint = powerup.getPos()

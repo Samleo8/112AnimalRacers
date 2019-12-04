@@ -3,6 +3,8 @@ from Racecar import *
 from Terrain import *
 from Powerup import *
 
+import copy
+
 class Wall(Obj3D):
     def __init__(self, gameObj, model, renderParent=None, pos=None, hpr=None):
         super().__init__(model, renderParent, pos, hpr)
@@ -349,11 +351,8 @@ class Racetrack(Obj3D):
         return pos1, pos2, (theta, phi)
 
 class Minimap():
-    def __init__(self, points, renderIn2D=True, size=(100, 100), pos=(0,0), color=None, thickness=2):
-        self.size = size # (width, height)
-        self.pos = pos # (x, y), top left corner
-        self.pad = 10
-
+    def __init__(self, points, renderIn2D=False, scaleFactor=100, color=None, thickness=2):
+        self.scaleFactor = scaleFactor
         self.renderIn2D = renderIn2D
 
         self.lineThickness = thickness
@@ -365,6 +364,9 @@ class Minimap():
         return
 
     def loadPoints(self, points):
+        # Ensure aliasing doesn't get into the way
+        points = copy.deepcopy(points)
+
         self.bounds = Minimap.getBounds(points) 
 
         minVec = LVector3f(
@@ -375,19 +377,14 @@ class Minimap():
             self.bounds["x"][1], self.bounds["y"][1], self.bounds["z"][1]
         )
 
-        if self.renderIn2D:
-            scaleFactor = self.size
-        else:
-            scaleFactor = 1/self.size[0]
-
         self.midPoint = (minVec + maxVec) / 2 - minVec
-        self.midPoint *= 1/self.size[0]
+        self.midPoint /= self.scaleFactor
 
         # Need to normalise points to the minimap
         for i in range(len(points)):
             point = LVector3f(points[i]) - minVec
 
-            points[i] = point * scaleFactor
+            points[i] = point / self.scaleFactor
             
         self.points = points
 
@@ -402,6 +399,7 @@ class Minimap():
         lines.moveTo(self.points[0])
         for point in self.points:
             x, y, z = point
+
             lines.drawTo(x, y, z)
 
         lines.drawTo(self.points[0])

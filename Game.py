@@ -782,19 +782,26 @@ class RacingGame(Game):
 
     def loadMinimap(self): 
         # Stupid aliasing; make sure it doesn't change the actual racetrack points
-        points = []
-        for pt in self.racetrack.points:
-            points.append(pt)
+        points = self.racetrack.points
+            
+        bounds = Minimap.getBounds(points)
+
+        maxB = max(bounds["x"][1], bounds["y"][1], bounds["z"][1])
+        minB = min(bounds["x"][0], bounds["y"][0], bounds["z"][0])
+
+        scaleFactor = (maxB-minB) * 2
 
         # Minimap
-        props = base.win.getProperties()
-        winX = props.getXSize()
-        winY = props.getYSize()
+        # Note that x=0, z=0 is at the center of the screen
+        # Everything is normalised to 1 
 
-        print(winX, winY)
-
-        self.minimap = Minimap(points)
+        self.minimap = Minimap(points, renderIn2D=True, scaleFactor=scaleFactor)
         self.minimapNode = render2d.attachNewNode(self.minimap.node)
+        self.minimapNode.setPos(-0.9, 0, -0.9)
+        self.minimapNode.setHpr(0, 90, 0)
+
+        print(points)
+        print(self.minimap.points)
 
         return
 
