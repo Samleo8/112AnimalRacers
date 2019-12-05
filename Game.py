@@ -811,16 +811,16 @@ class RacingGame(Game):
         # Draw the card (semi transparent bg) behind the minimap
         minimapCard = CardMaker("minimap")
         minimapCard.setFrame(-0.95, -0.35, -0.95, -0.35) # left right bottom top
-        minimapCard.setColor(110/255, 130/255, 11 0/255, 0.8)
+        minimapCard.setColor(110/255, 130/255, 110/255, 0.8)
         render2d.setTransparency(True)
 
         # Draw the actual minimap (tracks)
         # Note that x=0, z=0 is at the center of the screen
-        # Everything is normalised to 1 
+        # Everything is normalised to 1
 
         render2d.attachNewNode(minimapCard.generate())
 
-        self.minimap = Minimap(points, renderer=render2d, scaleFactor=scaleFactor)
+        self.minimap = Minimap(points, renderer=render2d, scaleFactor=scaleFactor, color=(1,1,1,0.5))
         renderNode = self.minimap.renderNode
         renderNode.setPos(-0.9, 0, -0.9)
         renderNode.setHpr(0, 90, 0)

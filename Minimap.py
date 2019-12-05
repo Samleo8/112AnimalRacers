@@ -9,8 +9,8 @@ class Minimap():
         self.scaleFactor = scaleFactor
 
         self.lineThickness = thickness
-        self.lineColor = (10, 10, 10, 1) if color == None else color
-        self.startLineColor = (255, 127, 0, 1)
+        self.lineColor = (1, 1, 1, 1) if color == None else color
+        self.startLineColor = (1, 127/255, 0, 1)
 
         self.renderer = renderer
 
