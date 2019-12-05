@@ -527,7 +527,7 @@ class RacingGame(Game):
         self.paused = False
         self.isGameOver = False
         self.gameOverTime = 0 # for camera rotation
-        self.printStatements = True
+        self.printStatements = False
 
         self.helpDialog = HelpDialog()
         self.helpDialog.hide()
@@ -866,7 +866,8 @@ class RacingGame(Game):
             (self.restartGame, ["r"], None),
             (self.oobe, ["="], None),
             (self.togglePause, ["backspace"], [False]),
-            (self.togglePause, ["p", "escape"], None)
+            (self.togglePause, ["p", "escape"], None),
+            (self.togglePrintStatements, ["\\"], None)
         ]
 
         for fn, keys, args in keyReleaseMap:
@@ -954,6 +955,11 @@ class RacingGame(Game):
             "powerup": BitMask32.bit(3),
             "offworld": BitMask32.bit(4)
         }
+
+    # Toggle whether or not to print statements (for debugging or extra information)
+    def togglePrintStatements(self):
+        self.printStatements ^= True
+        print("Printing Debug Statements:", self.printStatements)
 
     def togglePause(self, showHelp=True):
         self.paused ^= True

@@ -124,7 +124,7 @@ class MinimapPoint(Obj3D):
         if isPlayer:
             self.initTexture("yellow")
         else: 
-            self.initTexture("red")
+            self.initTexture("orange")
 
     def setScaledPos(self, x, y, z, centered=True):
         pos = x, y, z

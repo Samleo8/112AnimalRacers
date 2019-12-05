@@ -32,8 +32,8 @@ Powerups:
     Left-click and drag to move; alt-drag to rotate; ctrl-drag to zoom
  - [Backspace] Pause the game without showing the help screen. 
     This allows for debugging when you want to pause the game and use "god mode" to see items on the screen
-- [Space] In the start screens, press space to skip to the next screen (this is hinted in the GUI)
-
+ - [\ (Backslash)] Toggle the printing of debugging statements
+ - [Space] In the start screens, press space to skip to the next screen (this is hinted in the GUI)
 
 ## Credits
 
