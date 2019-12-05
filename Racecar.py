@@ -215,7 +215,7 @@ class Racecar(Obj3D):
     def onCollectPowerup(self, entry):
         powerupType = entry.getIntoNodePath().getPythonTag("powerupType")
 
-        print(f"Car {self.id} has collected a {powerupType} powerup!")
+        if self.gameObj.printStatements: print(f"Car {self.id} has collected a {powerupType} powerup!")
 
         # Deactivate first (removes away the sprites)
         self.deactivatePowerup()
@@ -231,7 +231,6 @@ class Racecar(Obj3D):
             # New powerup
             if self.powerupActiveTime == None:
                 self.powerupActiveTime = taskTime
-                # print(f"Car {self.id}: Activated {self.activePowerup} powerup")
             # Powerup needs to be deactivated
             elif taskTime - self.powerupActiveTime >= Powerup.lastTime:
                 self.deactivatePowerup()
@@ -254,7 +253,6 @@ class Racecar(Obj3D):
             self.incAcceleration(self.accInc * 12)
 
     def deactivatePowerup(self):
-        # print(f"Car {self.id}: {self.activePowerup} powerup deactivated")
         self.powerupActiveTime = None
         self.activePowerup = None
         
@@ -269,7 +267,8 @@ class Racecar(Obj3D):
 
         # Make sure that previous checkpoint was passed before update
         if self.passedCheckpoints[checkpointID-1] > self.passedCheckpoints[checkpointID]:
-            print(f"Car {self.id}: Passed checkpoint {checkpointID}")
+            if self.gameObj.printStatements:
+                print(f"Car {self.id}: Passed checkpoint {checkpointID}")
             self.passedCheckpoints[checkpointID] += 1
         # New lap
         elif checkpointID == 0 and self.passedCheckpoints[0] == self.passedCheckpoints[-1]:
@@ -287,10 +286,10 @@ class Racecar(Obj3D):
             if self.currLap >= totalLaps:
                 self.gameObj.gameOver(self)
             else:
-                print(f"Car {self.id}: Starting new lap {self.currLap} of {totalLaps}!")
+                if self.gameObj.printStatements: print(f"Car {self.id}: Starting new lap {self.currLap} of {totalLaps}!")
         else:
             N = len(self.passedCheckpoints)
-            print(f"Car {self.id}: Need to pass checkpoint {(checkpointID+N-1)%N} first")
+            if self.gameObj.printStatements: print(f"Car {self.id}: Need to pass checkpoint {(checkpointID+N-1)%N} first")
 
     def onCollideWall(self, entry):
         # Shield powerup negates all effects
@@ -421,6 +420,10 @@ class Racecar(Obj3D):
             self.initOnRacetrack(0)
             return
 
+    def updateMinimap(self, minimapPoint):
+        x, y, z = self.getPos()
+        minimapPoint.setScaledPos(x, y, z)
+
     # Check below ground
     def checkBelowGround(self):
         _, _, z = self.getPos()
@@ -538,14 +541,6 @@ class SmartCar(Racecar):
         currCheckpoint = entry.getIntoNodePath().getPythonTag("checkpointID")
 
         # Went back the wrong way, reset to old checkpoint
-        '''
-        if self.currentCheckpoint == currCheckpoint:
-            self.currentCheckpoint = currCheckpoint - 1
-            print(f"Car {self.id} went the wrong way at {currCheckpoint}!")
-        else:
-            self.currentCheckpoint = currCheckpoint
-        '''
-
         self.currentCheckpoint = currCheckpoint
         self.isBeingStupid = False
 
@@ -603,8 +598,6 @@ class SmartGreedyCar(SmartCar):
         trackPoints = self.gameObj.racetrack.points
         i = (self.currentCheckpoint+1) % len(trackPoints)
 
-        #print(f"Car {self.id} currently seeking checkpoint {self.currentCheckpoint}")
-        
         powerup = self.gameObj.racetrack.powerups[i-1]
         trackPoint = trackPoints[i]
         

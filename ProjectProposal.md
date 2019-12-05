@@ -4,16 +4,18 @@ A 3D racing game with some cool features, including random racetrack generation,
 ## TP3 Update
 
 ### Feedback (from people who played the game in lecture)
- 1. Add a minimap !!
- 2. Add gravity for hills (slowdown when going uphill)
- 3. Fix the camera views for some of the cars
+ - [x] Add a minimap !!
+ - [x] Fix the camera views for some of the cars
+ - [ ] Add gravity for hills (slowdown when going uphill)
 
 ### Changes since TP2
- - 3D racetrack preview
- - Added powerups
- - Actually intelligent cars
- - Random racetrack generation
- - Created a better GUI
+1. Created a better GUI
+1. 3D racetrack preview
+2. Added powerups
+3. Actually intelligent cars
+4. Random racetrack generation
+5. Minimap (as per feedback)
+6. Fixed camera views (as per feedback)
 
 ## TP2 Update
 1. I was unexpectedly able to code out the enemy cars in time. 
