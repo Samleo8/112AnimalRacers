@@ -40,7 +40,8 @@ from CameraController import *
 from panda3d.core import loadPrcFileData
 
 # Globally change window title name
-loadPrcFileData("", "window-title Animal Racers")
+gameTitle = "Animal Racers"
+loadPrcFileData("", f"window-title {gameTitle}")
 
 class Game(ShowBase):
     fonts = {}
@@ -174,7 +175,7 @@ class StartScreen(Game):
         )
 
         title = OnscreenText(
-            text='Animal Racers', pos=(0, 0.3), scale=0.32,
+            text=gameTitle, pos=(0, 0.3), scale=0.32,
             font=Game.fonts["AmericanCaptain"],
             align=TextNode.ACenter, mayChange=False
         )
