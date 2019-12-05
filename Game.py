@@ -37,6 +37,11 @@ from RacetrackGenerator import *
 # CameraController from https://discourse.panda3d.org/t/another-camera-controller-orbit-style/11545
 from CameraController import *
 
+from panda3d.core import loadPrcFileData
+
+# Globally change window title name
+loadPrcFileData("", "window-title Animal Racers")
+
 class Game(ShowBase):
     fonts = {}
     selectedTrack = "random.track"
@@ -811,14 +816,14 @@ class RacingGame(Game):
         # Draw the card (semi transparent bg) behind the minimap
         minimapCard = CardMaker("minimap")
         minimapCard.setFrame(-0.95, -0.35, -0.95, -0.35) # left right bottom top
-        minimapCard.setColor(110/255, 130/255, 110/255, 0.8)
+        minimapCard.setColor(90/255, 90/255, 90/255, 0.8)
+
+        render2d.attachNewNode(minimapCard.generate())
         render2d.setTransparency(True)
 
         # Draw the actual minimap (tracks)
         # Note that x=0, z=0 is at the center of the screen
         # Everything is normalised to 1
-
-        render2d.attachNewNode(minimapCard.generate())
 
         self.minimap = Minimap(points, renderer=render2d, scaleFactor=scaleFactor, color=(1,1,1,0.5))
         renderNode = self.minimap.renderNode
