@@ -1,3 +1,4 @@
+from Obj3D import *
 from Racetrack import *
 
 # Minimap generation
@@ -24,20 +25,20 @@ class Minimap():
 
         self.bounds = Minimap.getBounds(points) 
 
-        minVec = LVector3f(
+        self.minVec = LVector3f(
             self.bounds["x"][0], self.bounds["y"][0], self.bounds["z"][0]
         )
 
-        maxVec = LVector3f(
+        self.maxVec = LVector3f(
             self.bounds["x"][1], self.bounds["y"][1], self.bounds["z"][1]
         )
 
-        self.midPoint = (minVec + maxVec) / 2 - minVec
+        self.midPoint = (self.minVec + self.maxVec) / 2 - self.minVec
         self.midPoint /= self.scaleFactor
 
         # Need to normalise points to the minimap
         for i in range(len(points)):
-            point = LVector3f(points[i]) - minVec
+            point = LVector3f(points[i]) - self.minVec
 
             points[i] = point / self.scaleFactor
             
@@ -105,3 +106,32 @@ class Minimap():
             )
 
         return trackBounds
+
+class MinimapPoint(Obj3D):
+    def __init__(self, gameObj, minimap, isPlayer=False, renderParent=None, pos=None, hpr=None):
+        self.gameObj = gameObj
+        self.minimap = minimap
+
+        # Set model
+        #model = "minimap_playerdot" if isPlayer else "minimap_dot"
+        model = "minimap_dot"
+        modelFile = f"models/{model}"
+
+        super().__init__(model, renderParent, pos, hpr)
+
+        self.scaleAll(0.01)
+
+        if isPlayer:
+            self.initTexture("yellow")
+        else: 
+            self.initTexture("red")
+
+    def setScaledPos(self, x, y, z, centered=True):
+        pos = x, y, z
+        minimap = self.minimap
+
+        scaledPos = (LVector3f(pos) - minimap.minVec) / minimap.scaleFactor
+        x,y,z = tuple(scaledPos)
+        
+        self.setPos(x, y, z, centered)
+

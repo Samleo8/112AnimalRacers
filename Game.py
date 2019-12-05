@@ -216,13 +216,13 @@ class StartScreen(Game):
 
         # Instructions
         helpText = """\
-WASD/Arrow Keys to Drive | Hold Space while driving to drift
+WASD/Arrow Keys to Drive | Hold Space to drift
 1, 2, 3 to change camera | Hold C to look behind
 Hold V to look around | R to Restart
 """
         OnscreenText(
             text=helpText, pos=(0, -0.7), scale=0.1,
-            bg=(255,255,255,0.7), wordwrap=18,
+            bg=(255,255,255,0.7), wordwrap=20,
             font=Game.fonts["AmericanCaptain"],
             align=TextNode.ACenter, mayChange=False
         )
@@ -527,6 +527,7 @@ class RacingGame(Game):
         self.paused = False
         self.isGameOver = False
         self.gameOverTime = 0 # for camera rotation
+        self.printStatements = True
 
         self.helpDialog = HelpDialog()
         self.helpDialog.hide()
@@ -703,7 +704,7 @@ class RacingGame(Game):
         for car in self.cars:
             car.updatePowerup(task.time)
             car.updateMovement()
-            # TODO: car.updateMinimap()
+            car.updateMinimap(self.minimapPoints[car.id])
 
         for powerup in self.racetrack.powerups:
             if powerup != None:
@@ -798,12 +799,12 @@ class RacingGame(Game):
         self.cars.append(car1)
         self.cars.append(car2)
 
-        print(f"Opponent cars generated with difficulty {Game.level}")
+        if self.printStatements: print(f"Opponent cars generated with difficulty {Game.level}")
 
-    def loadMinimap(self): 
-        # Stupid aliasing; make sure it doesn't change the actual racetrack points
+    def loadMinimap(self):
+        # Load the minimap
         points = self.racetrack.points
-            
+
         bounds = Minimap.getBounds(points)
 
         maxB = max(bounds["x"][1], bounds["y"][1], bounds["z"][1])
@@ -819,6 +820,15 @@ class RacingGame(Game):
         renderNode = self.minimap.renderNode
         renderNode.setPos(-0.9, 0, -0.9)
         renderNode.setHpr(0, 90, 0)
+
+        # Load the minimap points (representing the players)
+        self.minimapPoints = [None for _ in range(len(self.cars))]
+
+        for car in self.cars:
+            self.minimapPoints[car.id] = MinimapPoint(
+                self, self.minimap,
+                isPlayer=(car.id == 0), renderParent=renderNode
+            )
 
     # Key Events
     def createKeyControls(self):
@@ -886,7 +896,7 @@ class RacingGame(Game):
             return
 
         self.camConfig = view
-        print("Camera view set to: " + self.camConfig)
+        if self.printStatements: print("Camera view set to: " + self.camConfig)
 
     def keyPressHandler(self, task):
         # NOTE: In order to allow for diagonal movement
