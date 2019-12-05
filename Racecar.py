@@ -301,7 +301,8 @@ class Racecar(Obj3D):
         self.setAcceleration(0, 0)
 
         # 3D audio yay!
-        self.audio["collision"].play()
+        if not self.gameObj.sfxMuted:
+            self.audio["collision"].play()
         
     def onExitWall(self, entry):
         self.isCollidingWall = False

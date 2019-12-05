@@ -65,6 +65,7 @@ Collect the powerups, and beat all the other cars to win!
 [Hold V] Look around
 
 [P] Pause and show help
+[M] Mute main music and sfx
 [R] Restart Game
 """
 
@@ -524,6 +525,8 @@ class RacingGame(Game):
 
         # Get other stuff ready
         self.paused = False
+        self.muted = False
+        self.sfxMuted = False
         self.isGameOver = False
         self.gameOverTime = 0 # for camera rotation
         self.printStatements = False
@@ -877,7 +880,8 @@ class RacingGame(Game):
             (self.oobe, ["="], None),
             (self.togglePause, ["backspace"], [False]),
             (self.togglePause, ["p", "escape"], None),
-            (self.togglePrintStatements, ["\\"], None)
+            (self.togglePrintStatements, ["\\"], None),
+            (self.toggleMute, ["m"], None)
         ]
 
         for fn, keys, args in keyReleaseMap:
@@ -978,12 +982,18 @@ class RacingGame(Game):
         if showHelp:
             self.helpDialog.toggleVisible()
 
+    def toggleMute(self):
+        self.muted ^= True
+        self.sfxMuted ^= True
+        self.pauseAudio()
+        return
+
     def pauseAudio(self):
         # We need to pause music too
         for nm in self.audio:
             sound = self.audio[nm]
 
-            playRate = 0 if self.paused or self.isGameOver else 1
+            playRate = 0 if self.paused or self.isGameOver or self.muted else 1
             sound.setPlayRate(playRate)
 
     def restartGame(self):
