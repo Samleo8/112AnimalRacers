@@ -4,6 +4,7 @@ blendercache*
 *tutorial/*
 
 # Ignore demo videos
+./demo/*
 *.mp4
 *.mov
 *.avi
