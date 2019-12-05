@@ -53,9 +53,16 @@ Main music adapted from [Purple Passion](https://www.youtube.com/watch?v=ERbmI4_
 [American Captain](https://www.fontspace.com/the-fontry/american-captain) by *The Fontry*
 
 ### Code Reference
+
+#### General
 [Panda 3D Manual](https://www.panda3d.org/manual/)
 
 [Panda 3D API Reference](https://www.panda3d.org/reference/python/index.html)
+
+### Specific (adapted code)
+[TabbedFrame for instructions screen](https://github.com/ArsThaumaturgis/TabbedFrame)
+
+[Camera control for 3D racetrack selection](https://discourse.panda3d.org/t/another-camera-controller-orbit-style/11545/2)
 
 ## Project Details
 Elaborated in document [here](ProjectProposal.md).
