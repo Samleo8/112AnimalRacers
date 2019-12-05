@@ -378,13 +378,6 @@ class RacecarSelection(Game):
     def __init__(self):
         ShowBase.__init__(self)
 
-        '''
-        concreteBg = OnscreenImage(
-            image="img/startscreen.png",
-            scale=(1.5, 1.5, 1)
-        )
-        '''
-
         title = OnscreenText(
             text='Select your Racecar and Passenger!', pos=(0, 0.7), scale=0.18,
             font=Game.fonts["AmericanCaptain"], bg=(255, 255, 255, 1),
@@ -805,7 +798,7 @@ class RacingGame(Game):
         if self.printStatements: print(f"Opponent cars generated with difficulty {Game.level}")
 
     def loadMinimap(self):
-        # Load the minimap
+        # Initialise points for minimap
         points = self.racetrack.points
 
         bounds = Minimap.getBounds(points)
@@ -815,9 +808,17 @@ class RacingGame(Game):
 
         scaleFactor = (maxB-minB) * 2
 
-        # Minimap
+        # Draw the card (semi transparent bg) behind the minimap
+        minimapCard = CardMaker("minimap")
+        minimapCard.setFrame(-0.95, -0.35, -0.95, -0.35) # left right bottom top
+        minimapCard.setColor(110/255, 130/255, 11 0/255, 0.8)
+        render2d.setTransparency(True)
+
+        # Draw the actual minimap (tracks)
         # Note that x=0, z=0 is at the center of the screen
         # Everything is normalised to 1 
+
+        render2d.attachNewNode(minimapCard.generate())
 
         self.minimap = Minimap(points, renderer=render2d, scaleFactor=scaleFactor)
         renderNode = self.minimap.renderNode
@@ -967,8 +968,6 @@ class RacingGame(Game):
     def togglePause(self, showHelp=True):
         self.paused ^= True
         self.pauseAudio()
-
-        print(showHelp)
 
         if showHelp:
             self.helpDialog.toggleVisible()

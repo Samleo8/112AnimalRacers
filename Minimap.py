@@ -47,6 +47,7 @@ class Minimap():
         return
 
     def draw(self):
+        print("Drawing minimap")
         # Setup
         lines = LineSegs("minimap")
         lines.setColor(self.lineColor)
@@ -106,6 +107,22 @@ class Minimap():
             )
 
         return trackBounds
+
+    # TODO: Allow for minimap orbit via mouse drags
+    # Adapted from https://discourse.panda3d.org/t/another-camera-controller-orbit-style/11545/2
+    def setOrbit(self, orbit):
+        if(orbit == True):
+            props = base.win.getProperties()
+            winX = props.getXSize()
+            winY = props.getYSize()
+            if base.mouseWatcherNode.hasMouse():
+                mX = base.mouseWatcherNode.getMouseX()
+                mY = base.mouseWatcherNode.getMouseY()
+                mPX = winX * ((mX+1)/2)
+                mPY = winY * ((-mY+1)/2)
+            self.orbit = [(mX, mY), [mPX, mPY]]
+        else:
+            self.orbit = None
 
 class MinimapPoint(Obj3D):
     def __init__(self, gameObj, minimap, isPlayer=False, renderParent=None, pos=None, hpr=None):
