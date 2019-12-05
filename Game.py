@@ -664,6 +664,9 @@ class RacingGame(Game):
         if "_rotate" in self.camConfig:
             self.camera.lookAt(x, y, z)
 
+        # Funny stuff: attempt to rotate minimap
+        # self.minimap.renderNode.setHpr(0, task.time * 3.0, 0)
+
         return Task.cont
 
     # Game over handling
