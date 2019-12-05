@@ -672,7 +672,7 @@ class RacingGame(Game):
     # Game over handling
     def gameOver(self, car):
         self.isGameOver = True
-        self.winningCar = car  # self.cars[1]
+        self.winningCar = car
         
         if car.id == 0: # player
             winMsg = f"Yay! You have won the game, beating {Racecar.nRacecars-1} other cars!"
