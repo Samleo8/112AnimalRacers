@@ -4,6 +4,8 @@ Creation of a 3D racing game for my CMU 15-112 Term Project!
 
 Collect the powerups, and beat all the other cars to win! 
 
+Trailer Video: https://youtu.be/lcON0dgbxwg
+
 ## Running and Installation
 First clone the git repository: `git clone git@github.com:Samleo8/112AnimalRacers.git`
 
