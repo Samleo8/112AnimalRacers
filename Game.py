@@ -37,6 +37,9 @@ from RacetrackGenerator import *
 # CameraController from https://discourse.panda3d.org/t/another-camera-controller-orbit-style/11545
 from CameraController import *
 
+# TabbedFrame from https://github.com/ArsThaumaturgis/TabbedFrame
+from TabbedFrame import TabbedFrame
+
 from panda3d.core import loadPrcFileData
 
 # Globally change window title name
@@ -113,32 +116,110 @@ class HelpDialog():
         )
         self.components.append(self.bg)
 
-        self.title = OnscreenText(
-            text='Instructions', pos=(0, 0.7), scale=0.15,
-            font=Game.fonts["AmericanCaptain"], bg=(255, 255, 255, 1),
-            align=TextNode.ACenter, mayChange=False
-        )
-        self.components.append(self.title)
+        # Construct our TabbedFrame
+        self.frame = TabbedFrame(tab_frameSize=(0, 7, 0, 2),
+                                 tab_text_align=TextNode.ALeft,
+                                 tab_text_pos=(0.2, 0.6))
 
-        self.instructions = OnscreenText(
-            text=Game.instructionsText, pos=(0, 0.52), scale=0.08,
-            font=Game.fonts["AmericanCaptain"], bg=(182, 182, 182, 0.5),
-            align=TextNode.ACenter, mayChange=False,
-            wordwrap=22
-        )
-        self.components.append(self.instructions)
+        # Adapted from https://github.com/ArsThaumaturgis/TabbedFrame/blob/master/TabbedFrameExample.py
+
+        font = Game.fonts["AmericanCaptain"]
+
+        # Controls
+        page1 = DirectFrame()
+        text = TextNode("text")
+        text.setText("""\
+[WASD/Arrow Keys] Drive
+[Hold Space] Drift (while driving)
+
+[1, 2, 3] Change camera view
+[Hold C] Look behind
+[Hold V] Look around
+
+[P] Pause and show help
+[M] Mute main music and sfx
+[R] Restart Game
+""")
+        text.setWordwrap(15)
+        text.setTextColor(0, 0, 0, 1)
+        #text.setFont(font)
+
+        textNP = NodePath(text)
+        textNP.reparentTo(page1)
+        textNP.setScale(0.1)
+        textNP.setPos(-0.7, 0, 0.6)
+
+        # Powerups
+        page2 = DirectFrame()
+        text = TextNode("text")
+        text.setText("""\
+[Bolt] Speed boost!
+[Shield] You don't slow down when you hit the walls. Instead you slide smoothly along them
+
+Note: Powerups last for 5 seconds.
+""")
+
+        text.setWordwrap(10)
+        text.setTextColor(0, 0, 0, 1)
+        #text.setFont(font)
+
+        textNP = NodePath(text)
+        textNP.reparentTo(page2)
+        textNP.setScale(0.1)
+        textNP.setPos(-0.7, 0, 0.6)
+
+        page3 = DirectFrame()
+        text = TextNode("text")
+        text.setText("""\
+Details on Github (Samleo8/112AnimalRacers)
+
+[3D Models]
+Jeep Model by bigcrazycarboy
+Lightning Bolt by Savino
+All other models from the Alice Gallery
+
+[Audio]
+Main music adapted from Purple Passion by Diana Boncheva
+
+[Fonts]
+American Captain by The Fontry
+
+[Code Reference]
+Panda 3D Manual
+Panda 3D API Reference
+Panda 3D forums
+""")
+
+        text.setWordwrap(20 )
+        text.setTextColor(0, 0, 0, 1)
+        #text.setFont(font)
+
+        textNP = NodePath(text)
+        textNP.reparentTo(page3)
+        textNP.setScale(0.072 )
+        textNP.setPos(-0.7, 0, 0.7)
+
+        # And finally, add the pages to our TabbedFrame, along with labels
+        # for their buttons
+        self.frame.addPage(page1, "Controls")
+        self.frame.addPage(page2, "Powerups")
+        self.frame.addPage(page3, "Credits")
+ 
+        self.components += self.frame.pageButtons  
+
+        self.components.append(self.frame)
 
         self.nextButton = DirectButton(
             text="Next", text_font=Game.fonts["AmericanCaptain"],
             scale=0.10, command=self.hide,
             pad=(0.3, 0.3),
-            pos=(0, 0, -0.8),
+            pos=(0, 0, -0.75),
             text_mayChange=True
         )
         self.components.append(self.nextButton)
 
         self.buttonHelperText = OnscreenText(
-            text='[P]', pos=(0, -0.93), scale=0.07,
+            text='[P]', pos=(0, -0.87), scale=0.07,
             font=Game.fonts["AmericanCaptain"],
             align=TextNode.ACenter, mayChange=True,
             bg=(182, 182, 182, 0.5),
