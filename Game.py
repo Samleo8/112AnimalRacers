@@ -109,11 +109,16 @@ class HelpDialog():
     def __init__(self):
         self.components = []
         self.hidden = False
-
-        self.bg = OnscreenImage(
-            image="img/startscreen.png",
-            scale=(1.5, 1.5, 1)
-        )
+        
+        try:
+            concreteBg = OnscreenImage(
+                image="img/startscreen.png",
+                scale=(1.5, 1.5, 1)
+            )
+        except:
+            print("img/startscreen.png not found. Get it from Github.")
+            concreteBg = None
+            
         self.components.append(self.bg)
 
         # Construct our TabbedFrame
@@ -251,10 +256,14 @@ class StartScreen(Game):
     def __init__(self):
         ShowBase.__init__(self)
 
-        concreteBg = OnscreenImage(
-            image="img/startscreen.png",
-            scale=(1.5, 1.5, 1)
-        )
+        try:
+            concreteBg = OnscreenImage(
+                image="img/startscreen.png",
+                scale=(1.5, 1.5, 1)
+            )
+        except:
+            print("img/startscreen.png not found. Get it from Github.")
+            concreteBg = None
 
         title = OnscreenText(
             text=gameTitle, pos=(0, 0.3), scale=0.32,
