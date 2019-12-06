@@ -119,7 +119,7 @@ class HelpDialog():
             print("img/startscreen.png not found. Get it from Github.")
             concreteBg = None
             
-        self.components.append(self.bg)
+        self.components.append(concreteBg)
 
         # Construct our TabbedFrame
         self.frame = TabbedFrame(tab_frameSize=(0, 7, 0, 2),
