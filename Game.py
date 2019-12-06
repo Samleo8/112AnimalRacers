@@ -111,15 +111,15 @@ class HelpDialog():
         self.hidden = False
         
         try:
-            concreteBg = OnscreenImage(
+            self.bg = OnscreenImage(
                 image="img/startscreen.png",
                 scale=(1.5, 1.5, 1)
             )
         except:
             print("img/startscreen.png not found. Get it from Github.")
-            concreteBg = None
+            self.bg = None
             
-        self.components.append(concreteBg)
+        self.components.append(self.bg)
 
         # Construct our TabbedFrame
         self.frame = TabbedFrame(tab_frameSize=(0, 7, 0, 2),
