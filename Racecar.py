@@ -30,6 +30,13 @@ class Racecar(Obj3D):
         self.drifting = False
         self.allowStaticTurning = False
 
+        # Drift and Mini-Turbo mechanics
+        self.driftStartTime = None
+        self.turboCharged = False
+        self.turboActive = False
+        self.turboEndTime = None
+        self.driftFrictionMultiplier = 0.3  # Reduced friction during drift
+
         self.isCollidingWall = False
 
         self.currLap = 0
@@ -372,7 +379,32 @@ class Racecar(Obj3D):
         return math.sqrt(squared)
 
     # Update movement
-    def updateMovement(self):
+    def updateMovement(self, taskTime=None):
+        # Handle drift timing and turbo charging
+        if self.drifting:
+            if self.driftStartTime is None:
+                self.driftStartTime = taskTime
+            elif taskTime is not None and self.turboCharged == False:
+                # Check if drift has lasted more than 2 seconds
+                if taskTime - self.driftStartTime >= 2.0:
+                    self.turboCharged = True
+                    if self.gameObj.printStatements:
+                        print(f"Car {self.id}: Turbo charged!")
+        else:
+            # Released drift key
+            if self.driftStartTime is not None:
+                # If turbo was charged, activate mini-turbo boost
+                if self.turboCharged and not self.turboActive:
+                    self.activateMiniTurbo(taskTime)
+                # Reset drift timer
+                self.driftStartTime = None
+                self.turboCharged = False
+        
+        # Handle active turbo boost
+        if self.turboActive and taskTime is not None:
+            if taskTime >= self.turboEndTime:
+                self.deactivateMiniTurbo()
+
         # Friction
         useSpeedBasedFriction = (self.speed == 0) or (self.acceleration > 1.5 * self.friction)
         if useSpeedBasedFriction:
@@ -382,6 +414,14 @@ class Racecar(Obj3D):
                 friction = -self.friction
             elif self.speed < 0:
                 friction = self.friction
+
+        # Apply drift friction reduction
+        if self.drifting:
+            friction *= self.driftFrictionMultiplier
+        
+        # Apply turbo boost friction reduction
+        if self.turboActive:
+            friction *= 0.5
 
         if self.activePowerup == "speed":
             friction *= 0.75
@@ -435,10 +475,36 @@ class Racecar(Obj3D):
     # External Controls
     def doDrive(self, direction="forwards"):
         accInc = self.accInc
+        
+        # Apply turbo boost speed increase
+        if self.turboActive:
+            accInc *= 1.5  # Increased acceleration during turbo
+        
         if direction in [ "backward", "backwards", "back", "reverse" ]:
             self.incAcceleration(-1 * accInc)
         else:
             self.incAcceleration(+1 * accInc)
+
+    def activateMiniTurbo(self, taskTime):
+        """Activate mini-turbo boost after successful drift"""
+        self.turboActive = True
+        self.turboEndTime = taskTime + 1.5  # Turbo lasts for 1.5 seconds
+        # Apply 30% boost to max speed
+        self.originalMaxSpeed = self.maxSpeed
+        self.maxSpeed = self.maxSpeed * 1.3
+        if self.gameObj.printStatements:
+            print(f"Car {self.id}: MINI-TURBO ACTIVATED!")
+
+    def deactivateMiniTurbo(self):
+        """Deactivate mini-turbo boost"""
+        self.turboActive = False
+        self.turboEndTime = None
+        # Restore original max speed
+        if hasattr(self, 'originalMaxSpeed'):
+            self.maxSpeed = self.originalMaxSpeed
+            del self.originalMaxSpeed
+        if self.gameObj.printStatements:
+            print(f"Car {self.id}: Mini-turbo ended")
 
     def doTurn(self, direction="left"):
         # Prevent static turning unless specified

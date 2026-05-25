@@ -816,7 +816,7 @@ class RacingGame(Game):
 
         for car in self.cars:
             car.updatePowerup(task.time)
-            car.updateMovement()
+            car.updateMovement(task.time)
             car.updateMinimap(self.minimapPoints[car.id])
 
         for powerup in self.racetrack.powerups:
